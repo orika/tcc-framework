@@ -3,7 +3,6 @@ package com.netease.backend.coordinator;
 import java.util.List;
 
 import com.netease.backend.coordinator.processor.ServiceTask;
-import com.netease.backend.coordinator.processor.TccProcessor;
 import com.netease.backend.coordinator.recover.RecoverManager;
 import com.netease.backend.coordinator.transaction.Action;
 import com.netease.backend.coordinator.transaction.Transaction;
@@ -14,7 +13,6 @@ import com.netease.backend.tcc.Procedure;
 
 public class DefaultCoordinator implements Coordinator {
 	
-	private TccProcessor processor = null;
 	private RecoverManager recoverManager = null;
 	private TxManager txManager = null;
 
@@ -35,9 +33,7 @@ public class DefaultCoordinator implements Coordinator {
 				proc.setMethod(ServiceTask.CONFIRM);
 		}
 		try {
-			txManager.begin(uuid, Action.CONFIRM);
-			processor.perform(uuid, procedures);
-			txManager.finish(uuid, Action.CONFIRM);
+			txManager.perform(uuid, Action.CONFIRM, procedures);
 		} catch (Exception e) {
 			throw new CoordinatorException(e);
 		}
@@ -50,9 +46,7 @@ public class DefaultCoordinator implements Coordinator {
 				proc.setMethod(ServiceTask.CONFIRM);
 		}
 		try {
-			txManager.begin(uuid, Action.CONFIRM);
-			processor.perform(uuid, procedures, timeout);
-			txManager.finish(uuid, Action.CONFIRM);
+			txManager.perform(uuid, Action.CONFIRM, procedures, timeout);
 		} catch (Exception e) {
 			throw new CoordinatorException(e);
 		}
@@ -66,9 +60,7 @@ public class DefaultCoordinator implements Coordinator {
 				proc.setMethod(ServiceTask.CANCEL);
 		}
 		try {
-			txManager.begin(uuid, Action.CANCEL);
-			processor.perform(uuid, procedures);
-			txManager.finish(uuid, Action.CANCEL);
+			txManager.perform(uuid, Action.CANCEL, procedures);
 		} catch (Exception e) {
 			throw new CoordinatorException(e);
 		}
@@ -82,9 +74,7 @@ public class DefaultCoordinator implements Coordinator {
 				proc.setMethod(ServiceTask.CANCEL);
 		}
 		try {
-			txManager.begin(uuid, Action.CANCEL);
-			processor.perform(uuid, procedures, timeout);
-			txManager.finish(uuid, Action.CANCEL);
+			txManager.perform(uuid, Action.CANCEL, procedures, timeout);
 		} catch (Exception e) {
 			throw new CoordinatorException(e);
 		}

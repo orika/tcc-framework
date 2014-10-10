@@ -1,6 +1,6 @@
-log
-logs
-target
+/log
+/logs
+/target
 .gradle/
 out/
 build/
