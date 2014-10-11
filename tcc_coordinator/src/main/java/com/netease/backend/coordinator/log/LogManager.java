@@ -5,7 +5,7 @@ import com.netease.backend.coordinator.transaction.Transaction;
 
 public interface LogManager {
 	
-	void logBegin(Transaction tx, Action action, boolean registerLocally) throws LogException;
+	void logBegin(Transaction tx, Action action) throws LogException;
 	
 	void logFinish(Transaction tx, Action action) throws LogException;
 	

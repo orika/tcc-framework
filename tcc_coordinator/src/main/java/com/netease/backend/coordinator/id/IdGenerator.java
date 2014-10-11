@@ -3,13 +3,13 @@ package com.netease.backend.coordinator.id;
 public class IdGenerator {
 	
 	private IdAtLastDown idLastDown = null;
-	private IdForCoodinator idOfCoordinator = null;
+	private IdForCoordinator idOfCoordinator = null;
 	private UUIDGenerator uuidGenerator = null;
 
 	public IdGenerator() {
 	}
 	
-	public int getCoordinatorId() {
+	public int getCoordinatorId() throws IdForCoordinatorException {
 		return idOfCoordinator.get();
 	}
 	
@@ -17,7 +17,7 @@ public class IdGenerator {
 		return idLastDown.get();
 	}
 	
-	public long getNextUUID() {
+	public long getNextUUID() throws IdForCoordinatorException {
 		return uuidGenerator.next();
 	}
 }

@@ -62,4 +62,19 @@ public class Transaction {
 	public void setStatus(Action status) {
 		this.status = status;
 	}
+
+	public long getLastTimestamp() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public List<Procedure> getConfirmList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<Procedure> getCancelList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
