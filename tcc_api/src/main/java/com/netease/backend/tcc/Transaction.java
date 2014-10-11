@@ -3,16 +3,14 @@ package com.netease.backend.tcc;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.netease.backend.tcc.error.CoordinatorException;
+
 public abstract class Transaction {
 
 	protected long uuid = -1;
 	protected int id;
 	protected Coordinator coordinator;
 	protected List<Procedure> expireList = null;
-//	private int[] cancelPrt;
-//	private int[] confirmPrt;
-//	private List<Procedure> activities = new ArrayList<Procedure>();
-//	private Map<String, Object> proxyCache = new HashMap<String, Object>();
 	
 	protected static AtomicInteger idGenerator = new AtomicInteger(0);
 	
@@ -51,5 +49,4 @@ public abstract class Transaction {
 	public abstract void cancel() throws CoordinatorException;
 	
 	public abstract void cancel(long timeout) throws CoordinatorException; 
-	
 }

@@ -17,14 +17,16 @@ package com.netease.backend.tcc;
 
 import java.util.List;
 
+import com.netease.backend.tcc.error.CoordinatorException;
+
 public interface Coordinator {	
 	long begin(int sequenceId, List<Procedure> procedures) throws CoordinatorException;
 
-	void confirm(int sequenceId, long uuid, List<Procedure> procedures) throws CoordinatorException;
+	short confirm(int sequenceId, long uuid, List<Procedure> procedures) throws CoordinatorException;
 	
-	void confirm(int sequenceId, long uuid, long timeout, List<Procedure> procedures) throws CoordinatorException;
+	short confirm(int sequenceId, long uuid, long timeout, List<Procedure> procedures) throws CoordinatorException;
 	
-	void cancel(int sequenceId, long uuid, List<Procedure> procedures) throws CoordinatorException;
+	short cancel(int sequenceId, long uuid, List<Procedure> procedures) throws CoordinatorException;
 	
-	void cancel(int sequenceId, long uuid, long timeout, List<Procedure> procedures) throws CoordinatorException;
+	short cancel(int sequenceId, long uuid, long timeout, List<Procedure> procedures) throws CoordinatorException;
 }

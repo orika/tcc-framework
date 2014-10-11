@@ -1,6 +1,6 @@
 package com.netease.backend.coordinator.id;
 
-import com.netease.backend.tcc.CoordinatorException;
+import com.netease.backend.tcc.error.CoordinatorException;
 
 public class IdForCoordinatorException extends CoordinatorException{
 	

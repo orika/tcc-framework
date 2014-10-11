@@ -14,6 +14,10 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import com.netease.backend.tcc.error.CoordinatorException;
+import com.netease.backend.tcc.error.ServiceDownException;
+import com.netease.backend.tcc.error.TimeoutException;
+
 public class TccManager implements ApplicationContextAware {
 	
 	private Coordinator coordinator;
@@ -119,10 +123,33 @@ public class TccManager implements ApplicationContextAware {
 			return pt;
 	}
 	
+	private void checkResult(short code, List<Procedure> procList, long timeout) 
+			throws CoordinatorException {
+		if (code == TccCode.OK) {
+			return;
+		} else if (TccCode.isTimeout(code)) {
+			Procedure proc = procList.get(code & TccUtils.TIMEOUT_MASK);
+			throw new TimeoutException(timeout, proc);
+		} else if (TccCode.isServiceDown(code)) {
+			Procedure proc = procList.get(code & TccUtils.UNVAILABLE_MAST);
+			throw new ServiceDownException(proc);
+		}
+	}
+	
+	private void checkResult(short code, List<Procedure> procList) 
+			throws CoordinatorException {
+		if (code == TccCode.OK) {
+			return;
+		} else if (TccCode.isServiceDown(code)) {
+			Procedure proc = procList.get(code & TccUtils.UNVAILABLE_MAST);
+			throw new ServiceDownException(proc);
+		}
+	}
+	
 	public class CertainTx extends Transaction implements Cloneable {
 		
 		private List<Procedure> confirmList = new ArrayList<Procedure>();
-		private List<Procedure> concelList = new ArrayList<Procedure>();
+		private List<Procedure> cancelList = new ArrayList<Procedure>();
 		
 		private CertainTx(TccActivity activity, Coordinator coordinator) {
 			super(coordinator);
@@ -175,25 +202,29 @@ public class TccManager implements ApplicationContextAware {
 		@Override
 		public void confirm() throws CoordinatorException {
 			checkBegin();
-			coordinator.confirm(id, uuid, confirmList);
+			short code = coordinator.confirm(id, uuid, confirmList);
+			checkResult(code, confirmList);
 		}
 
 		@Override
 		public void cancel() throws CoordinatorException {
 			checkBegin();
-			coordinator.cancel(id, uuid, concelList);
+			short code = coordinator.cancel(id, uuid, cancelList);
+			checkResult(code, cancelList);
 		}
 
 		@Override
 		public void confirm(long timeout) throws CoordinatorException {
 			checkBegin();
-			coordinator.confirm(id, uuid, timeout, confirmList);
+			short code = coordinator.confirm(id, uuid, timeout, confirmList);
+			checkResult(code, confirmList, timeout);
 		}
 
 		@Override
 		public void cancel(long timeout) throws CoordinatorException {
 			checkBegin();
-			coordinator.cancel(id, uuid, timeout, concelList);
+			short code = coordinator.cancel(id, uuid, timeout, cancelList);
+			checkResult(code, cancelList, timeout);
 		}
 		
 		@Override
@@ -244,7 +275,8 @@ public class TccManager implements ApplicationContextAware {
 			if (procList.isEmpty())
 				return;
 			try {
-				coordinator.confirm(id, uuid, procList);
+				short code = coordinator.confirm(id, uuid, procList);
+				checkResult(code, procList);
 			} finally {
 				procList.clear();
 			}
@@ -256,7 +288,8 @@ public class TccManager implements ApplicationContextAware {
 			if (procList.isEmpty())
 				return;
 			try {
-				coordinator.confirm(id, uuid, timeout, procList);
+				short code = coordinator.confirm(id, uuid, timeout, procList);
+				checkResult(code, procList, timeout);
 			} finally {
 				procList.clear();
 			}
@@ -268,7 +301,8 @@ public class TccManager implements ApplicationContextAware {
 			if (procList.isEmpty())
 				return;
 			try {
-				coordinator.cancel(id, uuid, procList);
+				short code = coordinator.cancel(id, uuid, procList);
+				checkResult(code, procList);
 			} finally {
 				procList.clear();
 			}
@@ -280,7 +314,8 @@ public class TccManager implements ApplicationContextAware {
 			if (procList.isEmpty())
 				return;
 			try {
-				coordinator.cancel(id, uuid, timeout, procList);
+				short code = coordinator.cancel(id, uuid, timeout, procList);
+				checkResult(code, procList, timeout);
 			} finally {
 				procList.clear();
 			}

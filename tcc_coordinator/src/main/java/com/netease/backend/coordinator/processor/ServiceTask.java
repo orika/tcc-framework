@@ -6,6 +6,9 @@ import java.util.concurrent.CountDownLatch;
 import com.netease.backend.coordinator.ServiceContext;
 import com.netease.backend.tcc.Participant;
 import com.netease.backend.tcc.Procedure;
+import com.netease.backend.tcc.TccCode;
+import com.netease.backend.tcc.error.HeuristicsException;
+import com.netease.backend.tcc.error.ParticipantException;
 
 public class ServiceTask implements Runnable {
 	
@@ -16,9 +19,11 @@ public class ServiceTask implements Runnable {
 	private Procedure proc;
 	private TaskResult result;
 	private long uuid;
+	private int index;
 	
-	public ServiceTask(long uuid, Procedure proc, TaskResult result) {
+	public ServiceTask(long uuid, int index, Procedure proc, TaskResult result) {
 		this.uuid = uuid;
+		this.index = index;
 		this.proc = proc;
 		this.result = result;
 	}
@@ -37,15 +42,17 @@ public class ServiceTask implements Runnable {
 				participant.expired(uuid);
 			else
 				participant.invoke(method, params.toArray());
-		} catch (Exception e) {
-			result.failed(e);
-		}
+		} catch (ClassNotFoundException e) {
+			result.failed(new HeuristicsException(TccCode.getServiceDownCode(index), proc));
+		} catch (ParticipantException e) {
+			result.failed(new HeuristicsException(e.getErrorCode(), proc));
+		} 
 		result.success();
 	}
 	
 	protected static class TaskResult {
 		private CountDownLatch countDown;
-		private Exception exception;
+		private HeuristicsException exception;
 		
 		public TaskResult(CountDownLatch countDown) {
 			this.countDown = countDown;
@@ -55,7 +62,7 @@ public class ServiceTask implements Runnable {
 			countDown.countDown();
 		}
 		
-		public void failed(Exception exception) {
+		public void failed(HeuristicsException exception) {
 			this.exception = exception;
 			countDown.countDown();
 		}
@@ -64,11 +71,11 @@ public class ServiceTask implements Runnable {
 			return exception != null;
 		}
 		
-		public Exception getException() {
+		public HeuristicsException getException() {
 			return exception;
 		}
 		
-		public void setException(Exception exception) {
+		public void setException(HeuristicsException exception) {
 			this.exception = exception;
 		}
 		

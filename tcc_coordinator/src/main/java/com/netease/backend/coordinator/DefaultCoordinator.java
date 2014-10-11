@@ -8,8 +8,10 @@ import com.netease.backend.coordinator.transaction.Action;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.coordinator.transaction.TxManager;
 import com.netease.backend.tcc.Coordinator;
-import com.netease.backend.tcc.CoordinatorException;
 import com.netease.backend.tcc.Procedure;
+import com.netease.backend.tcc.TccCode;
+import com.netease.backend.tcc.error.CoordinatorException;
+import com.netease.backend.tcc.error.HeuristicsException;
 
 public class DefaultCoordinator implements Coordinator {
 	
@@ -18,15 +20,11 @@ public class DefaultCoordinator implements Coordinator {
 
 	public long begin(int sequenceId, List<Procedure> expireGroups) throws CoordinatorException {
 		Transaction tx = null;
-		try {
-			tx = txManager.createTx(expireGroups);
-		} catch (Exception e) {
-			throw new CoordinatorException(e);
-		}
+		tx = txManager.createTx(expireGroups);
 		return tx.getUUID();
 	}
 	
-	public void confirm(int sequenceId, long uuid, List<Procedure> procedures) 
+	public short confirm(int sequenceId, long uuid, List<Procedure> procedures) 
 			throws CoordinatorException {
 		for (Procedure proc : procedures) {
 			if (proc.getMethod() == null)
@@ -34,12 +32,13 @@ public class DefaultCoordinator implements Coordinator {
 		}
 		try {
 			txManager.perform(uuid, Action.CONFIRM, procedures);
-		} catch (Exception e) {
-			throw new CoordinatorException(e);
+			return 0;
+		} catch (HeuristicsException e) {
+			return e.getCode();
 		}
 	}
 	
-	public void confirm(int sequenceId, final long uuid, long timeout, final List<Procedure> procedures) 
+	public short confirm(int sequenceId, final long uuid, long timeout, final List<Procedure> procedures) 
 			throws CoordinatorException {
 		for (Procedure proc : procedures) {
 			if (proc.getMethod() == null)
@@ -47,13 +46,14 @@ public class DefaultCoordinator implements Coordinator {
 		}
 		try {
 			txManager.perform(uuid, Action.CONFIRM, procedures, timeout);
-		} catch (Exception e) {
-			throw new CoordinatorException(e);
+			return TccCode.OK;
+		} catch (HeuristicsException e) {
+			return e.getCode();
 		}
 	}
 
 	@Override
-	public void cancel(int sequenceId, long uuid, List<Procedure> procedures) 
+	public short cancel(int sequenceId, long uuid, List<Procedure> procedures) 
 			throws CoordinatorException {
 		for (Procedure proc : procedures) {
 			if (proc.getMethod() == null)
@@ -61,13 +61,14 @@ public class DefaultCoordinator implements Coordinator {
 		}
 		try {
 			txManager.perform(uuid, Action.CANCEL, procedures);
-		} catch (Exception e) {
-			throw new CoordinatorException(e);
+			return TccCode.OK;
+		} catch (HeuristicsException e) {
+			return e.getCode();
 		}
 	}
 
 	@Override
-	public void cancel(int sequenceId, long uuid, long timeout, List<Procedure> procedures) 
+	public short cancel(int sequenceId, long uuid, long timeout, List<Procedure> procedures) 
 			throws CoordinatorException {
 		for (Procedure proc : procedures) {
 			if (proc.getMethod() == null)
@@ -75,8 +76,9 @@ public class DefaultCoordinator implements Coordinator {
 		}
 		try {
 			txManager.perform(uuid, Action.CANCEL, procedures, timeout);
-		} catch (Exception e) {
-			throw new CoordinatorException(e);
+			return TccCode.OK;
+		} catch (HeuristicsException e) {
+			return e.getCode();
 		}
 	}
 	

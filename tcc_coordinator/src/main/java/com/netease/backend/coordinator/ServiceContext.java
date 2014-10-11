@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import com.netease.backend.tcc.Participant;
-import com.netease.backend.tcc.ParticipantException;
+import com.netease.backend.tcc.error.ParticipantException;
 
 public class ServiceContext implements ApplicationContextAware {
 	
