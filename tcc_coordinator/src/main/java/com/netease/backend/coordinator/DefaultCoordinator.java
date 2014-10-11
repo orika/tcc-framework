@@ -84,8 +84,6 @@ public class DefaultCoordinator implements Coordinator {
 	
 	public void start() throws CoordinatorException {
 		recoverManager.init();
-		if (!recoverManager.isAvailable())
-			throw new CoordinatorException("this coordinator is not available yet");
 		com.alibaba.dubbo.container.Main.main(new String[0]);
 	}
 }
