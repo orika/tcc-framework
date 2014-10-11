@@ -6,8 +6,9 @@ import com.netease.backend.coordinator.id.IdGenerator;
 import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogManager;
 import com.netease.backend.coordinator.processor.TccProcessor;
-import com.netease.backend.tcc.CoordinatorException;
 import com.netease.backend.tcc.Procedure;
+import com.netease.backend.tcc.error.CoordinatorException;
+import com.netease.backend.tcc.error.HeuristicsException;
 
 public class TxManager {
 	
@@ -25,35 +26,46 @@ public class TxManager {
 	}
 	
 	public void perform(long uuid, Action action, List<Procedure> procList) 
-			throws CoordinatorException {
-		begin(uuid, action);
+			throws HeuristicsException, CoordinatorException {
+		Transaction tx = begin(uuid, action, procList);
 		try {
 			tccProcessor.perform(uuid, procList);
-		} finally {
 			finish(uuid, action);
+		} catch (HeuristicsException e) {
+			heuristic(tx, action, e);
 		}
 	}
 	
 	public void perform(long uuid, Action action, List<Procedure> procList, long timeout) 
-			throws CoordinatorException {
-		begin(uuid, action);
+			throws HeuristicsException, CoordinatorException {
+		Transaction tx = begin(uuid, action, procList);
 		try {
 			tccProcessor.perform(uuid, procList, timeout);
-		} finally {
 			finish(uuid, action);
+		} catch (HeuristicsException e) {
+			heuristic(tx, action, e);
 		}
 	}
 	
-	private void begin(long uuid, Action action) throws LogException {
+	private Transaction begin(long uuid, Action action, List<Procedure> procList) throws CoordinatorException {
 		Transaction tx = txTable.get(uuid);
-		boolean registerLocally = tx != null;
-		if (!registerLocally) {
+		if (tx == null) {
 			tx = new Transaction(uuid, null);
 			txTable.put(tx);
 		}
-		tx.setStatus(action);
+		switch (action) {
+			case CONFIRM:
+				tx.confirm(procList);
+				break;
+			case CANCEL:
+				tx.cancel(procList);
+				break;
+			default:
+				throw new IllegalActionException(uuid, tx.getAction(), action);
+		}
 		tx.setBeginTime(System.currentTimeMillis());
-		logManager.logBegin(tx, action, registerLocally);
+		logManager.logBegin(tx, action);
+		return tx;
 	}
 	
 	private void finish(long uuid, Action action) throws LogException {
@@ -64,13 +76,18 @@ public class TxManager {
 		logManager.logFinish(tx, action);
 	}
 	
-	public void expire(Transaction tx) throws CoordinatorException {
+	public void heuristic(Transaction tx, Action action, HeuristicsException e) throws LogException {
+		tx.setEndTime(System.currentTimeMillis());
+		logManager.logHeuristics(tx, action, e);
+	}
+	
+	public void expire(Transaction tx) throws HeuristicsException, CoordinatorException {
 		long uuid = tx.getUUID();
 		if (!logManager.checkExpired(uuid))
 			return;
-		tx.setStatus(Action.EXPIRED);
+		tx.expire();
 		tx.setBeginTime(System.currentTimeMillis());
-		logManager.logBegin(tx, Action.EXPIRED, true);
+		logManager.logBegin(tx, Action.EXPIRED);
 		tccProcessor.perform(uuid, tx.getExpireList());
 		txTable.remove(tx.getUUID());
 		tx.setEndTime(System.currentTimeMillis());

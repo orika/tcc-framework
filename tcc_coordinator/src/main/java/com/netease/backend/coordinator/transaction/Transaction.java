@@ -1,6 +1,7 @@
 package com.netease.backend.coordinator.transaction;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.netease.backend.tcc.Procedure;
 
@@ -10,13 +11,15 @@ public class Transaction {
 	private long createTime = -1;
 	private long beginTime = -1;
 	private long endTime = -1;
-	private Action status = Action.REGISTERED;
+	private AtomicReference<Action> status = new AtomicReference<Action>();
 	protected List<Procedure> expireList = null;
+	protected List<Procedure> procList = null;
 	
 	public Transaction(long uuid, List<Procedure> expireList) {
 		this.uuid = uuid;
 		this.expireList = expireList;
 		this.createTime = System.currentTimeMillis();
+		status.set(Action.REGISTERED);
 	}
 	
 	public long getUUID() {
@@ -43,8 +46,12 @@ public class Transaction {
 		return expireList;
 	}
 
-	public void setExpireList(List<Procedure> expireList) {
-		this.expireList = expireList;
+	public List<Procedure> getConfirmList() {
+		return procList;
+	}
+	
+	public List<Procedure> getCancelList() {
+		return procList;
 	}
 
 	public long getCreateTime() {
@@ -55,11 +62,27 @@ public class Transaction {
 		this.createTime = createTime;
 	}
 	
-	public Action getStatus() {
-		return status;
+	public Action getAction() {
+		return status.get();
 	}
 	
-	public void setStatus(Action status) {
-		this.status = status;
+	public void confirm(List<Procedure> procList) throws IllegalActionException {
+		if (status.compareAndSet(Action.REGISTERED, Action.CONFIRM))
+			this.procList = procList;
+		else 
+			throw new IllegalActionException(uuid, status.get(), Action.CONFIRM);
 	}
+	
+	public void cancel(List<Procedure> procList) throws IllegalActionException {
+		if (status.compareAndSet(Action.REGISTERED, Action.CANCEL))
+			this.procList = procList;
+		else 
+			throw new IllegalActionException(uuid, status.get(), Action.CANCEL);
+	}
+	
+	public void expire() throws IllegalActionException {
+		if (!status.compareAndSet(Action.REGISTERED, Action.EXPIRED))
+			throw new IllegalActionException(uuid, status.get(), Action.EXPIRED);
+	}
+	
 }

@@ -8,8 +8,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.netease.backend.coordinator.processor.ServiceTask.TaskResult;
-import com.netease.backend.tcc.HeuristicsException;
 import com.netease.backend.tcc.Procedure;
+import com.netease.backend.tcc.error.HeuristicsException;
 
 public class TccProcessor {
 	
@@ -22,10 +22,12 @@ public class TccProcessor {
 		while (procedures.size() != 0) {
 			Procedure lastOne = null;
 			int count = 0;
+			int index = 0;
 			for (Iterator<Procedure> it = procedures.iterator(); it.hasNext(); ) {
 				Procedure cur = it.next();
 				if (cur.getSequence() < 0) {
 					it.remove();
+					index++;
 					continue;
 				}
 				count++;
@@ -36,19 +38,19 @@ public class TccProcessor {
 			for (Iterator<Procedure> it = procedures.iterator(); it.hasNext() && count > 0; count--) {
 				Procedure cur = it.next();
 				if (count == 1) {
-					new ServiceTask(uuid, cur, result).run();
+					new ServiceTask(uuid, index++, cur, result).run();
 				} else {
-					threadPool.execute(new ServiceTask(uuid, cur, result));
+					threadPool.execute(new ServiceTask(uuid, index++, cur, result));
 				}
 				it.remove();
 			}
 			try {
 				result.await();
 			} catch (InterruptedException e) {
-				throw new HeuristicsException(e);
+				throw new HeuristicsException();
 			}
 			if (result.isFailed()) {
-				throw new HeuristicsException(result.getException());
+				throw result.getException();
 			}
 		}
 	}
@@ -73,11 +75,11 @@ public class TccProcessor {
 			try {
 				barrier.wait(timeout);
 			} catch (InterruptedException e) {
-				throw new HeuristicsException(e);
+				throw new HeuristicsException();
 			}
 		}
 		if (barrier.isFailed()) {
-			throw (HeuristicsException) barrier.getException();
+			throw barrier.getException();
 		}
 	}
 }

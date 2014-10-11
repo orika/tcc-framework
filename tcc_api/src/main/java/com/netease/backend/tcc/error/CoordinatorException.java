@@ -1,4 +1,4 @@
-package com.netease.backend.tcc;
+package com.netease.backend.tcc.error;
 
 public class CoordinatorException extends Exception {
 	

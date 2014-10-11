@@ -1,5 +1,7 @@
 package com.netease.backend.tcc;
 
+import com.netease.backend.tcc.error.ParticipantException;
+
 
 public interface Participant {
 	

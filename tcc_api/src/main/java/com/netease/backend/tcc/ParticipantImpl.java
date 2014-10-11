@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.netease.backend.tcc.error.ParticipantException;
+
 
 public abstract class ParticipantImpl implements Participant {
 	

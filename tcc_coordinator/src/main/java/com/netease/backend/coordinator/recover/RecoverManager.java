@@ -1,6 +1,6 @@
 package com.netease.backend.coordinator.recover;
 
-import com.netease.backend.tcc.CoordinatorException;
+import com.netease.backend.tcc.error.CoordinatorException;
 
 public abstract class RecoverManager {
 	
