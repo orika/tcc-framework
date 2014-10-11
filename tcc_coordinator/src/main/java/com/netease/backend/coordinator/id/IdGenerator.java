@@ -9,7 +9,7 @@ public class IdGenerator {
 	public IdGenerator() {
 	}
 	
-	public int getCoordinatorId() throws IdForCoordinatorException {
+	public int getCoordinatorId()  {
 		return idOfCoordinator.get();
 	}
 	
@@ -17,7 +17,7 @@ public class IdGenerator {
 		return idLastDown.get();
 	}
 	
-	public long getNextUUID() throws IdForCoordinatorException {
+	public long getNextUUID() {
 		return uuidGenerator.next();
 	}
 }

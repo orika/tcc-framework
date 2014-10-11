@@ -6,6 +6,7 @@ import com.netease.backend.coordinator.log.LogType;
 import com.netease.backend.coordinator.transaction.Action;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.coordinator.util.DbUtil;
+import com.netease.backend.tcc.error.HeuristicsException;
 
 public class LogManagerImp implements LogManager {
 
@@ -66,8 +67,15 @@ public class LogManagerImp implements LogManager {
 	@Override
 	public boolean checkExpired(long uuid) throws LogException {
 		// TODO Auto-generated method stub
-		boolean res = this.dbUtil.checkExpire();
+		boolean res = this.dbUtil.checkExpire(uuid);
 		return res;
+	}
+
+	@Override
+	public void logHeuristics(Transaction tx, Action action,
+			HeuristicsException e) throws LogException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

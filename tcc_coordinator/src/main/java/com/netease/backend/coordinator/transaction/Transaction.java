@@ -85,4 +85,7 @@ public class Transaction {
 			throw new IllegalActionException(uuid, status.get(), Action.EXPIRED);
 	}
 	
+	public long getLastTimeStamp() {
+		return endTime == -1 ? (beginTime == -1 ? createTime : beginTime) : endTime;
+	}
 }

@@ -10,11 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.netease.backend.coordinator.config.CoordinatorConfig;
-import com.netease.backend.coordinator.id.IdForCoordinatorException;
 import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogType;
 import com.netease.backend.coordinator.transaction.Action;
 import com.netease.backend.coordinator.transaction.Transaction;
+import com.netease.backend.tcc.error.CoordinatorException;
 
 public class DbUtil {
 	public static BasicDataSource localDataSource = null;
@@ -43,7 +43,7 @@ public class DbUtil {
 		systemDataSource.setMaxWait(null);
 	} 
 	
-	public int getServerId(CoordinatorConfig config) throws IdForCoordinatorException {
+	public int getServerId(CoordinatorConfig config) throws CoordinatorException {
 		int serverId = -1;
 		Connection localConn = null;
 		PreparedStatement localPstmt = null;
@@ -55,7 +55,7 @@ public class DbUtil {
 			serverId = localRset.getInt("SERVER_ID");
 		} catch (SQLException e) {
 			logger.error("Read COORDINATOR_INFO table error", e);
-			throw new IdForCoordinatorException("Cannot fetch local ServerId");
+			throw new CoordinatorException("Cannot fetch local ServerId");
 		} finally {
 			try {
 				localRset.close();
@@ -85,7 +85,7 @@ public class DbUtil {
 				serverId = sysRset.getInt("SERVER_ID");
 			} catch (SQLException e) {
 				logger.error("Write SERVER_INFO table error", e);
-				throw new IdForCoordinatorException("Cannot get a new ServerId");
+				throw new CoordinatorException("Cannot get a new ServerId");
 			} finally {
 				try {
 					sysRset.close();
@@ -107,7 +107,7 @@ public class DbUtil {
 				int rs = localPstmt.executeUpdate();
 			} catch (SQLException e) {
 				logger.error("Write COORDINATOR_INFO table error", e);
-				throw new IdForCoordinatorException("Cannot update local ServerId");
+				throw new CoordinatorException("Cannot update local ServerId");
 			} finally {
 				try {
 					localPstmt.close();
@@ -149,7 +149,7 @@ public class DbUtil {
 			// set insert values
 			localPstmt.setLong(0, tx.getUUID());
 			localPstmt.setInt(1, logType.ordinal());
-			localPstmt.setLong(2, tx.getLastTimestamp());
+			localPstmt.setLong(2, tx.getLastTimeStamp());
 			localPstmt.setBytes(3, trxContent);
 			
 			localPstmt.executeUpdate();
@@ -167,23 +167,59 @@ public class DbUtil {
 		}
 	}
 
-	public boolean checkExpire(long uuid) {
+	public boolean checkExpire(long uuid) throws LogException {
 		Connection systemConn = null;
 		PreparedStatement systemPstmt = null;
 		ResultSet systemRset = null;
-		
+		int res = 0;
 		try {
 			systemConn = DbUtil.systemDataSource.getConnection();
-			systemPstmt = systemConn.prepareStatement("INSERT INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION)" +
+			systemPstmt = systemConn.prepareStatement("INSERT IGNORE INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION)" +
 					" VALUES(?,?)");
 			
 			systemPstmt.setLong(0, uuid);
+			systemPstmt.setInt(1, Action.EXPIRED.ordinal());
 			
+			res = systemPstmt.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Check expired error.", e);
+			throw new LogException("Check expire error");
+		} finally {
+			try {
+				systemPstmt.close();
+			} catch (SQLException e) {
+				logger.error("Check expired error.", e);
+			}
 		}
-		return false;
+		
+
+		// must duplicate key, then check the action
+		if (res == 0) {
+			try {
+				systemPstmt = systemConn.prepareStatement("SELECT TRX_ACTION FROM EXPIRE_TRX_INFO WHERE TRX_ID = ?");
+				systemPstmt.setLong(0, uuid);
+				systemRset = systemPstmt.executeQuery();
+				// if other node confirm or cancel this trx , then checkfailed
+				if (systemRset.getInt(0) != Action.EXPIRED.ordinal()) {
+					return false;
+				} else { 
+					return true;
+				}
+			} catch (SQLException e) {
+				logger.error("Check expired error.", e);
+				throw new LogException("Check expire error");
+			} finally {
+				try {
+					systemRset.close();
+					systemPstmt.close();
+					systemConn.close();
+				} catch (SQLException e) {
+					logger.error("Check expired error.", e);
+				}
+			}
+			
+		}
+		return true;
 	}
 	
 }

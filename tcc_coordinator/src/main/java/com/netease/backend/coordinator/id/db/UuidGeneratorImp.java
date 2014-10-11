@@ -1,7 +1,6 @@
 package com.netease.backend.coordinator.id.db;
 
 import com.netease.backend.coordinator.id.IdForCoordinator;
-import com.netease.backend.coordinator.id.IdForCoordinatorException;
 import com.netease.backend.coordinator.id.UUIDGenerator;
 
 public class UuidGeneratorImp implements UUIDGenerator {
@@ -26,7 +25,7 @@ public class UuidGeneratorImp implements UUIDGenerator {
 	
 	
 	@Override
-	public long next() throws IdForCoordinatorException {
+	public long next() {
 		// TODO Auto-generated method stub
 		int serverId = this.serverIdDist.get();
 		long seqId = this.seqGen.nextSeqId();
