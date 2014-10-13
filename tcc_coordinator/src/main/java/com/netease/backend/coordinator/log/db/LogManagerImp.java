@@ -1,5 +1,8 @@
 package com.netease.backend.coordinator.log.db;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogManager;
 import com.netease.backend.coordinator.log.LogType;
@@ -11,6 +14,7 @@ import com.netease.backend.tcc.error.HeuristicsException;
 public class LogManagerImp implements LogManager {
 
 	private DbUtil dbUtil = null;
+	private Logger logger = LoggerFactory.getLogger(LogManagerImp.class);
 	
 	public LogManagerImp() {
 		this.dbUtil = new DbUtil();
@@ -73,6 +77,14 @@ public class LogManagerImp implements LogManager {
 	@Override
 	public void logHeuristics(Transaction tx, Action action,
 			HeuristicsException e) throws LogException {
+		
+		try {
+			this.dbUtil.writeHeuristicRec(tx, action, e, false);
+		} catch (LogException e1) {
+			logger.error("Write system heuristic record error", e1);
+			this.dbUtil.writeHeuristicRec(tx, action, e, true);
+		}
+		
 		LogType logType = LogType.TRX_HEURESTIC;
 		this.dbUtil.writeLog(tx, logType);
 	}
@@ -94,6 +106,13 @@ public class LogManagerImp implements LogManager {
 	public boolean checkActionInRecover(long uuid) throws LogException {
 		// TODO Auto-generated method stub
 		boolean res = this.dbUtil.checkActionInRecover(uuid);
+		return res;
+	}
+
+	@Override
+	public boolean checkLocalLogMgrAlive() {
+		// TODO Auto-generated method stub
+		boolean res = this.dbUtil.checkLocaLogMgrAlive();
 		return res;
 	}
 

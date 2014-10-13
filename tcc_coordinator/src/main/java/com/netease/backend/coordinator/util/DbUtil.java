@@ -16,6 +16,7 @@ import com.netease.backend.coordinator.log.LogType;
 import com.netease.backend.coordinator.transaction.Action;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.tcc.error.CoordinatorException;
+import com.netease.backend.tcc.error.HeuristicsException;
 
 public class DbUtil {
 	public BasicDataSource localDataSource = null;
@@ -49,7 +50,7 @@ public class DbUtil {
 			localRset = localPstmt.executeQuery();
 			serverId = localRset.getInt("SERVER_ID");
 		} catch (SQLException e) {
-			logger.error("Read COORDINATOR_INFO table error", e);
+			logger.debug("Read COORDINATOR_INFO table error", e);
 			throw new CoordinatorException("Cannot fetch local ServerId");
 		} finally {
 			try {
@@ -57,7 +58,7 @@ public class DbUtil {
 				localPstmt.close();
 				localConn.close();
 			} catch (SQLException e) {
-				logger.error("Read COORDINATOR_INFO table error", e);
+				logger.debug("Read COORDINATOR_INFO table error", e);
 			}	
 		}
 		
@@ -74,12 +75,12 @@ public class DbUtil {
 				sysPstmt.setString(0, config.getServerIp());
 				sysPstmt.setString(1, config.getRdsIp());
 				
-				int s = sysPstmt.executeUpdate();
+				sysPstmt.executeUpdate();
 				sysRset = sysPstmt.getGeneratedKeys();
 				sysRset.next();
 				serverId = sysRset.getInt("SERVER_ID");
 			} catch (SQLException e) {
-				logger.error("Write SERVER_INFO table error", e);
+				logger.debug("Write SERVER_INFO table error", e);
 				throw new CoordinatorException("Cannot get a new ServerId");
 			} finally {
 				try {
@@ -87,7 +88,7 @@ public class DbUtil {
 					sysPstmt.close();
 					sysConn.close();
 				} catch (SQLException e) {
-					logger.error("Write SERVER_INFO table error", e);
+					logger.debug("Write SERVER_INFO table error", e);
 				}	
 			}
 			
@@ -99,16 +100,16 @@ public class DbUtil {
 				// set update value
 				localPstmt.setInt(1, serverId);
 				
-				int rs = localPstmt.executeUpdate();
+				localPstmt.executeUpdate();
 			} catch (SQLException e) {
-				logger.error("Write COORDINATOR_INFO table error", e);
+				logger.debug("Write COORDINATOR_INFO table error", e);
 				throw new CoordinatorException("Cannot update local ServerId");
 			} finally {
 				try {
 					localPstmt.close();
 					localConn.close();
 				} catch (SQLException e) {
-					logger.error("Write COORDINATOR_INFO table error", e);
+					logger.debug("Write COORDINATOR_INFO table error", e);
 				}	
 			}
 			
@@ -149,14 +150,14 @@ public class DbUtil {
 			
 			localPstmt.executeUpdate();
 		} catch (SQLException e) {
-			logger.error("Write log error.", e);
+			logger.debug("Write log error.", e);
 			throw new LogException("Write log error");
 		} finally {
 			try {
 				localPstmt.close();
 				localConn.close();
 			} catch (SQLException e) {
-				logger.error("Write log error.", e);
+				logger.debug("Write log error.", e);
 			}
 			
 		}
@@ -177,13 +178,13 @@ public class DbUtil {
 			
 			res = systemPstmt.executeUpdate();
 		} catch (SQLException e) {
-			logger.error("Check expired error.", e);
+			logger.debug("Check expired error.", e);
 			throw new LogException("Check expire error");
 		} finally {
 			try {
 				systemPstmt.close();
 			} catch (SQLException e) {
-				logger.error("Check expired error.", e);
+				logger.debug("Check expired error.", e);
 			}
 		}
 		
@@ -201,7 +202,7 @@ public class DbUtil {
 					return true;
 				}
 			} catch (SQLException e) {
-				logger.error("Check expired error.", e);
+				logger.debug("Check expired error.", e);
 				throw new LogException("Check expire error");
 			} finally {
 				try {
@@ -209,7 +210,7 @@ public class DbUtil {
 					systemPstmt.close();
 					systemConn.close();
 				} catch (SQLException e) {
-					logger.error("Check expired error.", e);
+					logger.debug("Check expired error.", e);
 				}
 			}
 			
@@ -231,14 +232,14 @@ public class DbUtil {
 			
 			localPstmt.executeUpdate();
 		} catch (SQLException e) {
-			logger.error("Update checkpoint error.", e);
+			logger.debug("Update checkpoint error.", e);
 			throw new LogException("Update checkpoint error");
 		} finally {
 			try {
 				localPstmt.close();
 				localConn.close();
 			} catch (SQLException e) {
-				logger.error("Update checkpoint error.", e);
+				logger.debug("Update checkpoint error.", e);
 			}
 			
 		}
@@ -257,14 +258,14 @@ public class DbUtil {
 			localRset = localPstmt.executeQuery();
 			checkpoint = localRset.getLong(0);
 		} catch (SQLException e) {
-			logger.error("Read checkpoint error.", e);
+			logger.debug("Read checkpoint error.", e);
 			throw new LogException("Read checkpoint error");
 		} finally {
 			try {
 				localPstmt.close();
 				localConn.close();
 			} catch (SQLException e) {
-				logger.error("Read checkpoint error.", e);
+				logger.debug("Read checkpoint error.", e);
 			}
 			
 		}
@@ -281,7 +282,7 @@ public class DbUtil {
 			pstmt.setFetchSize(STREAM_SIZE);
 			rset = pstmt.executeQuery();
 		} catch (SQLException e) {
-			logger.error("Start read log error.", e);
+			logger.debug("Start read log error.", e);
 			throw new LogException("Start read log error");
 		} 
 	}
@@ -290,7 +291,7 @@ public class DbUtil {
 		try {
 			return rset.next();
 		} catch (SQLException e) {
-			logger.error("Read log has next error.", e);
+			logger.debug("Read log has next error.", e);
 			throw new LogException("Read log has next error");
 		}
 	}
@@ -303,7 +304,7 @@ public class DbUtil {
 			byte[] procs = rset.getBytes("TRX_CONTENT");
 			return new LogRecord(uuid, logType, timestamp, procs);
 		} catch (SQLException e) {
-			logger.error("Read next log error.", e);
+			logger.debug("Read next log error.", e);
 			throw new LogException("Read next log error");
 		}	
 	}
@@ -316,7 +317,7 @@ public class DbUtil {
 			pstmt.close();
 			conn.close();
 		} catch (SQLException e) {
-			logger.error("End read log error.", e);
+			logger.debug("End read log error.", e);
 			throw new LogException("Ene read log error");
 		}
 	}
@@ -329,6 +330,7 @@ public class DbUtil {
 		
 		int res = 0;
 		try {
+			// Insert a record to system db, and mark trx action as REGISTED
 			systemConn = this.systemDataSource.getConnection();
 			systemPstmt = systemConn.prepareStatement("INSERT IGNORE INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION)" +
 					" VALUES(?,?)");
@@ -338,13 +340,13 @@ public class DbUtil {
 			
 			res = systemPstmt.executeUpdate();
 		} catch (SQLException e) {
-			logger.error("Check action in recover error.", e);
+			logger.debug("Check action in recover error.", e);
 			throw new LogException("Check action in recover error");
 		} finally {
 			try {
 				systemPstmt.close();
 			} catch (SQLException e) {
-				logger.error("Check action in recover error.", e);
+				logger.debug("Check action in recover error.", e);
 			}
 		}
 		
@@ -362,7 +364,7 @@ public class DbUtil {
 					return true;
 				}
 			} catch (SQLException e) {
-				logger.error("Check action in recover error.", e);
+				logger.debug("Check action in recover error.", e);
 				throw new LogException("Check action in recover error");
 			} finally {
 				try {
@@ -370,7 +372,7 @@ public class DbUtil {
 					systemPstmt.close();
 					systemConn.close();
 				} catch (SQLException e) {
-					logger.error("Check action in recover error.", e);
+					logger.debug("Check action in recover error.", e);
 				}
 			}
 			
@@ -379,6 +381,79 @@ public class DbUtil {
 	}
 
 
+	public boolean checkLocaLogMgrAlive() {
+		// TODO Auto-generated method stub	
+		Connection localConn = null;
+		PreparedStatement localPstmt = null;
+		ResultSet localRset = null;
+		try {
+			localConn = this.localDataSource.getConnection();
+			localPstmt = localConn.prepareStatement("SELECT 1");
+			
+			
+			localRset = localPstmt.executeQuery();
+			return true;
+		} catch (SQLException e) {
+			logger.debug("Check action in recover error.", e);
+			return false;
+		} finally {
+			try {
+				localRset.close();
+				localPstmt.close();
+				localConn.close();
+			} catch (SQLException e) {
+				logger.debug("Check action in recover error.", e);
+			}
+		}
+	}
+
+
+	public void writeHeuristicRec(Transaction tx, Action action,
+			HeuristicsException e, boolean isLocal) throws LogException {
+		// TODO Auto-generated method stub
+		BasicDataSource dataSource = isLocal ? this.localDataSource : this.systemDataSource;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		byte[] trxContent = null;
+		switch(action) {
+		case EXPIRED:
+			trxContent = LogUtil.serialize(tx.getExpireList());
+			break;
+		case CONFIRM:
+			trxContent = LogUtil.serialize(tx.getConfirmList());
+			break;
+		case CANCEL:
+			trxContent = LogUtil.serialize(tx.getCancelList());
+			break;
+		default:
+			trxContent = null;	
+		}
+		
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement("INSERT IGNORE INTO HEURISTIC_TRX_INFO(TRX_ID, TRX_ACTION, TRX_HEURISTIC_CODE, TRX_TIMESTAMP, TRX_CONTENT) VALUES(?,?,?,?,?)");
+			pstmt.setLong(0, tx.getUUID());
+			pstmt.setInt(1, action.getCode());
+			pstmt.setShort(2, e.getCode());
+			pstmt.setLong(3, tx.getLastTimeStamp());
+			pstmt.setBytes(4, trxContent);
+			
+			pstmt.executeUpdate();
+		} catch (SQLException e1) {
+			logger.debug("Write heuristic record error.", e);
+			throw new LogException("Write heuristic record error");
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e1) {
+				logger.debug("Write heuristic record error.", e);
+			}
+		}
+		
+	}
+
+	
 
 	
 }

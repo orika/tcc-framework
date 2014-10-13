@@ -3,7 +3,6 @@ package com.netease.backend.coordinator.log.db;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,6 @@ public class LogScannerImp implements LogScanner{
 	private PreparedStatement pstmt;
 	private ResultSet rset;
 	private DbUtil dbUtil;
-	private Logger logger = LoggerFactory.getLogger(LogScanner.class);
 	
 	public LogScannerImp() {
 		
