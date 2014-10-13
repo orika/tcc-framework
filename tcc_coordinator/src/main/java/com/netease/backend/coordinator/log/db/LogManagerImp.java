@@ -66,7 +66,6 @@ public class LogManagerImp implements LogManager {
 
 	@Override
 	public boolean checkExpired(long uuid) throws LogException {
-		// TODO Auto-generated method stub
 		boolean res = this.dbUtil.checkExpire(uuid);
 		return res;
 	}
@@ -74,8 +73,30 @@ public class LogManagerImp implements LogManager {
 	@Override
 	public void logHeuristics(Transaction tx, Action action,
 			HeuristicsException e) throws LogException {
+		LogType logType = LogType.TRX_HEURESTIC;
+		this.dbUtil.writeLog(tx, logType);
+	}
+
+	@Override
+	public void setCheckpoint(long checkpoint) throws LogException {
 		// TODO Auto-generated method stub
-		
+		this.dbUtil.setCheckpoint(checkpoint);
+	}
+
+	@Override
+	public long getCheckpoint() throws LogException {
+		// TODO Auto-generated method stub
+		long checkpoint = this.dbUtil.getCheckpoint();
+		return checkpoint;
+	}
+
+	@Override
+	public boolean checkActionInRecover(long uuid) throws LogException {
+		// TODO Auto-generated method stub
+		boolean res = this.dbUtil.checkActionInRecover(uuid);
+		return res;
 	}
 
 }
+
+

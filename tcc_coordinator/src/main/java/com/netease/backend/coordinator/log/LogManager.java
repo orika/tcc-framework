@@ -1,5 +1,6 @@
 package com.netease.backend.coordinator.log;
 
+import com.netease.backend.coordinator.log.db.LogScannerImp;
 import com.netease.backend.coordinator.transaction.Action;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.tcc.error.HeuristicsException;
@@ -15,4 +16,11 @@ public interface LogManager {
 	void logHeuristics(Transaction tx, Action action, HeuristicsException e) throws LogException;
 	
 	boolean checkExpired(long uuid) throws LogException;
+	
+	void setCheckpoint(long checkpoint) throws LogException;
+	
+	long getCheckpoint() throws LogException;
+	
+	boolean checkActionInRecover(long uuid) throws LogException;
+
 }

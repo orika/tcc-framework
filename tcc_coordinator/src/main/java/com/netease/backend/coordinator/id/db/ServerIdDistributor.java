@@ -1,7 +1,6 @@
 package com.netease.backend.coordinator.id.db;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+
 
 import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.id.IdForCoordinator;
@@ -10,7 +9,6 @@ import com.netease.backend.tcc.error.CoordinatorException;
 
 public class ServerIdDistributor implements IdForCoordinator {
 
-	private String ip;
 	private int serverId;
 	private DbUtil dbUtil;
 	
@@ -27,6 +25,13 @@ public class ServerIdDistributor implements IdForCoordinator {
 	@Override
 	public int get() {
 		return this.serverId;
+	}
+
+
+	@Override
+	public boolean isUuidOwn(long uuid) {
+		int serverId = (int) (uuid >> 48);
+		return this.serverId == serverId;
 	}
 
 }

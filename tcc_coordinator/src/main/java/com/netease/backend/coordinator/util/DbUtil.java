@@ -11,38 +11,33 @@ import org.slf4j.LoggerFactory;
 
 import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.log.LogException;
+import com.netease.backend.coordinator.log.LogRecord;
 import com.netease.backend.coordinator.log.LogType;
 import com.netease.backend.coordinator.transaction.Action;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.tcc.error.CoordinatorException;
 
 public class DbUtil {
-	public static BasicDataSource localDataSource = null;
-	public static BasicDataSource systemDataSource = null;
+	public BasicDataSource localDataSource = null;
+	public BasicDataSource systemDataSource = null;
 	private Logger logger = LoggerFactory.getLogger(DbUtil.class);
+	private static int STREAM_SIZE = 100;
 	
 	public DbUtil() {
 		
 	}
 	
-	public static void init(CoordinatorConfig config) {
-		localDataSource.setDriverClassName(null);
-		localDataSource.setUsername(null);
-		localDataSource.setPassword(null);
-		localDataSource.setUrl(null);
-		localDataSource.setMaxActive(null);
-		localDataSource.setMaxIdle(null);
-		localDataSource.setMaxWait(null);
-		
-		systemDataSource.setDriverClassName(null);
-		systemDataSource.setUsername(null);
-		systemDataSource.setPassword(null);
-		systemDataSource.setUrl(null);
-		systemDataSource.setMaxActive(null);
-		systemDataSource.setMaxIdle(null);
-		systemDataSource.setMaxWait(null);
-	} 
-	
+
+	public void setLocalDataSource(BasicDataSource localDataSource) {
+		this.localDataSource = localDataSource;
+	}
+
+
+	public void setSystemDataSource(BasicDataSource systemDataSource) {
+		this.systemDataSource = systemDataSource;
+	}
+
+
 	public int getServerId(CoordinatorConfig config) throws CoordinatorException {
 		int serverId = -1;
 		Connection localConn = null;
@@ -127,13 +122,13 @@ public class DbUtil {
 		switch(logType) {
 		case TRX_BEGIN:
 		case TRX_START_EXPIRE:
-			trxContent = LogUtil.getPayLoad(tx.getExpireList());
+			trxContent = LogUtil.serialize(tx.getExpireList());
 			break;
 		case TRX_START_CONFIRM:
-			trxContent = LogUtil.getPayLoad(tx.getConfirmList());
+			trxContent = LogUtil.serialize(tx.getConfirmList());
 			break;
 		case TRX_START_CANCEL:
-			trxContent = LogUtil.getPayLoad(tx.getCancelList());
+			trxContent = LogUtil.serialize(tx.getCancelList());
 			break;
 		default:
 			trxContent = null;	
@@ -143,7 +138,7 @@ public class DbUtil {
 		PreparedStatement localPstmt = null;
 		
 		try {
-			localConn = DbUtil.localDataSource.getConnection();
+			localConn = this.localDataSource.getConnection();
 			localPstmt = localConn.prepareStatement("INSERT INTO COORDINATOR_LOG(TRX_ID, TRX_STATUS, TRX_TIMESTAMP, TRX_CONTENT) VALUES(?,?,?,?)");
 			
 			// set insert values
@@ -173,7 +168,7 @@ public class DbUtil {
 		ResultSet systemRset = null;
 		int res = 0;
 		try {
-			systemConn = DbUtil.systemDataSource.getConnection();
+			systemConn = this.systemDataSource.getConnection();
 			systemPstmt = systemConn.prepareStatement("INSERT IGNORE INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION)" +
 					" VALUES(?,?)");
 			
@@ -221,5 +216,169 @@ public class DbUtil {
 		}
 		return true;
 	}
+
+
+	public void setCheckpoint(long checkpoint) throws LogException {
+		Connection localConn = null;
+		PreparedStatement localPstmt = null;
+		
+		try {
+			localConn = this.localDataSource.getConnection();
+			localPstmt = localConn.prepareStatement("UPDATE COORDINATOR_INFO SET CHECKPOINT = ?");
+			
+			// set insert values
+			localPstmt.setLong(0, checkpoint);
+			
+			localPstmt.executeUpdate();
+		} catch (SQLException e) {
+			logger.error("Update checkpoint error.", e);
+			throw new LogException("Update checkpoint error");
+		} finally {
+			try {
+				localPstmt.close();
+				localConn.close();
+			} catch (SQLException e) {
+				logger.error("Update checkpoint error.", e);
+			}
+			
+		}
+	}
+
+
+	public long getCheckpoint() throws LogException {
+		Connection localConn = null;
+		PreparedStatement localPstmt = null;
+		ResultSet localRset = null;
+		long checkpoint = 0;
+		try {
+			localConn = this.localDataSource.getConnection();
+			localPstmt = localConn.prepareStatement("SELECT CHECKPOINT FROM COORDINATOR_INFO");
+			
+			localRset = localPstmt.executeQuery();
+			checkpoint = localRset.getLong(0);
+		} catch (SQLException e) {
+			logger.error("Read checkpoint error.", e);
+			throw new LogException("Read checkpoint error");
+		} finally {
+			try {
+				localPstmt.close();
+				localConn.close();
+			} catch (SQLException e) {
+				logger.error("Read checkpoint error.", e);
+			}
+			
+		}
+		return checkpoint;
+	}
+
+
+	public void beginScan(long startpoint, Connection conn,
+			PreparedStatement pstmt, ResultSet rset) throws LogException {
+		try {
+			conn = this.localDataSource.getConnection();
+			pstmt = conn.prepareStatement("SELECT TRX_ID, TRX_STATUS, TRX_TIMESTAMP, TRX_CONTENT FROM COORDINATOR_LOG WHERE TRX_TIMESTAMP >= ?");
+			pstmt.setLong(0, startpoint);
+			pstmt.setFetchSize(STREAM_SIZE);
+			rset = pstmt.executeQuery();
+		} catch (SQLException e) {
+			logger.error("Start read log error.", e);
+			throw new LogException("Start read log error");
+		} 
+	}
+	
+	public boolean hasNext(ResultSet rset) throws LogException {
+		try {
+			return rset.next();
+		} catch (SQLException e) {
+			logger.error("Read log has next error.", e);
+			throw new LogException("Read log has next error");
+		}
+	}
+
+	public LogRecord getNextLog(ResultSet rset) throws LogException {
+		try {
+			long uuid = rset.getLong("TRX_ID");
+			LogType logType = LogType.values()[rset.getInt("TRX_STATUS")];
+			long timestamp = rset.getLong("TRX_TIMESTAMP");
+			byte[] procs = rset.getBytes("TRX_CONTENT");
+			return new LogRecord(uuid, logType, timestamp, procs);
+		} catch (SQLException e) {
+			logger.error("Read next log error.", e);
+			throw new LogException("Read next log error");
+		}	
+	}
+
+
+	public void endScan(Connection conn, PreparedStatement pstmt,
+			ResultSet rset) throws LogException {
+		try {
+			rset.close();
+			pstmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			logger.error("End read log error.", e);
+			throw new LogException("Ene read log error");
+		}
+	}
+
+
+	public boolean checkActionInRecover(long uuid) throws LogException {
+		Connection systemConn = null;
+		PreparedStatement systemPstmt = null;
+		ResultSet systemRset = null;
+		
+		int res = 0;
+		try {
+			systemConn = this.systemDataSource.getConnection();
+			systemPstmt = systemConn.prepareStatement("INSERT IGNORE INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION)" +
+					" VALUES(?,?)");
+			
+			systemPstmt.setLong(0, uuid);
+			systemPstmt.setInt(1, Action.REGISTERED.ordinal());
+			
+			res = systemPstmt.executeUpdate();
+		} catch (SQLException e) {
+			logger.error("Check action in recover error.", e);
+			throw new LogException("Check action in recover error");
+		} finally {
+			try {
+				systemPstmt.close();
+			} catch (SQLException e) {
+				logger.error("Check action in recover error.", e);
+			}
+		}
+		
+
+		// must duplicate key, then check the action
+		if (res == 0) {
+			try {
+				systemPstmt = systemConn.prepareStatement("SELECT TRX_ACTION FROM EXPIRE_TRX_INFO WHERE TRX_ID = ?");
+				systemPstmt.setLong(0, uuid);
+				systemRset = systemPstmt.executeQuery();
+				// if other node expire this trx , then checkfailed
+				if (systemRset.getInt(0) != Action.REGISTERED.ordinal()) {
+					return false;
+				} else { 
+					return true;
+				}
+			} catch (SQLException e) {
+				logger.error("Check action in recover error.", e);
+				throw new LogException("Check action in recover error");
+			} finally {
+				try {
+					systemRset.close();
+					systemPstmt.close();
+					systemConn.close();
+				} catch (SQLException e) {
+					logger.error("Check action in recover error.", e);
+				}
+			}
+			
+		}
+		return true;
+	}
+
+
+
 	
 }
