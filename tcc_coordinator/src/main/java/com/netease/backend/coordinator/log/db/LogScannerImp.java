@@ -20,7 +20,6 @@ public class LogScannerImp implements LogScanner{
 		
 	}
 	
-
 	public void setDbUtil(DbUtil dbUtil) {
 		this.dbUtil = dbUtil;
 	}
@@ -39,15 +38,8 @@ public class LogScannerImp implements LogScanner{
 		return dbUtil.getNextLog(rset);
 	}
 
-
 	@Override
 	public void endScan() throws LogException {
 		dbUtil.endScan(conn, pstmt, rset);
-		
 	}
-
-
-	
-
-
 }

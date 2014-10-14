@@ -1,32 +1,35 @@
 package com.netease.backend.coordinator.recover.db;
 
-
-
 import java.util.List;
 
-import com.netease.backend.coordinator.id.IdGenerator;
+import com.netease.backend.coordinator.id.IdForCoordinator;
 import com.netease.backend.coordinator.log.LogManager;
 import com.netease.backend.coordinator.log.LogRecord;
 import com.netease.backend.coordinator.log.LogScanner;
 import com.netease.backend.coordinator.log.LogType;
 import com.netease.backend.coordinator.log.db.LogScannerImp;
-
+import com.netease.backend.coordinator.processor.RetryProcessor;
 import com.netease.backend.coordinator.recover.RecoverManager;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.coordinator.transaction.TxTable;
 import com.netease.backend.coordinator.util.LogUtil;
 import com.netease.backend.tcc.Procedure;
-import com.netease.backend.coordinator.util.DbUtil;
 import com.netease.backend.tcc.error.CoordinatorException;
 
 public class RecoverManagerImp implements RecoverManager {
 	
 	private TxTable txTable = null;
 	private LogManager logMgr = null;
-	private IdGenerator idGenerator = null;
+	private IdForCoordinator idForCoordinator = null;
+	private long lastMaxUUID = 0;
+	private RetryProcessor retryProcessor = null;
 
-	public void setIdGenerator(IdGenerator idGenerator) {
-		this.idGenerator = idGenerator;
+	public void setRetryProcessor(RetryProcessor retryProcessor) {
+		this.retryProcessor = retryProcessor;
+	}
+
+	public void setIdForCoordinator(IdForCoordinator idForCoordinator) {
+		this.idForCoordinator = idForCoordinator;
 	}
 
 	public void setTxTable(TxTable txTable) {
@@ -44,7 +47,6 @@ public class RecoverManagerImp implements RecoverManager {
 		long checkpoint = logMgr.getCheckpoint();
 		LogScanner logScanner = new LogScannerImp();
 		logScanner.beginScan(checkpoint);
-		long maxUuid = 0;
 		while (logScanner.hasNext()){
 			LogRecord logRec = logScanner.next();
 			long uuid = logRec.getTrxId();
@@ -87,16 +89,18 @@ public class RecoverManagerImp implements RecoverManager {
 			}
 			
 			// update max Uuid
-			if (this.idGenerator.isUuidOwn(trx.getUUID()) &&
-					trx.getUUID() > maxUuid){
-				maxUuid = trx.getUUID();
+			if (this.idForCoordinator.isUuidOwn(trx.getUUID()) &&
+					trx.getUUID() > lastMaxUUID){
+				lastMaxUUID = trx.getUUID();
 			}
 		}
-		
 		logScanner.endScan();
-		
-		// set max Uuid
-		this.idGenerator.setUUIDofLastDown(maxUuid);
+		retryProcessor.recover();
+	}
+
+	@Override
+	public long getLastMaxUUID() {
+		return lastMaxUUID;
 	}
 
 }
