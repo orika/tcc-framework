@@ -32,14 +32,6 @@ public class TccManager implements ApplicationContextAware {
 		TccManager.applicationContext = applicationContext;
 	}
 	
-	  /** 
-     * @return ApplicationContext 
-     */  
-    public static ApplicationContext getApplicationContext() {  
-        return applicationContext;  
-    }  
-
-	
 	private void init() {
 		Class<?> pClass = null;
 		try {

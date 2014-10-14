@@ -53,6 +53,13 @@ public class Transaction {
 	public List<Procedure> getCancelList() {
 		return procList;
 	}
+	
+	public List<Procedure> getProcList(Action action) {
+		if (action == Action.EXPIRED)
+			return expireList;
+		else
+			return procList;
+	}
 
 	public long getCreateTime() {
 		return createTime;

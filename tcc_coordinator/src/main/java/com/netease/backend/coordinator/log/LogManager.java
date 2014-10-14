@@ -14,5 +14,5 @@ public interface LogManager {
 	
 	void logHeuristics(Transaction tx, Action action, HeuristicsException e) throws LogException;
 	
-	boolean checkExpired(long uuid) throws LogException;
+	boolean checkExpire(Transaction tx) throws LogException;
 }

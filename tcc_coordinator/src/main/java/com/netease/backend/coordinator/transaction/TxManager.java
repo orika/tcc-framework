@@ -2,15 +2,20 @@ package com.netease.backend.coordinator.transaction;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.netease.backend.coordinator.id.IdGenerator;
 import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogManager;
 import com.netease.backend.coordinator.processor.TccProcessor;
+import com.netease.backend.coordinator.task.TxResultWatcher;
 import com.netease.backend.tcc.Procedure;
 import com.netease.backend.tcc.error.CoordinatorException;
 import com.netease.backend.tcc.error.HeuristicsException;
 
 public class TxManager {
+	
+	private final Logger logger = Logger.getLogger("TxManager");
 	
 	private IdGenerator idGenerator = null;
 	private TxTable txTable = null;
@@ -73,7 +78,11 @@ public class TxManager {
 		if (tx == null)
 			throw new RuntimeException("finish a null transaction!!");
 		tx.setEndTime(System.currentTimeMillis());
-		logManager.logFinish(tx, action);
+		try {
+			logManager.logFinish(tx, action);
+		} catch (LogException e) {
+			logger.warn("log finish failed:" + tx.getUUID());
+		}
 	}
 	
 	public void heuristic(Transaction tx, Action action, HeuristicsException e) throws LogException {
@@ -81,16 +90,50 @@ public class TxManager {
 		logManager.logHeuristics(tx, action, e);
 	}
 	
+	
+	public void retryAsync(Transaction tx, TxResultWatcher watcher) throws HeuristicsException, LogException {
+		Action action = tx.getAction();
+		if (action == Action.EXPIRED && !logManager.checkExpire(tx))
+			return;
+		performAsync(tx, action, watcher);
+	}
+	
 	public void expire(Transaction tx) throws HeuristicsException, CoordinatorException {
-		long uuid = tx.getUUID();
-		if (!logManager.checkExpired(uuid))
+		if (!logManager.checkExpire(tx))
 			return;
 		tx.expire();
+		perform(tx, Action.EXPIRED);
+	}
+	
+	private void perform(Transaction tx, Action action) throws LogException, HeuristicsException {
+		long uuid = tx.getUUID();
 		tx.setBeginTime(System.currentTimeMillis());
-		logManager.logBegin(tx, Action.EXPIRED);
-		tccProcessor.perform(uuid, tx.getExpireList());
-		txTable.remove(tx.getUUID());
+		logManager.logBegin(tx, action);
+		tccProcessor.perform(uuid, tx.getProcList(action));
+		txTable.remove(uuid);
 		tx.setEndTime(System.currentTimeMillis());
-		logManager.logFinish(tx, Action.EXPIRED);
+		try {
+			logManager.logFinish(tx, action);
+		} catch (LogException e) {
+			logger.warn("log finish failed:" + tx.getUUID());
+		}
+	}
+	
+	private void performAsync(Transaction tx, Action action, TxResultWatcher watcher) throws LogException {
+		long uuid = tx.getUUID();
+		tx.setBeginTime(System.currentTimeMillis());
+		logManager.logBegin(tx, action);
+		tccProcessor.performAsync(uuid, tx.getProcList(action), watcher, true);
+		txTable.remove(uuid);
+		tx.setEndTime(System.currentTimeMillis());
+		try {
+			logManager.logFinish(tx, action);
+		} catch (LogException e) {
+			logger.warn("log finish failed:" + tx.getUUID());
+		}
+	}
+	 
+	public void recover() {
+		
 	}
 }

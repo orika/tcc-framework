@@ -2,8 +2,8 @@ package com.netease.backend.coordinator;
 
 import java.util.List;
 
-import com.netease.backend.coordinator.processor.ServiceTask;
 import com.netease.backend.coordinator.recover.RecoverManager;
+import com.netease.backend.coordinator.task.ServiceTask;
 import com.netease.backend.coordinator.transaction.Action;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.coordinator.transaction.TxManager;

@@ -9,12 +9,25 @@ import com.netease.backend.tcc.Procedure;
 
 public class LogUtil {
 
-	public static byte[] getPayLoad(List<Procedure> procList) throws IOException {
+	public static byte[] getPayLoad(List<Procedure> procList) {
 		ByteArrayOutputStream bo = new ByteArrayOutputStream();
-		ObjectOutputStream oo = new ObjectOutputStream(bo);
-		oo.writeObject(procList);
-		byte[] result = bo.toByteArray();
-		oo.close();
+		ObjectOutputStream oo = null;
+		byte[] result = null;
+		try {
+			oo = new ObjectOutputStream(bo);
+			oo.writeObject(procList);
+			result = bo.toByteArray();
+		} catch (IOException e) {
+			
+		} finally {
+			try {
+				oo.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	
 		return result;
 	}
 }

@@ -24,6 +24,12 @@ public class HeuristicsException extends Exception {
 		this.code = TccCode.UNDEFINED;
 	}
 	
+	public HeuristicsException(Procedure proc) {
+		super();
+		this.code = TccCode.UNDEFINED;
+		this.proc = proc;
+	}
+	
 	public short getCode() {
 		return code;
 	}
