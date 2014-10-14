@@ -3,6 +3,7 @@ package com.netease.backend.coordinator.transaction;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+
 import com.netease.backend.tcc.Procedure;
 
 public class Transaction {
@@ -94,5 +95,18 @@ public class Transaction {
 	
 	public long getLastTimeStamp() {
 		return endTime == -1 ? (beginTime == -1 ? createTime : beginTime) : endTime;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Transaction ").append(uuid);
+		if (status.get() != Action.REGISTERED) {
+			builder.append(" action:").append(status.get().name());
+			builder.append(" service").append(procList);
+		}
+		else 
+			builder.append(" service").append(expireList);
+		return builder.toString();
 	}
 }

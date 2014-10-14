@@ -15,7 +15,7 @@ import com.netease.backend.tcc.error.HeuristicsException;
 public class TccProcessor {
 	
 	private ExecutorService threadPool = Executors.newCachedThreadPool();
-	private BgExecutor bgExecutor= null;
+	private BgExecutor bgExecutor= new BgExecutor();
 
 	public void perform(long uuid, List<Procedure> procedures) 
 			throws HeuristicsException {

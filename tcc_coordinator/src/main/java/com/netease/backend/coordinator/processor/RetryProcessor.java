@@ -31,6 +31,14 @@ public class RetryProcessor implements Runnable {
 	private Condition isSpotFree = lock.newCondition();
 	private volatile boolean stop = false;
 	
+	public void setTxManager(TxManager txManager) {
+		this.txManager = txManager;
+	}
+
+	public void setTxTable(TxTable txTable) {
+		this.txTable = txTable;
+	}
+
 	public RetryProcessor(int parallelism) {
 		this.spots = new Task[parallelism];
 		this.watchers = new ResultWatcher[parallelism];
@@ -64,7 +72,7 @@ public class RetryProcessor implements Runnable {
 		}
 	}
 	
-	public void recover() {
+	public void recover() throws CoordinatorException {
 		int confirmCount = 0;
 		int cancelCount = 0;
 		int expireCount = 0;
@@ -88,7 +96,7 @@ public class RetryProcessor implements Runnable {
 			}
 		}
 		StringBuilder builder = new StringBuilder();
-		builder.append("Init retrying tasks,confirm:").append(confirmCount);
+		builder.append("Initialize retrying tasks,confirm:").append(confirmCount);
 		builder.append(",cancel:" + cancelCount);
 		builder.append(",expire:" + expireCount);
 		logger.info(builder);
@@ -97,7 +105,7 @@ public class RetryProcessor implements Runnable {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				throw new CoordinatorException(e);
 			}
 			if (count % 5 == 0)
 				logger.info("retry queue left Task count:" + retryQueue.size());

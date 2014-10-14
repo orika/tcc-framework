@@ -17,6 +17,10 @@ public class TxTable extends TimerTask {
 	public TxTable() {
 	}
 	
+	public void setExpireProcessor(ExpireProcessor expireProcessor) {
+		this.expireProcessor = expireProcessor;
+	}
+
 	@Override
 	public void run() {
 		long now = System.currentTimeMillis() - 10800000;

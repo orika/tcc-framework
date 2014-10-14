@@ -70,4 +70,13 @@ public class Procedure implements Comparable<Procedure>, Serializable {
 	public int compareTo(Procedure o) {
 		return this.sequence - o.sequence;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @just return service name for list procedure
+	 */
+	@Override
+	public String toString() {
+		return service;
+	}
 }

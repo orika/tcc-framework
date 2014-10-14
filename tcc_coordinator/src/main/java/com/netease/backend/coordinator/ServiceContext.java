@@ -59,10 +59,4 @@ public class ServiceContext implements ApplicationContextAware {
 			throw new ParticipantException("service " + name + " is not find in coordinator");
 		}
 	}
-	
-	public void start() {
-//		Participant p = getService("payment");
-//		for (Class clzz : p.getClass().getInterfaces())
-//			System.out.println(clzz.getName());
-	}
 }

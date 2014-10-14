@@ -2,7 +2,9 @@ package com.netease.backend.coordinator;
 
 import java.util.List;
 
-import com.netease.backend.coordinator.recover.RecoverManager;
+import org.apache.log4j.Logger;
+
+import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.task.ServiceTask;
 import com.netease.backend.coordinator.transaction.Action;
 import com.netease.backend.coordinator.transaction.Transaction;
@@ -15,13 +17,22 @@ import com.netease.backend.tcc.error.HeuristicsException;
 
 public class DefaultCoordinator implements Coordinator {
 	
-	private RecoverManager recoverManager = null;
+	private static final Logger logger = Logger.getLogger("Coordinator");
 	private TxManager txManager = null;
+	
+	public DefaultCoordinator(TxManager txManager) {
+		this.txManager = txManager;
+	}
 
 	public long begin(int sequenceId, List<Procedure> expireGroups) throws CoordinatorException {
-		Transaction tx = null;
-		tx = txManager.createTx(expireGroups);
-		return tx.getUUID();
+		try {
+			Transaction tx = null;
+			tx = txManager.createTx(expireGroups);
+			return tx.getUUID();
+		} catch (LogException e) {
+			logger.error("transaction register error", e);
+			throw e;
+		}
 	}
 	
 	public short confirm(int sequenceId, long uuid, List<Procedure> procedures) 
@@ -35,8 +46,11 @@ public class DefaultCoordinator implements Coordinator {
 			return 0;
 		} catch (HeuristicsException e) {
 			return e.getCode();
+		} catch (CoordinatorException e) {
+			logger.error("transaction " + uuid + " confirm error.", e);
+			throw e;
 		}
-	}
+	} 
 	
 	public short confirm(int sequenceId, final long uuid, long timeout, final List<Procedure> procedures) 
 			throws CoordinatorException {
@@ -49,6 +63,9 @@ public class DefaultCoordinator implements Coordinator {
 			return TccCode.OK;
 		} catch (HeuristicsException e) {
 			return e.getCode();
+		} catch (CoordinatorException e) {
+			logger.error("transaction " + uuid + " confirm error.", e);
+			throw e;
 		}
 	}
 
@@ -64,6 +81,9 @@ public class DefaultCoordinator implements Coordinator {
 			return TccCode.OK;
 		} catch (HeuristicsException e) {
 			return e.getCode();
+		} catch (CoordinatorException e) {
+			logger.error("transaction " + uuid + " confirm error.", e);
+			throw e;
 		}
 	}
 
@@ -79,11 +99,9 @@ public class DefaultCoordinator implements Coordinator {
 			return TccCode.OK;
 		} catch (HeuristicsException e) {
 			return e.getCode();
+		} catch (CoordinatorException e) {
+			logger.error("transaction " + uuid + " confirm error.", e);
+			throw e;
 		}
-	}
-	
-	public void start() throws CoordinatorException {
-		recoverManager.init();
-		com.alibaba.dubbo.container.Main.main(new String[0]);
 	}
 }
