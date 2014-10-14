@@ -13,6 +13,8 @@ import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogRecord;
 import com.netease.backend.coordinator.log.LogType;
+import com.netease.backend.coordinator.monitor.MonitorException;
+import com.netease.backend.coordinator.monitor.MonitorRecord;
 import com.netease.backend.coordinator.transaction.Action;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.tcc.error.CoordinatorException;
@@ -440,17 +442,61 @@ public class DbUtil {
 			
 			pstmt.executeUpdate();
 		} catch (SQLException e1) {
-			logger.debug("Write heuristic record error.", e);
+			logger.debug("Write heuristic record error.", e1);
 			throw new LogException("Write heuristic record error");
 		} finally {
 			try {
 				pstmt.close();
 				conn.close();
 			} catch (SQLException e1) {
-				logger.debug("Write heuristic record error.", e);
+				logger.debug("Write heuristic record error.", e1);
 			}
 		}
 		
+	}
+
+
+	public void writeMonitorRec(MonitorRecord rec) throws MonitorException {
+		// TODO Auto-generated method stub
+		Connection systemConn = null;
+		PreparedStatement systemPstmt = null;
+		
+		try {
+			systemConn = systemDataSource.getConnection();
+			systemPstmt = systemConn.prepareStatement("INSERT INTO SERVER_MONITOR" +
+					"(SERVER_ID, TIMESTAMP, CUR_TRX_NUM, CUR_PROCESS_TRX_NUM," +
+					" REGISTED_TRX_NUM, CONFIRM_NUM, CANCEL_NUM, EXPIRE_NUM," +
+					" AVG_REGISTED_TIME, MAX_REGISTED_TIME, " +
+					"AVG_CONFIRM_TIME, MAX_CONFIRM_TIME, AVG_CANCEL_TIME, MAX_CANCEL_TIME)" +
+					" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)" );
+			
+			systemPstmt.setInt(0,  rec.getServerId());
+			systemPstmt.setLong(1, rec.getTimestamp());
+			systemPstmt.setLong(2, rec.getCurTrxNum());
+			systemPstmt.setLong(3, rec.getCurProcessTrxNum());
+			systemPstmt.setLong(4, rec.getRegistTrxNum());
+			systemPstmt.setLong(5, rec.getConfirmTrxNum());
+			systemPstmt.setLong(6, rec.getCancelTrxNum());
+			systemPstmt.setLong(7, rec.getExpireTrxNum());
+			systemPstmt.setLong(8, rec.getAvgRegistTime());
+			systemPstmt.setLong(9, rec.getMaxRegistTime());
+			systemPstmt.setLong(10, rec.getAvgConfirmTime());
+			systemPstmt.setLong(11, rec.getMaxConfirmTime());
+			systemPstmt.setLong(12, rec.getAvgCancelTime());
+			systemPstmt.setLong(13, rec.getMaxCancelTime());
+			
+			systemPstmt.executeQuery();
+		} catch (SQLException e) {
+			logger.debug("Write monitor record error.", e);
+			throw new MonitorException("Write monitor record error");
+		} finally {
+			try {
+				systemPstmt.close();
+				systemConn.close();
+			} catch (SQLException e) {
+				logger.debug("Write monitor record error.", e);
+			}
+		}
 	}
 
 	
