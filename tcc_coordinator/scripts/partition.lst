@@ -1,0 +1,11 @@
+[checkinvade]
+ip= 10.120.150.25
+port= 3306
+user = tcc
+password = tcc
+tablename = COORDINATOR_LOG
+database = tcc
+keeppartition = 14
+extendpartition = 3
+interval = 1
+daytime = 86400 
