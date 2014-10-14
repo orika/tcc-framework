@@ -9,7 +9,7 @@ import com.netease.backend.tcc.Procedure;
 
 public class LogUtil {
 
-	public static byte[] getPayLoad(List<Procedure> procList) {
+	public static byte[] serialize(List<Procedure> procList) {
 		ByteArrayOutputStream bo = new ByteArrayOutputStream();
 		ObjectOutputStream oo = null;
 		byte[] result = null;
@@ -29,5 +29,10 @@ public class LogUtil {
 		}
 	
 		return result;
+	}
+	
+	
+	public static List<Procedure> deserialize(byte[] procs) {
+		return null;
 	}
 }

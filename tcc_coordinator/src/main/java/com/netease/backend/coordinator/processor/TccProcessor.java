@@ -62,7 +62,7 @@ public class TccProcessor {
 				if (lastOne != null && lastOne.getSequence() != cur.getSequence())
 					break;
 			}
-			result = new TxResult(count, watcher);;
+			result = new TxResult(uuid, count, watcher);;
 			for (Iterator<Procedure> it = procedures.iterator(); it.hasNext() && count > 0; count--) {
 				Procedure cur = it.next();
 				if (count == 1) {

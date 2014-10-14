@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class SequenceIdGenerator {
 	private AtomicLong seqId;
+	public static long sequenceIdMask = 0xffffffffffffL;
 	
 	public SequenceIdGenerator() {
 		setSeqId(0);

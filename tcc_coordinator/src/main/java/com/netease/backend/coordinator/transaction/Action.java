@@ -5,7 +5,7 @@ public enum Action {
 	REGISTERED(0),
 	CONFIRM(1),
 	CANCEL(2),
-	EXPIRED(3);
+	EXPIRE(3);
 	
 	private int code;
 	

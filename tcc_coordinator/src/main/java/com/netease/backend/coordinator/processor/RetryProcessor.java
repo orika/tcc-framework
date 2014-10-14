@@ -1,5 +1,6 @@
 package com.netease.backend.coordinator.processor;
 
+import java.util.Iterator;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
@@ -13,6 +14,7 @@ import com.netease.backend.coordinator.task.TxResult;
 import com.netease.backend.coordinator.task.TxResultWatcher;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.coordinator.transaction.TxManager;
+import com.netease.backend.coordinator.transaction.TxTable;
 import com.netease.backend.tcc.error.CoordinatorException;
 import com.netease.backend.tcc.error.HeuristicsException;
 
@@ -23,6 +25,7 @@ public class RetryProcessor implements Runnable {
 	private Task spots[];
 	private TxResultWatcher watchers[];
 	private TxManager txManager = null;
+	private TxTable txTable = null;
 	private DelayQueue<Task> retryQueue = new DelayQueue<Task>();
 	private Lock lock = new ReentrantLock();
 	private Condition isSpotFree = lock.newCondition();
@@ -49,7 +52,7 @@ public class RetryProcessor implements Runnable {
 							if (spots[i].delay(10000))
 								retryQueue.offer(spots[i]);
 							else
-								logger.warn(spots[i].getFailedDescrip());
+								logger.error(spots[i].getFailedDescrip());
 						}
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -61,9 +64,53 @@ public class RetryProcessor implements Runnable {
 		}
 	}
 	
+	public void recover() {
+		int confirmCount = 0;
+		int cancelCount = 0;
+		int expireCount = 0;
+		for (Iterator<Transaction> it = txTable.getTxMap().values().iterator(); it.hasNext(); ) {
+			Transaction tx = it.next();
+			switch (tx.getAction()) {
+				case CANCEL:
+					cancelCount++;
+					process(tx, 1);
+					break;
+				case CONFIRM:
+					confirmCount++;
+					process(tx, 1);
+					break;
+				case EXPIRE:
+					expireCount++;
+					process(tx, 1);
+					break;
+				default:
+					break;
+			}
+		}
+		StringBuilder builder = new StringBuilder();
+		builder.append("Init retrying tasks,confirm:").append(confirmCount);
+		builder.append(",cancel:" + cancelCount);
+		builder.append(",expire:" + expireCount);
+		logger.info(builder);
+		int count = 0;
+		while (retryQueue.size() != 0) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			if (count % 5 == 0)
+				logger.info("retry queue left Task count:" + retryQueue.size());
+		}
+	}
+	
+	/*
+	 * failed or success, just drop it
+	 */
 	private void processResult(int index, TxResult result) {
-		lock.lock();
 		spots[index] = null;
+		txTable.remove(result.getUUID());
+		lock.lock();
 		isSpotFree.signalAll();
 		lock.unlock();
 	}

@@ -15,8 +15,6 @@ public class TxTable extends TimerTask {
 	private ExpireProcessor expireProcessor = null;
 
 	public TxTable() {
-		Timer timer = new Timer();
-		timer.schedule(this, 30000, 30000);
 	}
 	
 	@Override
@@ -41,5 +39,14 @@ public class TxTable extends TimerTask {
 	
 	public Transaction remove(long uuid) {
 		return table.remove(uuid);
+	}
+	
+	public Map<Long, Transaction> getTxMap() {
+		return table;
+	}
+	
+	void beginExpiring() {
+		Timer timer = new Timer();
+		timer.schedule(this, 30000, 30000);
 	}
 }

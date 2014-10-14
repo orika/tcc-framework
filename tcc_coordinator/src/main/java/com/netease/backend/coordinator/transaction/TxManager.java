@@ -1,5 +1,6 @@
 package com.netease.backend.coordinator.transaction;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -93,16 +94,16 @@ public class TxManager {
 	
 	public void retryAsync(Transaction tx, TxResultWatcher watcher) throws HeuristicsException, LogException {
 		Action action = tx.getAction();
-		if (action == Action.EXPIRED && !logManager.checkExpire(tx))
+		if (action == Action.EXPIRE && !logManager.checkExpire(tx.getUUID()))
 			return;
 		performAsync(tx, action, watcher);
 	}
 	
 	public void expire(Transaction tx) throws HeuristicsException, CoordinatorException {
-		if (!logManager.checkExpire(tx))
+		if (!logManager.checkExpire(tx.getUUID()))
 			return;
 		tx.expire();
-		perform(tx, Action.EXPIRED);
+		perform(tx, Action.EXPIRE);
 	}
 	
 	private void perform(Transaction tx, Action action) throws LogException, HeuristicsException {
@@ -131,9 +132,5 @@ public class TxManager {
 		} catch (LogException e) {
 			logger.warn("log finish failed:" + tx.getUUID());
 		}
-	}
-	 
-	public void recover() {
-		
 	}
 }

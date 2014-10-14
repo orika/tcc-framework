@@ -14,5 +14,14 @@ public interface LogManager {
 	
 	void logHeuristics(Transaction tx, Action action, HeuristicsException e) throws LogException;
 	
-	boolean checkExpire(Transaction tx) throws LogException;
+	boolean checkExpire(long uuid) throws LogException;
+	
+	void setCheckpoint(long checkpoint) throws LogException;
+	
+	long getCheckpoint() throws LogException;
+	
+	boolean checkActionInRecover(long uuid) throws LogException;
+	
+	boolean checkLocalLogMgrAlive();
+
 }

@@ -20,4 +20,13 @@ public class IdGenerator {
 	public long getNextUUID() {
 		return uuidGenerator.next();
 	}
+	
+	public boolean isUuidOwn(long uuid) {
+		return idOfCoordinator.isUuidOwn(uuid);
+	}
+
+	public void setUUIDofLastDown(long uuid) {
+		// TODO Auto-generated method stub
+		
+	}
 }

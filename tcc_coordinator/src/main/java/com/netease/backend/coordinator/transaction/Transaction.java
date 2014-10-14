@@ -55,7 +55,7 @@ public class Transaction {
 	}
 	
 	public List<Procedure> getProcList(Action action) {
-		if (action == Action.EXPIRED)
+		if (action == Action.EXPIRE)
 			return expireList;
 		else
 			return procList;
@@ -88,8 +88,8 @@ public class Transaction {
 	}
 	
 	public void expire() throws IllegalActionException {
-		if (!status.compareAndSet(Action.REGISTERED, Action.EXPIRED))
-			throw new IllegalActionException(uuid, status.get(), Action.EXPIRED);
+		if (!status.compareAndSet(Action.REGISTERED, Action.EXPIRE))
+			throw new IllegalActionException(uuid, status.get(), Action.EXPIRE);
 	}
 	
 	public long getLastTimeStamp() {
