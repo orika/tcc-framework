@@ -42,6 +42,11 @@
     		<artifactId>commons-dbcp</artifactId>
     		<version>1.4</version>
 		</dependency>
+		<dependency>
+    		<groupId>com.netease</groupId>
+   			<artifactId>monitor-jar</artifactId>
+    		<version>2.0.4</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

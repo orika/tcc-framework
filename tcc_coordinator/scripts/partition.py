@@ -14,7 +14,7 @@ def sedmail(msg):
     smtpuser = 'ddb_hz@corp.netease.com'
     smtppass = 'ddb_hz|netease1'
     #RECIPIENTS = ['hznishansan@corp.netease.com','shiyong@corp.netease.com','hzzhaotianyuan@corp.netease.com', 'dba@hz.netease.com']
-    RECIPIENTS = ['hzzhaotianyuan@corp.netease.com','zhangyunyun@corp.netease.com']
+    RECIPIENTS = ['hzhuwei@corp.netease.com']
     SENDER = 'ddb_hz@corp.netease.com'
     mssg = """From: ddb_hz <ddb_hz@corp.netease.com>
 To: dba <dba@corp.netease.com>
