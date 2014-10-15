@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogManager;
+import com.netease.backend.coordinator.log.LogScanner;
 import com.netease.backend.coordinator.log.LogType;
 import com.netease.backend.coordinator.transaction.Action;
 import com.netease.backend.coordinator.transaction.Transaction;
@@ -116,6 +117,12 @@ public class LogManagerImp implements LogManager {
 		// TODO Auto-generated method stub
 		boolean res = this.dbUtil.checkLocaLogMgrAlive();
 		return res;
+	}
+
+	@Override
+	public LogScanner beginScan(long startpoint) throws LogException {
+		// TODO Auto-generated method stub
+		return dbUtil.beginScan(startpoint);
 	}
 
 }

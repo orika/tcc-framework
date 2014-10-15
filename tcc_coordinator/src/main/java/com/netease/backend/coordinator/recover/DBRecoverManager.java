@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.netease.backend.coordinator.id.IdForCoordinator;
+import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogManager;
 import com.netease.backend.coordinator.log.LogRecord;
 import com.netease.backend.coordinator.log.LogScanner;
@@ -46,10 +47,10 @@ public class DBRecoverManager implements RecoverManager {
 	@Override
 	public void init() {
 		logger.info("begin recovering transaction table");
+		LogScanner logScanner = null;
 		try {
 			long checkpoint = logMgr.getCheckpoint();
-			LogScanner logScanner = new LogScannerImp();
-			logScanner.beginScan(checkpoint);
+			logScanner = logMgr.beginScan(checkpoint);
 			while (logScanner.hasNext()){
 				LogRecord logRec = logScanner.next();
 				long uuid = logRec.getTrxId();

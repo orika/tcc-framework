@@ -12,7 +12,9 @@ import org.apache.log4j.Logger;
 import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogRecord;
+import com.netease.backend.coordinator.log.LogScanner;
 import com.netease.backend.coordinator.log.LogType;
+import com.netease.backend.coordinator.log.db.LogScannerImp;
 import com.netease.backend.coordinator.monitor.MonitorException;
 import com.netease.backend.coordinator.monitor.MonitorRecord;
 import com.netease.backend.coordinator.transaction.Action;
@@ -314,14 +316,15 @@ public class DbUtil {
 	}
 
 
-	public void beginScan(long startpoint, Connection conn,
-			PreparedStatement pstmt, ResultSet rset) throws LogException {
+	public LogScanner beginScan(long startpoint) throws LogException {
 		try {
-			conn = this.localDataSource.getConnection();
-			pstmt = conn.prepareStatement("SELECT TRX_ID, TRX_STATUS, TRX_TIMESTAMP, TRX_CONTENT FROM COORDINATOR_LOG WHERE TRX_TIMESTAMP >= ?");
+			Connection conn = this.localDataSource.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement("SELECT TRX_ID, TRX_STATUS, TRX_TIMESTAMP, TRX_CONTENT FROM COORDINATOR_LOG WHERE TRX_TIMESTAMP >= ?");
 			pstmt.setLong(1, startpoint);
 			pstmt.setFetchSize(STREAM_SIZE);
-			rset = pstmt.executeQuery();
+			ResultSet rset = pstmt.executeQuery();
+			
+			return new LogScannerImp(conn, pstmt, rset);
 		} catch (SQLException e) {
 			logger.error("Start read log error.", e);
 			throw new LogException("Start read log error");
