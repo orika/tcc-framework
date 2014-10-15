@@ -61,7 +61,7 @@ public class DbUtil {
 			if (localRset.next())
 				serverId = localRset.getInt("SERVERID");
 			else
-				return -1;
+				throw new CoordinatorException("Cannot fetch local ServerId");
 		} catch (SQLException e) {
 			logger.error("Read COORDINATOR_INFO table error", e);
 			throw new CoordinatorException("Cannot fetch local ServerId");
@@ -74,7 +74,7 @@ public class DbUtil {
 				if (localConn != null)
 					localConn.close();
 			} catch (SQLException e) {
-				logger.debug("Read COORDINATOR_INFO table error", e);
+				logger.error("Read COORDINATOR_INFO table error", e);
 			}	
 		}
 		
@@ -93,8 +93,10 @@ public class DbUtil {
 				
 				sysPstmt.executeUpdate();
 				sysRset = sysPstmt.getGeneratedKeys();
-				sysRset.next();
-				serverId = sysRset.getInt(1);
+				if (sysRset.next())
+					serverId = sysRset.getInt(1);
+				else
+					throw new CoordinatorException("Cannot get a new ServerId");
 			} catch (SQLException e) {
 				logger.error("Write SERVER_INFO table error", e);
 				throw new CoordinatorException("Cannot get a new ServerId");
@@ -107,7 +109,7 @@ public class DbUtil {
 					if (sysConn != null)
 						sysConn.close();
 				} catch (SQLException e) {
-					logger.debug("Write SERVER_INFO table error", e);
+					logger.error("Write SERVER_INFO table error", e);
 				}	
 			}
 			
@@ -121,14 +123,16 @@ public class DbUtil {
 				
 				localPstmt.executeUpdate();
 			} catch (SQLException e) {
-				logger.debug("Write COORDINATOR_INFO table error", e);
+				logger.error("Write COORDINATOR_INFO table error", e);
 				throw new CoordinatorException("Cannot update local ServerId");
 			} finally {
 				try {
-					localPstmt.close();
-					localConn.close();
+					if (localPstmt != null)
+						localPstmt.close();
+					if (localConn != null)
+						localConn.close();
 				} catch (SQLException e) {
-					logger.debug("Write COORDINATOR_INFO table error", e);
+					logger.error("Write COORDINATOR_INFO table error", e);
 				}	
 			}
 			
@@ -169,14 +173,16 @@ public class DbUtil {
 			
 			localPstmt.executeUpdate();
 		} catch (SQLException e) {
-			logger.debug("Write log error.", e);
+			logger.error("Write log error.", e);
 			throw new LogException("Write log error");
 		} finally {
 			try {
-				localPstmt.close();
-				localConn.close();
+				if (localPstmt != null)
+					localPstmt.close();
+				if (localConn != null)
+					localConn.close();
 			} catch (SQLException e) {
-				logger.debug("Write log error.", e);
+				logger.error("Write log error.", e);
 			}
 			
 		}
@@ -197,13 +203,14 @@ public class DbUtil {
 			
 			res = systemPstmt.executeUpdate();
 		} catch (SQLException e) {
-			logger.debug("Check expired error.", e);
+			logger.error("Check expired error.", e);
 			throw new LogException("Check expire error");
 		} finally {
 			try {
-				systemPstmt.close();
+				if (systemPstmt != null)
+					systemPstmt.close();
 			} catch (SQLException e) {
-				logger.debug("Check expired error.", e);
+				logger.error("Check expired error.", e);
 			}
 		}
 		
@@ -215,21 +222,28 @@ public class DbUtil {
 				systemPstmt.setLong(1, uuid);
 				systemRset = systemPstmt.executeQuery();
 				// if other node confirm or cancel this trx , then checkfailed
-				if (systemRset.getInt(0) != Action.EXPIRE.ordinal()) {
-					return false;
-				} else { 
-					return true;
+				if (systemRset.next()) {
+					if (systemRset.getInt(0) != Action.EXPIRE.ordinal()) {
+						return false;
+					} else { 
+						return true;
+					}
+				} else {
+					throw new LogException("Check expire error");
 				}
 			} catch (SQLException e) {
-				logger.debug("Check expired error.", e);
+				logger.error("Check expired error.", e);
 				throw new LogException("Check expire error");
 			} finally {
 				try {
-					systemRset.close();
-					systemPstmt.close();
-					systemConn.close();
+					if (systemRset != null)
+						systemRset.close();
+					if (systemPstmt != null)
+						systemPstmt.close();
+					if (systemConn != null)
+						systemConn.close();
 				} catch (SQLException e) {
-					logger.debug("Check expired error.", e);
+					logger.error("Check expired error.", e);
 				}
 			}
 			
@@ -251,14 +265,16 @@ public class DbUtil {
 			
 			localPstmt.executeUpdate();
 		} catch (SQLException e) {
-			logger.debug("Update checkpoint error.", e);
+			logger.error("Update checkpoint error.", e);
 			throw new LogException("Update checkpoint error");
 		} finally {
 			try {
-				localPstmt.close();
-				localConn.close();
+				if (localPstmt != null)
+					localPstmt.close();
+				if (localConn != null)
+					localConn.close();
 			} catch (SQLException e) {
-				logger.debug("Update checkpoint error.", e);
+				logger.error("Update checkpoint error.", e);
 			}
 			
 		}
@@ -275,16 +291,22 @@ public class DbUtil {
 			localPstmt = localConn.prepareStatement("SELECT CHECKPOINT FROM COORDINATOR_INFO");
 			
 			localRset = localPstmt.executeQuery();
-			checkpoint = localRset.getLong(0);
+			if (localRset.next()) {
+				checkpoint = localRset.getLong(0);
+			} else {
+				throw new LogException("Read checkpoint error");
+			}
 		} catch (SQLException e) {
-			logger.debug("Read checkpoint error.", e);
+			logger.error("Read checkpoint error.", e);
 			throw new LogException("Read checkpoint error");
 		} finally {
 			try {
-				localPstmt.close();
-				localConn.close();
+				if (localPstmt != null)
+					localPstmt.close();
+				if (localConn != null)
+					localConn.close();
 			} catch (SQLException e) {
-				logger.debug("Read checkpoint error.", e);
+				logger.error("Read checkpoint error.", e);
 			}
 			
 		}
@@ -301,7 +323,7 @@ public class DbUtil {
 			pstmt.setFetchSize(STREAM_SIZE);
 			rset = pstmt.executeQuery();
 		} catch (SQLException e) {
-			logger.debug("Start read log error.", e);
+			logger.error("Start read log error.", e);
 			throw new LogException("Start read log error");
 		} 
 	}
@@ -310,7 +332,7 @@ public class DbUtil {
 		try {
 			return rset.next();
 		} catch (SQLException e) {
-			logger.debug("Read log has next error.", e);
+			logger.error("Read log has next error.", e);
 			throw new LogException("Read log has next error");
 		}
 	}
@@ -323,7 +345,7 @@ public class DbUtil {
 			byte[] procs = rset.getBytes("TRX_CONTENT");
 			return new LogRecord(uuid, logType, timestamp, procs);
 		} catch (SQLException e) {
-			logger.debug("Read next log error.", e);
+			logger.error("Read next log error.", e);
 			throw new LogException("Read next log error");
 		}	
 	}
@@ -332,11 +354,14 @@ public class DbUtil {
 	public void endScan(Connection conn, PreparedStatement pstmt,
 			ResultSet rset) throws LogException {
 		try {
-			rset.close();
-			pstmt.close();
-			conn.close();
+			if (rset != null)
+				rset.close();
+			if (pstmt != null)
+				pstmt.close();
+			if (conn != null)
+				conn.close();
 		} catch (SQLException e) {
-			logger.debug("End read log error.", e);
+			logger.error("End read log error.", e);
 			throw new LogException("Ene read log error");
 		}
 	}
@@ -359,13 +384,14 @@ public class DbUtil {
 			
 			res = systemPstmt.executeUpdate();
 		} catch (SQLException e) {
-			logger.debug("Check action in recover error.", e);
+			logger.error("Check action in recover error.", e);
 			throw new LogException("Check action in recover error");
 		} finally {
 			try {
-				systemPstmt.close();
+				if (systemPstmt != null)
+					systemPstmt.close();
 			} catch (SQLException e) {
-				logger.debug("Check action in recover error.", e);
+				logger.error("Check action in recover error.", e);
 			}
 		}
 		
@@ -376,22 +402,30 @@ public class DbUtil {
 				systemPstmt = systemConn.prepareStatement("SELECT TRX_ACTION FROM EXPIRE_TRX_INFO WHERE TRX_ID = ?");
 				systemPstmt.setLong(1, uuid);
 				systemRset = systemPstmt.executeQuery();
-				// if other node expire this trx , then checkfailed
-				if (systemRset.getInt(0) != Action.REGISTERED.ordinal()) {
-					return false;
-				} else { 
-					return true;
+				
+				if (systemRset.next()) {
+					// if other node expire this trx , then checkfailed
+					if (systemRset.getInt(0) != Action.REGISTERED.ordinal()) {
+						return false;
+					} else { 
+						return true;
+					}
+				} else {
+					throw new LogException("Check action in recover error");
 				}
 			} catch (SQLException e) {
-				logger.debug("Check action in recover error.", e);
+				logger.error("Check action in recover error.", e);
 				throw new LogException("Check action in recover error");
 			} finally {
 				try {
-					systemRset.close();
-					systemPstmt.close();
-					systemConn.close();
+					if (systemRset != null)
+						systemRset.close();
+					if (systemPstmt != null)
+						systemPstmt.close();
+					if (systemConn != null)
+						systemConn.close();
 				} catch (SQLException e) {
-					logger.debug("Check action in recover error.", e);
+					logger.error("Check action in recover error.", e);
 				}
 			}
 			
@@ -411,17 +445,25 @@ public class DbUtil {
 			
 			
 			localRset = localPstmt.executeQuery();
-			return true;
+			
+			if (localRset.next()) {
+				return true;
+			} else {
+				return false;
+			}
 		} catch (SQLException e) {
-			logger.debug("Check action in recover error.", e);
+			logger.error("Check action in recover error.", e);
 			return false;
 		} finally {
 			try {
-				localRset.close();
-				localPstmt.close();
-				localConn.close();
+				if (localRset != null)
+					localRset.close();
+				if (localPstmt != null)
+					localPstmt.close();
+				if (localConn != null)
+					localConn.close();
 			} catch (SQLException e) {
-				logger.debug("Check action in recover error.", e);
+				logger.error("Check action in recover error.", e);
 			}
 		}
 	}
@@ -459,14 +501,16 @@ public class DbUtil {
 			
 			pstmt.executeUpdate();
 		} catch (SQLException e1) {
-			logger.debug("Write heuristic record error.", e1);
+			logger.error("Write heuristic record error.", e1);
 			throw new LogException("Write heuristic record error");
 		} finally {
 			try {
-				pstmt.close();
-				conn.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (SQLException e1) {
-				logger.debug("Write heuristic record error.", e1);
+				logger.error("Write heuristic record error.", e1);
 			}
 		}
 		
@@ -504,14 +548,16 @@ public class DbUtil {
 			
 			systemPstmt.executeQuery();
 		} catch (SQLException e) {
-			logger.debug("Write monitor record error.", e);
+			logger.error("Write monitor record error.", e);
 			throw new MonitorException("Write monitor record error");
 		} finally {
 			try {
-				systemPstmt.close();
-				systemConn.close();
+				if (systemPstmt != null)
+					systemPstmt.close();
+				if (systemConn != null)
+					systemConn.close();
 			} catch (SQLException e) {
-				logger.debug("Write monitor record error.", e);
+				logger.error("Write monitor record error.", e);
 			}
 		}
 	}
