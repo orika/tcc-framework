@@ -314,7 +314,7 @@ public class DbUtil {
 	}
 
 
-	public void beginScan(long startpoint, Connection conn,
+	public ResultSet beginScan(long startpoint, Connection conn,
 			PreparedStatement pstmt, ResultSet rset) throws LogException {
 		try {
 			conn = this.localDataSource.getConnection();
@@ -322,6 +322,7 @@ public class DbUtil {
 			pstmt.setLong(1, startpoint);
 			pstmt.setFetchSize(STREAM_SIZE);
 			rset = pstmt.executeQuery();
+			return rset;
 		} catch (SQLException e) {
 			logger.error("Start read log error.", e);
 			throw new LogException("Start read log error");

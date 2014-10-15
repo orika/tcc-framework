@@ -20,7 +20,7 @@ public class LogScannerImp implements LogScanner{
 		this.dbUtil = dbUtil;
 	}
 	
-	public void beginScan (long startpoint) throws LogException {
+	public void beginScan(long startpoint) throws LogException {
 		dbUtil.beginScan(startpoint, conn, pstmt, rset);
 	}
 
