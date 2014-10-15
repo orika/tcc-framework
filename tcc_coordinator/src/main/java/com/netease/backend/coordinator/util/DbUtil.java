@@ -223,7 +223,7 @@ public class DbUtil {
 				systemRset = systemPstmt.executeQuery();
 				// if other node confirm or cancel this trx , then checkfailed
 				if (systemRset.next()) {
-					if (systemRset.getInt(0) != Action.EXPIRE.ordinal()) {
+					if (systemRset.getInt(1) != Action.EXPIRE.ordinal()) {
 						return false;
 					} else { 
 						return true;
@@ -292,7 +292,7 @@ public class DbUtil {
 			
 			localRset = localPstmt.executeQuery();
 			if (localRset.next()) {
-				checkpoint = localRset.getLong(0);
+				checkpoint = localRset.getLong(1);
 			} else {
 				throw new LogException("Read checkpoint error");
 			}
@@ -405,7 +405,7 @@ public class DbUtil {
 				
 				if (systemRset.next()) {
 					// if other node expire this trx , then checkfailed
-					if (systemRset.getInt(0) != Action.REGISTERED.ordinal()) {
+					if (systemRset.getInt(1) != Action.REGISTERED.ordinal()) {
 						return false;
 					} else { 
 						return true;
