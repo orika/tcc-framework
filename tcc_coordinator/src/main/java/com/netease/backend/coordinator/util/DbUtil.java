@@ -4,10 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.log.LogException;
@@ -21,13 +21,16 @@ import com.netease.backend.tcc.error.CoordinatorException;
 import com.netease.backend.tcc.error.HeuristicsException;
 
 public class DbUtil {
-	public BasicDataSource localDataSource = null;
-	public BasicDataSource systemDataSource = null;
-	private Logger logger = LoggerFactory.getLogger(DbUtil.class);
-	private static int STREAM_SIZE = 100;
 	
-	public DbUtil() {
-		
+	private static final Logger logger = Logger.getLogger(DbUtil.class);
+	
+	private BasicDataSource localDataSource = null;
+	private BasicDataSource systemDataSource = null;
+	private static int STREAM_SIZE = 100;
+	private CoordinatorConfig config = null;
+	
+	public DbUtil(CoordinatorConfig config) {
+		this.config = config;
 	}
 	
 	public BasicDataSource getLocalDataSource() {
@@ -46,24 +49,30 @@ public class DbUtil {
 		this.systemDataSource = systemDataSource;
 	}
 
-	public int getServerId(CoordinatorConfig config) throws CoordinatorException {
+	public int getServerId() throws CoordinatorException {
 		int serverId = -1;
 		Connection localConn = null;
 		PreparedStatement localPstmt = null;
 		ResultSet localRset = null;
 		try {
 			localConn = localDataSource.getConnection();
-			localPstmt = localConn.prepareStatement("SELECT SERVER_ID FROM COORDINATOR_INFO");
+			localPstmt = localConn.prepareStatement("SELECT SERVERID FROM COORDINATOR_INFO");
 			localRset = localPstmt.executeQuery();
-			serverId = localRset.getInt("SERVER_ID");
+			if (localRset.next())
+				serverId = localRset.getInt("SERVERID");
+			else
+				return -1;
 		} catch (SQLException e) {
-			logger.debug("Read COORDINATOR_INFO table error", e);
+			logger.error("Read COORDINATOR_INFO table error", e);
 			throw new CoordinatorException("Cannot fetch local ServerId");
 		} finally {
 			try {
-				localRset.close();
-				localPstmt.close();
-				localConn.close();
+				if (localRset != null)
+					localRset.close();
+				if (localPstmt != null)
+					localPstmt.close();
+				if (localConn != null)
+					localConn.close();
 			} catch (SQLException e) {
 				logger.debug("Read COORDINATOR_INFO table error", e);
 			}	
@@ -76,24 +85,27 @@ public class DbUtil {
 			ResultSet sysRset = null;
 			try {
 				sysConn = systemDataSource.getConnection();
-				sysPstmt = sysConn.prepareStatement("Insert into SERVER_INFO(SERVER_IP, RDS_IP) values (?, ?)");
+				sysPstmt = sysConn.prepareStatement("Insert into SERVER_INFO(SERVER_IP, RDS_IP) values (?, ?)", Statement.RETURN_GENERATED_KEYS);
 				
 				// set insert value
-				sysPstmt.setString(0, config.getServerIp());
-				sysPstmt.setString(1, config.getRdsIp());
+				sysPstmt.setString(1, config.getServerIp());
+				sysPstmt.setString(2, config.getRdsIp());
 				
 				sysPstmt.executeUpdate();
 				sysRset = sysPstmt.getGeneratedKeys();
 				sysRset.next();
-				serverId = sysRset.getInt("SERVER_ID");
+				serverId = sysRset.getInt(1);
 			} catch (SQLException e) {
-				logger.debug("Write SERVER_INFO table error", e);
+				logger.error("Write SERVER_INFO table error", e);
 				throw new CoordinatorException("Cannot get a new ServerId");
 			} finally {
 				try {
-					sysRset.close();
-					sysPstmt.close();
-					sysConn.close();
+					if (sysRset != null)
+						sysRset.close();
+					if (sysPstmt != null)
+						sysPstmt.close();
+					if (sysConn != null)
+						sysConn.close();
 				} catch (SQLException e) {
 					logger.debug("Write SERVER_INFO table error", e);
 				}	
@@ -150,10 +162,10 @@ public class DbUtil {
 			localPstmt = localConn.prepareStatement("INSERT INTO COORDINATOR_LOG(TRX_ID, TRX_STATUS, TRX_TIMESTAMP, TRX_CONTENT) VALUES(?,?,?,?)");
 			
 			// set insert values
-			localPstmt.setLong(0, tx.getUUID());
-			localPstmt.setInt(1, logType.ordinal());
-			localPstmt.setLong(2, tx.getLastTimeStamp());
-			localPstmt.setBytes(3, trxContent);
+			localPstmt.setLong(1, tx.getUUID());
+			localPstmt.setInt(2, logType.ordinal());
+			localPstmt.setLong(3, tx.getLastTimeStamp());
+			localPstmt.setBytes(4, trxContent);
 			
 			localPstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -180,8 +192,8 @@ public class DbUtil {
 			systemPstmt = systemConn.prepareStatement("INSERT IGNORE INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION)" +
 					" VALUES(?,?)");
 			
-			systemPstmt.setLong(0, uuid);
-			systemPstmt.setInt(1, Action.EXPIRE.ordinal());
+			systemPstmt.setLong(1, uuid);
+			systemPstmt.setInt(2, Action.EXPIRE.ordinal());
 			
 			res = systemPstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -200,7 +212,7 @@ public class DbUtil {
 		if (res == 0) {
 			try {
 				systemPstmt = systemConn.prepareStatement("SELECT TRX_ACTION FROM EXPIRE_TRX_INFO WHERE TRX_ID = ?");
-				systemPstmt.setLong(0, uuid);
+				systemPstmt.setLong(1, uuid);
 				systemRset = systemPstmt.executeQuery();
 				// if other node confirm or cancel this trx , then checkfailed
 				if (systemRset.getInt(0) != Action.EXPIRE.ordinal()) {
@@ -235,7 +247,7 @@ public class DbUtil {
 			localPstmt = localConn.prepareStatement("UPDATE COORDINATOR_INFO SET CHECKPOINT = ?");
 			
 			// set insert values
-			localPstmt.setLong(0, checkpoint);
+			localPstmt.setLong(1, checkpoint);
 			
 			localPstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -285,7 +297,7 @@ public class DbUtil {
 		try {
 			conn = this.localDataSource.getConnection();
 			pstmt = conn.prepareStatement("SELECT TRX_ID, TRX_STATUS, TRX_TIMESTAMP, TRX_CONTENT FROM COORDINATOR_LOG WHERE TRX_TIMESTAMP >= ?");
-			pstmt.setLong(0, startpoint);
+			pstmt.setLong(1, startpoint);
 			pstmt.setFetchSize(STREAM_SIZE);
 			rset = pstmt.executeQuery();
 		} catch (SQLException e) {
@@ -342,8 +354,8 @@ public class DbUtil {
 			systemPstmt = systemConn.prepareStatement("INSERT IGNORE INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION)" +
 					" VALUES(?,?)");
 			
-			systemPstmt.setLong(0, uuid);
-			systemPstmt.setInt(1, Action.REGISTERED.ordinal());
+			systemPstmt.setLong(1, uuid);
+			systemPstmt.setInt(2, Action.REGISTERED.ordinal());
 			
 			res = systemPstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -362,7 +374,7 @@ public class DbUtil {
 		if (res == 0) {
 			try {
 				systemPstmt = systemConn.prepareStatement("SELECT TRX_ACTION FROM EXPIRE_TRX_INFO WHERE TRX_ID = ?");
-				systemPstmt.setLong(0, uuid);
+				systemPstmt.setLong(1, uuid);
 				systemRset = systemPstmt.executeQuery();
 				// if other node expire this trx , then checkfailed
 				if (systemRset.getInt(0) != Action.REGISTERED.ordinal()) {
@@ -439,11 +451,11 @@ public class DbUtil {
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement("INSERT IGNORE INTO HEURISTIC_TRX_INFO(TRX_ID, TRX_ACTION, TRX_HEURISTIC_CODE, TRX_TIMESTAMP, TRX_CONTENT) VALUES(?,?,?,?,?)");
-			pstmt.setLong(0, tx.getUUID());
-			pstmt.setInt(1, action.getCode());
-			pstmt.setShort(2, e.getCode());
-			pstmt.setLong(3, tx.getLastTimeStamp());
-			pstmt.setBytes(4, trxContent);
+			pstmt.setLong(1, tx.getUUID());
+			pstmt.setInt(2, action.getCode());
+			pstmt.setShort(3, e.getCode());
+			pstmt.setLong(4, tx.getLastTimeStamp());
+			pstmt.setBytes(5, trxContent);
 			
 			pstmt.executeUpdate();
 		} catch (SQLException e1) {
@@ -475,20 +487,20 @@ public class DbUtil {
 					"AVG_CONFIRM_TIME, MAX_CONFIRM_TIME, AVG_CANCEL_TIME, MAX_CANCEL_TIME)" +
 					" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)" );
 			
-			systemPstmt.setInt(0,  rec.getServerId());
-			systemPstmt.setLong(1, rec.getTimestamp());
-			systemPstmt.setLong(2, rec.getCurTrxNum());
-			systemPstmt.setLong(3, rec.getCurProcessTrxNum());
-			systemPstmt.setLong(4, rec.getRegistTrxNum());
-			systemPstmt.setLong(5, rec.getConfirmTrxNum());
-			systemPstmt.setLong(6, rec.getCancelTrxNum());
-			systemPstmt.setLong(7, rec.getExpireTrxNum());
-			systemPstmt.setLong(8, rec.getAvgRegistTime());
-			systemPstmt.setLong(9, rec.getMaxRegistTime());
-			systemPstmt.setLong(10, rec.getAvgConfirmTime());
-			systemPstmt.setLong(11, rec.getMaxConfirmTime());
-			systemPstmt.setLong(12, rec.getAvgCancelTime());
-			systemPstmt.setLong(13, rec.getMaxCancelTime());
+			systemPstmt.setInt(1,  rec.getServerId());
+			systemPstmt.setLong(2, rec.getTimestamp());
+			systemPstmt.setLong(3, rec.getCurTrxNum());
+			systemPstmt.setLong(4, rec.getCurProcessTrxNum());
+			systemPstmt.setLong(5, rec.getRegistTrxNum());
+			systemPstmt.setLong(6, rec.getConfirmTrxNum());
+			systemPstmt.setLong(7, rec.getCancelTrxNum());
+			systemPstmt.setLong(8, rec.getExpireTrxNum());
+			systemPstmt.setLong(9, rec.getAvgRegistTime());
+			systemPstmt.setLong(10, rec.getMaxRegistTime());
+			systemPstmt.setLong(11, rec.getAvgConfirmTime());
+			systemPstmt.setLong(12, rec.getMaxConfirmTime());
+			systemPstmt.setLong(13, rec.getAvgCancelTime());
+			systemPstmt.setLong(14, rec.getMaxCancelTime());
 			
 			systemPstmt.executeQuery();
 		} catch (SQLException e) {
@@ -503,8 +515,4 @@ public class DbUtil {
 			}
 		}
 	}
-
-	
-
-	
 }

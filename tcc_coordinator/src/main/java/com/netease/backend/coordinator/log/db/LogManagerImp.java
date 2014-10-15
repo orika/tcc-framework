@@ -1,7 +1,6 @@
 package com.netease.backend.coordinator.log.db;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogManager;
@@ -14,14 +13,15 @@ import com.netease.backend.tcc.error.HeuristicsException;
 public class LogManagerImp implements LogManager {
 
 	private DbUtil dbUtil = null;
-	private Logger logger = LoggerFactory.getLogger(LogManagerImp.class);
+	private static final Logger logger = Logger.getLogger(LogManagerImp.class);
 	
 	public LogManagerImp() {
-		this.dbUtil = new DbUtil();
 	}
 	
-	
-	
+	public void setDbUtil(DbUtil dbUtil) {
+		this.dbUtil = dbUtil;
+	}
+
 	@Override
 	public void logBegin(Transaction tx, Action action) throws LogException {	
 		// Get log Type

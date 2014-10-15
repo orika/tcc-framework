@@ -13,7 +13,7 @@ public class ExpireProcessor {
 	private static final Logger logger = Logger.getLogger("ExpireProcessor");
 	private RetryProcessor processor = null;
 	
-	public void setProcessor(RetryProcessor processor) {
+	public ExpireProcessor(RetryProcessor processor) {
 		this.processor = processor;
 	}
 

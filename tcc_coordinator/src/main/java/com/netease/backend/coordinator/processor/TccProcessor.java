@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.task.ServiceTask;
 import com.netease.backend.coordinator.task.TxResult;
 import com.netease.backend.coordinator.task.TxResultWatcher;
@@ -15,7 +16,11 @@ import com.netease.backend.tcc.error.HeuristicsException;
 public class TccProcessor {
 	
 	private ExecutorService threadPool = Executors.newCachedThreadPool();
-	private BgExecutor bgExecutor= new BgExecutor();
+	private BgExecutor bgExecutor = null;
+	
+	public TccProcessor(CoordinatorConfig config) {
+		this.bgExecutor = new BgExecutor(config.getBgMaxThreadNum());
+	}
 
 	public void perform(long uuid, List<Procedure> procedures) 
 			throws HeuristicsException {

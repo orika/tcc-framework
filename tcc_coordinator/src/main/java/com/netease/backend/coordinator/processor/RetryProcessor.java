@@ -10,6 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.log4j.Logger;
 
+import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.task.TxResult;
 import com.netease.backend.coordinator.task.TxResultWatcher;
 import com.netease.backend.coordinator.transaction.Transaction;
@@ -39,7 +40,8 @@ public class RetryProcessor implements Runnable {
 		this.txTable = txTable;
 	}
 
-	public RetryProcessor(int parallelism) {
+	public RetryProcessor(CoordinatorConfig config) {
+		int parallelism = config.getRetryParallelism();
 		this.spots = new Task[parallelism];
 		this.watchers = new ResultWatcher[parallelism];
 		for (int i = 0; i < parallelism; i++)

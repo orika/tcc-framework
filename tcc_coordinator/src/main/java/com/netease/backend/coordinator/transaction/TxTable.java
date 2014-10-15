@@ -49,7 +49,7 @@ public class TxTable extends TimerTask {
 		return table;
 	}
 	
-	void beginExpiring() {
+	public void beginExpiring() {
 		Timer timer = new Timer();
 		timer.schedule(this, 30000, 30000);
 	}

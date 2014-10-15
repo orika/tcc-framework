@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	
+	<bean id="coordinator" class="com.netease.backend.coordinator.DefaultCoordinator">
+		<constructor-arg ref= "txManager"/>
+	</bean>
+	<bean id="serviceContext" class="com.netease.backend.coordinator.ServiceContext"/>
+	<dubbo:service interface="com.netease.backend.tcc.Coordinator" ref="coordinator" timeout="2000"/>
+	<dubbo:reference id="payment" interface="com.netease.backend.tcc.demo.IPayment" />
+	<dubbo:reference id="sale" interface="com.netease.backend.tcc.demo.ISale" />
+	<dubbo:reference id="order" interface="com.netease.backend.tcc.demo.IOrder" />
+	
+	<bean id = "tccContainer" class = "com.netease.backend.coordinator.TccContainer">
+		<constructor-arg index = "0" ref= "tccMonitor"/>
+		<constructor-arg index = "1" ref= "recoverManager"/>
+		<constructor-arg index = "2" ref= "txTable"/>
+	</bean>
+	
+	<bean id = "tccMonitor" class = "com.netease.backend.coordinator.monitor.DBTccMonitor">
+		<property name="dbUtil" ref="dbUtil" />
+	</bean>
+	
+	<bean id = "recoverManager" class = "com.netease.backend.coordinator.recover.DBRecoverManager">
+		<property name="txTable" ref="txTable" />
+		<property name="logMgr" ref="logManager" />
+		<property name="idForCoordinator" ref="idForCoordinator" />
+		<property name="retryProcessor" ref="retryProcessor" />
+	</bean>
+	
+	<bean id = "txManager" class = "com.netease.backend.coordinator.transaction.TxManager">
+		<property name="idGenerator" ref="idGenerator" />
+		<property name="txTable" ref="txTable" />
+		<property name="logManager" ref="logManager" />
+		<property name="tccProcessor" ref="tccProcessor" />
+	</bean>
+	
+	<bean id = "txTable" class = "com.netease.backend.coordinator.transaction.TxTable">
+		<property name="expireProcessor" ref="expireProcessor" />
+	</bean>
+	
+	<bean id = "tccProcessor" class = "com.netease.backend.coordinator.processor.TccProcessor">
+		<constructor-arg ref="config"/>
+	</bean>
+	<bean id = "retryProcessor" class = "com.netease.backend.coordinator.processor.RetryProcessor">
+		<constructor-arg ref="config"/>
+	</bean>
+	<bean id = "expireProcessor" class = "com.netease.backend.coordinator.processor.ExpireProcessor">
+		<constructor-arg ref="retryProcessor"/>
+	</bean>
+	
+	<bean id = "idGenerator" class = "com.netease.backend.coordinator.id.IdGenerator">
+		<property name="idForCoordinator" ref="idForCoordinator" />
+		<property name="uuidGenerator" ref="uuidGenerator" />
+	</bean>
+	<bean id = "idForCoordinator" class = "com.netease.backend.coordinator.id.db.ServerIdDistributor">
+		<constructor-arg ref="dbUtil"/>
+	</bean>
+	<bean id = "uuidGenerator" class = "com.netease.backend.coordinator.id.db.UuidGeneratorImp">
+		<constructor-arg index = "0" ref= "idForCoordinator"/>
+		<constructor-arg index = "1" ref= "recoverManager"/>
+	</bean>
+	
+	<bean id = "logManager" class = "com.netease.backend.coordinator.log.db.LogManagerImp">
+		<property name="dbUtil" ref="dbUtil" />
+	</bean>
+	
+	<bean id = "dbUtil" class = "com.netease.backend.coordinator.util.DbUtil">
+		<constructor-arg ref= "config"/>
+		<property name = "localDataSource" ref = "localDataSource" />
+		<property name = "systemDataSource" ref = "systemDataSource" />
+	</bean>
+</beans>

@@ -3,7 +3,7 @@ package com.netease.backend.coordinator.id.db;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class SequenceIdGenerator {
-	private AtomicLong seqId;
+	private AtomicLong seqId = new AtomicLong(0);
 	public static long sequenceIdMask = 0xffffffffffffL;
 	
 	public SequenceIdGenerator() {
