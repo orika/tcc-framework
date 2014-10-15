@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogManager;
+import com.netease.backend.coordinator.log.LogScanner;
 import com.netease.backend.coordinator.log.LogType;
 import com.netease.backend.coordinator.transaction.Action;
 import com.netease.backend.coordinator.transaction.Transaction;
@@ -118,6 +119,10 @@ public class LogManagerImp implements LogManager {
 		return res;
 	}
 
+	
+	public LogScanner getLogScanner() {
+		return new LogScannerImp(dbUtil);
+	}
 }
 
 

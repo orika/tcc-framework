@@ -24,4 +24,5 @@ public interface LogManager {
 	
 	boolean checkLocalLogMgrAlive();
 
+	LogScanner getLogScanner();
 }

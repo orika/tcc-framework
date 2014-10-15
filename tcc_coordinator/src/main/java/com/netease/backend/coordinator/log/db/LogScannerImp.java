@@ -16,11 +16,7 @@ public class LogScannerImp implements LogScanner{
 	private ResultSet rset;
 	private DbUtil dbUtil;
 	
-	public LogScannerImp() {
-		
-	}
-	
-	public void setDbUtil(DbUtil dbUtil) {
+	public LogScannerImp(DbUtil dbUtil) {
 		this.dbUtil = dbUtil;
 	}
 	

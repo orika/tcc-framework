@@ -277,7 +277,7 @@ public class DbUtil {
 			localRset = localPstmt.executeQuery();
 			checkpoint = localRset.getLong(0);
 		} catch (SQLException e) {
-			logger.debug("Read checkpoint error.", e);
+			logger.error("Read checkpoint error.", e);
 			throw new LogException("Read checkpoint error");
 		} finally {
 			try {

@@ -48,7 +48,7 @@ public class DBRecoverManager implements RecoverManager {
 		logger.info("begin recovering transaction table");
 		try {
 			long checkpoint = logMgr.getCheckpoint();
-			LogScanner logScanner = new LogScannerImp();
+			LogScanner logScanner = logMgr.getLogScanner();
 			logScanner.beginScan(checkpoint);
 			while (logScanner.hasNext()){
 				LogRecord logRec = logScanner.next();
