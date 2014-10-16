@@ -8,18 +8,34 @@ public class IdGenerator {
 	public IdGenerator() {
 	}
 	
+	/**
+	 * 
+	 * @param idForCoordinator
+	 */
 	public void setIdForCoordinator(IdForCoordinator idForCoordinator) {
 		this.idForCoordinator = idForCoordinator;
 	}
 
+	/**
+	 * 
+	 * @param uuidGenerator
+	 */
 	public void setUuidGenerator(UUIDGenerator uuidGenerator) {
 		this.uuidGenerator = uuidGenerator;
 	}
 
+	/**
+	 * Description: get id of current coordinator node
+	 * @return serverid
+	 */
 	public int getCoordinatorId()  {
 		return idForCoordinator.get();
 	}
 	
+	/**
+	 * Description: get next uuid
+	 * @return next uuid
+	 */
 	public long getNextUUID() {
 		return uuidGenerator.next();
 	}

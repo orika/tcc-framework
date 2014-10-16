@@ -21,6 +21,7 @@ public class ServerIdDistributor implements IdForCoordinator {
 
 	@Override
 	public boolean isUuidOwn(long uuid) {
+		// check high 12 bit to determine
 		int serverId = (int) (uuid >> 48);
 		return this.serverId == serverId;
 	}

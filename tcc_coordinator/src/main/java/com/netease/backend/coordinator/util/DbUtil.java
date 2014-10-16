@@ -51,17 +51,23 @@ public class DbUtil {
 		this.systemDataSource = systemDataSource;
 	}
 
+	/**
+	 * Description: get serverId from local or system database 
+	 * @return serverId
+	 * @throws CoordinatorException
+	 */
 	public int getServerId() throws CoordinatorException {
 		int serverId = -1;
 		Connection localConn = null;
 		PreparedStatement localPstmt = null;
 		ResultSet localRset = null;
+		// read local database to fetch serverId
 		try {
 			localConn = localDataSource.getConnection();
-			localPstmt = localConn.prepareStatement("SELECT SERVERID FROM COORDINATOR_INFO");
+			localPstmt = localConn.prepareStatement("SELECT SERVER_ID FROM COORDINATOR_INFO");
 			localRset = localPstmt.executeQuery();
 			if (localRset.next())
-				serverId = localRset.getInt("SERVERID");
+				serverId = localRset.getInt(1);
 			else
 				throw new CoordinatorException("Cannot fetch local ServerId");
 		} catch (SQLException e) {
@@ -80,6 +86,8 @@ public class DbUtil {
 			}	
 		}
 		
+		// if local serverId is -1 means the node is not initiated
+		// register this node to system database and get a unique serverId
 		if (serverId == -1) {
 			// if have no server id, take one from system db
 			Connection sysConn = null;
@@ -118,7 +126,7 @@ public class DbUtil {
 			// Update new ServerId to local DB
 			try {
 				localConn = localDataSource.getConnection();
-				localPstmt = localConn.prepareStatement("UPDATE COORDINATOR_INFO SET SERVERID = ?");
+				localPstmt = localConn.prepareStatement("UPDATE COORDINATOR_INFO SET SERVER_ID = ?");
 				
 				// set update value
 				localPstmt.setInt(1, serverId);
@@ -142,6 +150,12 @@ public class DbUtil {
 		return serverId;
 	}
 
+	/**
+	 * Description: Write a log to local database
+	 * @param tx
+	 * @param logType
+	 * @throws LogException
+	 */
 	public void writeLog(Transaction tx, LogType logType) throws LogException {
 		byte[] trxContent = null;
 		
@@ -190,11 +204,46 @@ public class DbUtil {
 		}
 	}
 
+	/**
+	 * Description: Check expire is valid
+	 * @param uuid
+	 * @return true if expire is valid
+	 * @throws LogException
+	 */
 	public boolean checkExpire(long uuid) throws LogException {
 		Connection systemConn = null;
 		PreparedStatement systemPstmt = null;
 		ResultSet systemRset = null;
 		int res = 0;
+		
+		// check whether the trx is already heuristics
+		try {
+			systemConn = systemDataSource.getConnection();
+			systemPstmt = systemConn.prepareStatement("SELECT TRX_ID FROM HEURISTIC_TRX_INFO"
+					+ "WHERE TRX_ID = ?");
+			
+			systemPstmt.setLong(1, uuid);
+			systemRset = systemPstmt.executeQuery();
+			if (systemRset.next()) {
+				return false;
+			}
+		} catch (SQLException e) {
+			logger.error("Check expired error.", e);
+			throw new LogException("Check expire error");
+		} finally {
+			try {
+				if (systemRset != null)
+					systemRset.close();
+				if (systemPstmt != null)
+					systemPstmt.close();
+				if (systemConn != null)
+					systemConn.close();
+			} catch (SQLException e) {
+				logger.error("Check expired error.", e);
+			}
+		}
+		
+		// insert record to Expire_trx_info to avoid other node to confirm/cancel
 		try {
 			systemConn = systemDataSource.getConnection();
 			systemPstmt = systemConn.prepareStatement("INSERT IGNORE INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION)" +
@@ -211,6 +260,8 @@ public class DbUtil {
 			try {
 				if (systemPstmt != null)
 					systemPstmt.close();
+				if (systemConn != null)
+					systemConn.close();
 			} catch (SQLException e) {
 				logger.error("Check expired error.", e);
 			}
@@ -218,8 +269,10 @@ public class DbUtil {
 		
 
 		// must duplicate key, then check the action
+		// if the action is confirm/cancel return invalid
 		if (res == 0) {
 			try {
+				systemConn = systemDataSource.getConnection();
 				systemPstmt = systemConn.prepareStatement("SELECT TRX_ACTION FROM EXPIRE_TRX_INFO WHERE TRX_ID = ?");
 				systemPstmt.setLong(1, uuid);
 				systemRset = systemPstmt.executeQuery();
@@ -253,7 +306,11 @@ public class DbUtil {
 		return true;
 	}
 
-
+	/**
+	 * Description: set checkpoint to local database
+	 * @param checkpoint
+	 * @throws LogException
+	 */
 	public void setCheckpoint(long checkpoint) throws LogException {
 		Connection localConn = null;
 		PreparedStatement localPstmt = null;
@@ -282,7 +339,11 @@ public class DbUtil {
 		}
 	}
 
-
+	/**
+	 * Description: get checkpoint from local database
+	 * @return
+	 * @throws LogException
+	 */
 	public long getCheckpoint() throws LogException {
 		Connection localConn = null;
 		PreparedStatement localPstmt = null;
@@ -315,7 +376,12 @@ public class DbUtil {
 		return checkpoint;
 	}
 
-
+	/**
+	 * Description: read log from checkpoint
+	 * @param startpoint
+	 * @return
+	 * @throws LogException
+	 */
 	public LogScanner beginScan(long startpoint) throws LogException {
 		try {
 			Connection conn = this.localDataSource.getConnection();
@@ -331,6 +397,12 @@ public class DbUtil {
 		} 
 	}
 	
+	/**
+	 * Description: determine whether having more log record
+	 * @param rset
+	 * @return true if log has next record
+	 * @throws LogException
+	 */
 	public boolean hasNext(ResultSet rset) throws LogException {
 		try {
 			return rset.next();
@@ -340,6 +412,12 @@ public class DbUtil {
 		}
 	}
 
+	/**
+	 * Description: get next log record
+	 * @param rset
+	 * @return log record
+	 * @throws LogException
+	 */
 	public LogRecord getNextLog(ResultSet rset) throws LogException {
 		try {
 			long uuid = rset.getLong("TRX_ID");
@@ -353,7 +431,14 @@ public class DbUtil {
 		}	
 	}
 
-
+	/**
+	 * Description: end scan and destroy resultset,
+	 * 				preparedstatement and connection
+	 * @param conn
+	 * @param pstmt
+	 * @param rset
+	 * @throws LogException
+	 */
 	public void endScan(Connection conn, PreparedStatement pstmt,
 			ResultSet rset) throws LogException {
 		try {
@@ -369,7 +454,12 @@ public class DbUtil {
 		}
 	}
 
-
+	/**
+	 * Description: check confirm/cancel in recovery is valid
+	 * @param uuid
+	 * @return true if action is valid
+	 * @throws LogException
+	 */
 	public boolean checkActionInRecover(long uuid) throws LogException {
 		Connection systemConn = null;
 		PreparedStatement systemPstmt = null;
@@ -393,6 +483,8 @@ public class DbUtil {
 			try {
 				if (systemPstmt != null)
 					systemPstmt.close();
+				if (systemConn != null)
+					systemConn.close();
 			} catch (SQLException e) {
 				logger.error("Check action in recover error.", e);
 			}
@@ -400,8 +492,10 @@ public class DbUtil {
 		
 
 		// must duplicate key, then check the action
+		// if the table record's action is expired, return invalid 
 		if (res == 0) {
 			try {
+				systemConn = this.systemDataSource.getConnection();
 				systemPstmt = systemConn.prepareStatement("SELECT TRX_ACTION FROM EXPIRE_TRX_INFO WHERE TRX_ID = ?");
 				systemPstmt.setLong(1, uuid);
 				systemRset = systemPstmt.executeQuery();
@@ -436,7 +530,10 @@ public class DbUtil {
 		return true;
 	}
 
-
+	/**
+	 * Description: select 1 to check RDS is alive
+	 * @return true if rds is alive
+	 */
 	public boolean checkLocaLogMgrAlive() {
 		// TODO Auto-generated method stub	
 		Connection localConn = null;
@@ -471,7 +568,14 @@ public class DbUtil {
 		}
 	}
 
-
+	/**
+	 * Description: write heuristic record in system db or local db
+	 * @param tx
+	 * @param action
+	 * @param e
+	 * @param isLocal  if true write record to local db, else to system db
+	 * @throws LogException
+	 */
 	public void writeHeuristicRec(Transaction tx, Action action,
 			HeuristicsException e, boolean isLocal) throws LogException {
 		// TODO Auto-generated method stub
@@ -519,7 +623,11 @@ public class DbUtil {
 		
 	}
 
-
+	/**
+	 * Description: write monitor data to system database
+	 * @param rec
+	 * @throws MonitorException
+	 */
 	public void writeMonitorRec(MonitorRecord rec) throws MonitorException {
 		// TODO Auto-generated method stub
 		Connection systemConn = null;
