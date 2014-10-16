@@ -13,8 +13,7 @@ def sedmail(msg):
     AUTHREQUIRED = 1
     smtpuser = 'ddb_hz@corp.netease.com'
     smtppass = 'ddb_hz|netease1'
-    #RECIPIENTS = ['hznishansan@corp.netease.com','shiyong@corp.netease.com','hzzhaotianyuan@corp.netease.com', 'dba@hz.netease.com']
-    RECIPIENTS = ['hzhuwei@corp.netease.com']
+    RECIPIENTS = []
     SENDER = 'ddb_hz@corp.netease.com'
     mssg = """From: ddb_hz <ddb_hz@corp.netease.com>
 To: dba <dba@corp.netease.com>
@@ -133,5 +132,5 @@ for i in tables :
             partition_arrry= GetPartition(host , int(port) , user , password , database , sql  )
             left_par = leftpartition (partition_arrry , now , num)
     msg=msg+'******************tablename is %s . database is %s . mysql host is %s . mysql port is %s ******************\n\n' % (table , database , host , port)
-sedmail (msg)
+#sedmail (msg)
 print msg
