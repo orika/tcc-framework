@@ -16,14 +16,19 @@ public class LogScannerImp implements LogScanner{
 	private ResultSet rset;
 	private DbUtil dbUtil;
 	
-	public LogScannerImp(DbUtil dbUtil) {
+	public LogScannerImp(DbUtil dbUtil, Connection conn, PreparedStatement pstmt,
+			ResultSet rset) {
+		super();
+		this.dbUtil = dbUtil;
+		this.conn = conn;
+		this.pstmt = pstmt;
+		this.rset = rset;
+	}
+
+	public void setDbUtil(DbUtil dbUtil) {
 		this.dbUtil = dbUtil;
 	}
 	
-	public void beginScan(long startpoint) throws LogException {
-		dbUtil.beginScan(startpoint, conn, pstmt, rset);
-	}
-
 	@Override
 	public boolean hasNext() throws LogException {
 		return dbUtil.hasNext(rset);

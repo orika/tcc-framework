@@ -5,11 +5,11 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 	
-	<bean id="coordinator" class="com.netease.backend.coordinator.DefaultCoordinator">
+	<bean id="coordinator" class="com.netease.backend.coordinator.DefaultCoordinator" >
 		<constructor-arg ref= "txManager"/>
 	</bean>
 	<bean id="serviceContext" class="com.netease.backend.coordinator.ServiceContext"/>
-	<dubbo:service interface="com.netease.backend.tcc.Coordinator" ref="coordinator" timeout="2000"/>
+	<dubbo:service interface="com.netease.backend.tcc.Coordinator" ref="coordinator"/>
 	<dubbo:reference id="payment" interface="com.netease.backend.tcc.demo.IPayment" />
 	<dubbo:reference id="sale" interface="com.netease.backend.tcc.demo.ISale" />
 	<dubbo:reference id="order" interface="com.netease.backend.tcc.demo.IOrder" />
@@ -18,6 +18,7 @@
 		<constructor-arg index = "0" ref= "tccMonitor"/>
 		<constructor-arg index = "1" ref= "recoverManager"/>
 		<constructor-arg index = "2" ref= "txTable"/>
+		<constructor-arg index = "3" ref= "retryProcessor"/>
 	</bean>
 	
 	<bean id = "tccMonitor" class = "com.netease.backend.coordinator.monitor.DBTccMonitor">
@@ -39,7 +40,9 @@
 	</bean>
 	
 	<bean id = "txTable" class = "com.netease.backend.coordinator.transaction.TxTable">
+		<constructor-arg ref= "config"/>
 		<property name="expireProcessor" ref="expireProcessor" />
+		<property name="logManager" ref="logManager" />
 	</bean>
 	
 	<bean id = "tccProcessor" class = "com.netease.backend.coordinator.processor.TccProcessor">
@@ -47,6 +50,8 @@
 	</bean>
 	<bean id = "retryProcessor" class = "com.netease.backend.coordinator.processor.RetryProcessor">
 		<constructor-arg ref="config"/>
+		<property name = "txTable" ref = "txTable" />
+		<property name = "txManager" ref = "txManager" />
 	</bean>
 	<bean id = "expireProcessor" class = "com.netease.backend.coordinator.processor.ExpireProcessor">
 		<constructor-arg ref="retryProcessor"/>

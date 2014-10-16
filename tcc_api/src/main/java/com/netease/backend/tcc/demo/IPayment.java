@@ -10,4 +10,6 @@ public interface IPayment extends Participant {
 	void cancel(long uuid, String person);
 
 	void pay(long uuid, String persion);
+	
+	boolean isConfirmed(long uuid);
 }

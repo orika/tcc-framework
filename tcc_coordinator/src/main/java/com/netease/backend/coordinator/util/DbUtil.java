@@ -12,7 +12,9 @@ import org.apache.log4j.Logger;
 import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogRecord;
+import com.netease.backend.coordinator.log.LogScanner;
 import com.netease.backend.coordinator.log.LogType;
+import com.netease.backend.coordinator.log.db.LogScannerImp;
 import com.netease.backend.coordinator.monitor.MonitorException;
 import com.netease.backend.coordinator.monitor.MonitorRecord;
 import com.netease.backend.coordinator.transaction.Action;
@@ -167,7 +169,7 @@ public class DbUtil {
 			
 			// set insert values
 			localPstmt.setLong(1, tx.getUUID());
-			localPstmt.setInt(2, logType.ordinal());
+			localPstmt.setInt(2, logType.getCode());
 			localPstmt.setLong(3, tx.getLastTimeStamp());
 			localPstmt.setBytes(4, trxContent);
 			
@@ -184,7 +186,6 @@ public class DbUtil {
 			} catch (SQLException e) {
 				logger.error("Write log error.", e);
 			}
-			
 		}
 	}
 
@@ -195,13 +196,14 @@ public class DbUtil {
 		int res = 0;
 		try {
 			systemConn = systemDataSource.getConnection();
-			systemPstmt = systemConn.prepareStatement("INSERT IGNORE INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION)" +
-					" VALUES(?,?)");
+			systemPstmt = systemConn.prepareStatement("INSERT INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION, TRX_TIMESTAMP)" +
+					" VALUES(?,?,?)");
 			
 			systemPstmt.setLong(1, uuid);
-			systemPstmt.setInt(2, Action.EXPIRE.ordinal());
-			
-			res = systemPstmt.executeUpdate();
+			systemPstmt.setInt(2, Action.EXPIRE.getCode());
+			systemPstmt.setLong(3, System.currentTimeMillis());
+			systemPstmt.executeUpdate();
+			res = systemPstmt.getUpdateCount();
 		} catch (SQLException e) {
 			logger.error("Check expired error.", e);
 			throw new LogException("Check expire error");
@@ -223,7 +225,7 @@ public class DbUtil {
 				systemRset = systemPstmt.executeQuery();
 				// if other node confirm or cancel this trx , then checkfailed
 				if (systemRset.next()) {
-					if (systemRset.getInt(1) != Action.EXPIRE.ordinal()) {
+					if (systemRset.getInt(1) != Action.EXPIRE.getCode()) {
 						return false;
 					} else { 
 						return true;
@@ -314,15 +316,14 @@ public class DbUtil {
 	}
 
 
-	public ResultSet beginScan(long startpoint, Connection conn,
-			PreparedStatement pstmt, ResultSet rset) throws LogException {
+	public LogScanner beginScan(long startpoint) throws LogException {
 		try {
-			conn = this.localDataSource.getConnection();
-			pstmt = conn.prepareStatement("SELECT TRX_ID, TRX_STATUS, TRX_TIMESTAMP, TRX_CONTENT FROM COORDINATOR_LOG WHERE TRX_TIMESTAMP >= ?");
+			Connection conn = this.localDataSource.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement("SELECT TRX_ID, TRX_STATUS, TRX_TIMESTAMP, TRX_CONTENT FROM COORDINATOR_LOG WHERE TRX_TIMESTAMP >= ?");
 			pstmt.setLong(1, startpoint);
 			pstmt.setFetchSize(STREAM_SIZE);
-			rset = pstmt.executeQuery();
-			return rset;
+			ResultSet rset = pstmt.executeQuery();
+			return new LogScannerImp(this, conn, pstmt, rset);
 		} catch (SQLException e) {
 			logger.error("Start read log error.", e);
 			throw new LogException("Start read log error");
@@ -381,7 +382,7 @@ public class DbUtil {
 					" VALUES(?,?)");
 			
 			systemPstmt.setLong(1, uuid);
-			systemPstmt.setInt(2, Action.REGISTERED.ordinal());
+			systemPstmt.setInt(2, Action.REGISTERED.getCode());
 			
 			res = systemPstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -406,7 +407,7 @@ public class DbUtil {
 				
 				if (systemRset.next()) {
 					// if other node expire this trx , then checkfailed
-					if (systemRset.getInt(1) != Action.REGISTERED.ordinal()) {
+					if (systemRset.getInt(1) != Action.REGISTERED.getCode()) {
 						return false;
 					} else { 
 						return true;

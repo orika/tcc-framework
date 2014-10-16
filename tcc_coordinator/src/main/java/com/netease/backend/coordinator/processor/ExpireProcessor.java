@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.netease.backend.coordinator.task.ServiceTask;
+import com.netease.backend.coordinator.transaction.IllegalActionException;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.tcc.Procedure;
 
@@ -24,6 +25,11 @@ public class ExpireProcessor {
 		for (Procedure proc : procList) {
 			if (proc.getMethod() == null)
 				proc.setMethod(ServiceTask.EXPIRED);
+		}
+		try {
+			tx.expire();
+		} catch (IllegalActionException e) {
+			return;
 		}
 		logger.info("expire " + tx);
 		processor.process(tx, 1);

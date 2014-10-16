@@ -49,7 +49,8 @@ public class TccProcessor {
 		}
 	}
 	
-	public TxResult performAsync(long uuid, List<Procedure> procedures, TxResultWatcher watcher, boolean isBackground) {
+	public TxResult performAsync(long uuid, List<Procedure> procedures, TxResultWatcher watcher, boolean isBackground) 
+			throws HeuristicsException {
 		Collections.sort(procedures);
 		TxResult result = null;
 		while (procedures.size() != 0) {
@@ -60,14 +61,13 @@ public class TccProcessor {
 				Procedure cur = it.next();
 				if (cur.getSequence() < 0) {
 					it.remove();
-					index++;
 					continue;
 				}
 				count++;
 				if (lastOne != null && lastOne.getSequence() != cur.getSequence())
 					break;
 			}
-			result = new TxResult(uuid, count, watcher);;
+			result = new TxResult(uuid, count, watcher);
 			for (Iterator<Procedure> it = procedures.iterator(); it.hasNext() && count > 0; count--) {
 				Procedure cur = it.next();
 				if (count == 1) {
@@ -79,6 +79,14 @@ public class TccProcessor {
 						threadPool.execute(new ServiceTask(uuid, index++, cur, result));
 				}
 				it.remove();
+			}
+			try {
+				result.await();
+			} catch (InterruptedException e) {
+				throw new HeuristicsException();
+			}
+			if (result.isFailed()) {
+				throw result.getException();
 			}
 		}
 		return result;

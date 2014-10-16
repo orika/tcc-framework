@@ -9,7 +9,6 @@ import com.netease.backend.coordinator.log.LogManager;
 import com.netease.backend.coordinator.log.LogRecord;
 import com.netease.backend.coordinator.log.LogScanner;
 import com.netease.backend.coordinator.log.LogType;
-import com.netease.backend.coordinator.log.db.LogScannerImp;
 import com.netease.backend.coordinator.processor.RetryProcessor;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.coordinator.transaction.TxTable;
@@ -46,10 +45,10 @@ public class DBRecoverManager implements RecoverManager {
 	@Override
 	public void init() {
 		logger.info("begin recovering transaction table");
+		LogScanner logScanner = null;
 		try {
 			long checkpoint = logMgr.getCheckpoint();
-			LogScanner logScanner = logMgr.getLogScanner();
-			logScanner.beginScan(checkpoint);
+			logScanner = logMgr.beginScan(checkpoint);
 			while (logScanner.hasNext()){
 				LogRecord logRec = logScanner.next();
 				long uuid = logRec.getTrxId();

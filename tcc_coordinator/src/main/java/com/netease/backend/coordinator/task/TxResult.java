@@ -4,7 +4,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.tcc.error.HeuristicsException;
 
 public class TxResult {

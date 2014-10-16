@@ -18,4 +18,6 @@ public interface ISale extends Participant {
 	public void confirm(long uuid);
 
 	public void cancel(long uuid);
+	
+	boolean isConfirmed(long uuid);
 }

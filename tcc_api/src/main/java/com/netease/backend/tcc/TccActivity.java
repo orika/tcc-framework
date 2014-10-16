@@ -10,6 +10,7 @@ public class TccActivity extends ParticipantGroup {
 	
 	public TccActivity(TccManager tccManager, Participant... participants) {
 		this.participants = participants;
+		checkParticipants();
 		tccManager.register(this);
 	}
 	
@@ -31,8 +32,19 @@ public class TccActivity extends ParticipantGroup {
 	}
 
 	@Override
-	public boolean isCustomed() {
+	public final boolean isCustomed() {
 		return false;
 	}
 
+	private void checkParticipants() {
+		if (getConfirmSeq() != DEFAULT_SEQ && getConfirmSeq().length != participants.length)
+			throw new IllegalArgumentException("illegal participant count for confirming:" 
+					+ getConfirmSeq().length);
+		if (getCancelSeq() != DEFAULT_SEQ && getCancelSeq().length != participants.length)
+			throw new IllegalArgumentException("illegal participant count for canceling:" 
+					+ getConfirmSeq().length);
+		if (getExpireSeq() != DEFAULT_SEQ && getExpireSeq().length != participants.length)
+			throw new IllegalArgumentException("illegal participant count for expiring:" 
+					+ getConfirmSeq().length);
+	}
 }

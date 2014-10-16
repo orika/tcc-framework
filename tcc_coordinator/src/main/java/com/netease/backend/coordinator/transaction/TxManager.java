@@ -82,8 +82,6 @@ public class TxManager {
 			tx = new Transaction(uuid, null);
 			txTable.put(tx);
 		}
-		if (logger.isDebugEnabled())
-			logger.debug("begin " + tx);
 		switch (action) {
 			case CONFIRM:
 				tx.confirm(procList);
@@ -94,6 +92,8 @@ public class TxManager {
 			default:
 				throw new IllegalActionException(uuid, tx.getAction(), action);
 		}
+		if (logger.isDebugEnabled())
+			logger.debug("begin " + tx);
 		tx.setBeginTime(System.currentTimeMillis());
 		logManager.logBegin(tx, action);
 		return tx;
@@ -116,13 +116,14 @@ public class TxManager {
 	public void heuristic(Transaction tx, Action action, HeuristicsException e) throws LogException {
 		tx.setEndTime(System.currentTimeMillis());
 		logManager.logHeuristics(tx, action, e);
+		txTable.remove(tx.getUUID());
 		logger.info("tx " + tx.getUUID() + " heuristics code:" + e.getCode());
 	}
 	
 	
 	public void retryAsync(Transaction tx, TxResultWatcher watcher) throws HeuristicsException, LogException {
 		Action action = tx.getAction();
-		if (action == Action.EXPIRE && !logManager.checkExpire(tx.getUUID())) {
+		if ((action == Action.EXPIRE || action == Action.REGISTERED) && !logManager.checkExpire(tx.getUUID())) {
 			if (logger.isDebugEnabled())
 				logger.debug("Transaction " + tx.getUUID() + " check expire false");
 			return;
@@ -156,7 +157,12 @@ public class TxManager {
 		long uuid = tx.getUUID();
 		tx.setBeginTime(System.currentTimeMillis());
 		logManager.logBegin(tx, action);
-		tccProcessor.performAsync(uuid, tx.getProcList(action), watcher, true);
+		try {
+			tccProcessor.performAsync(uuid, tx.getProcList(action), watcher, true);
+		} catch (HeuristicsException e) {
+			heuristic(tx, action, e);
+			return;
+		}
 		if (logger.isDebugEnabled())
 			logger.debug("perform aync:" + tx);
 		txTable.remove(uuid);

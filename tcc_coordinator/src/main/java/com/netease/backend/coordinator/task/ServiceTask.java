@@ -44,11 +44,11 @@ public class ServiceTask implements Runnable {
 				participant.invoke(method, params.toArray());
 			result.success(index);
 		} catch (ClassNotFoundException e) {
-			result.failed(index, new HeuristicsException(TccCode.getServiceDownCode(index), proc));
+			result.failed(index, new HeuristicsException(TccCode.getServiceDownCode(proc.getIndex()), proc));
 		} catch (ParticipantException e) {
 			result.failed(index, new HeuristicsException(e.getErrorCode(), proc));
 		} catch (InterruptedException e) {
-			result.failed(index, new HeuristicsException(TccCode.getTimeoutCode(index), proc));
+			result.failed(index, new HeuristicsException(TccCode.getTimeoutCode(proc.getIndex()), proc));
 		} catch (RuntimeException e) {
 			result.failed(index, new HeuristicsException(proc));
 		}

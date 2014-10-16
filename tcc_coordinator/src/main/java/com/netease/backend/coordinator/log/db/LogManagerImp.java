@@ -80,48 +80,42 @@ public class LogManagerImp implements LogManager {
 	@Override
 	public void logHeuristics(Transaction tx, Action action,
 			HeuristicsException e) throws LogException {
-		
 		try {
 			this.dbUtil.writeHeuristicRec(tx, action, e, false);
 		} catch (LogException e1) {
 			logger.error("Write system heuristic record error", e1);
 			this.dbUtil.writeHeuristicRec(tx, action, e, true);
 		}
-		
 		LogType logType = LogType.TRX_HEURESTIC;
 		this.dbUtil.writeLog(tx, logType);
 	}
 
 	@Override
 	public void setCheckpoint(long checkpoint) throws LogException {
-		// TODO Auto-generated method stub
 		this.dbUtil.setCheckpoint(checkpoint);
 	}
 
 	@Override
 	public long getCheckpoint() throws LogException {
-		// TODO Auto-generated method stub
 		long checkpoint = this.dbUtil.getCheckpoint();
 		return checkpoint;
 	}
 
 	@Override
 	public boolean checkActionInRecover(long uuid) throws LogException {
-		// TODO Auto-generated method stub
 		boolean res = this.dbUtil.checkActionInRecover(uuid);
 		return res;
 	}
 
 	@Override
 	public boolean checkLocalLogMgrAlive() {
-		// TODO Auto-generated method stub
 		boolean res = this.dbUtil.checkLocaLogMgrAlive();
 		return res;
 	}
 
-	
-	public LogScanner getLogScanner() {
-		return new LogScannerImp(dbUtil);
+	@Override
+	public LogScanner beginScan(long startpoint) throws LogException {
+		return dbUtil.beginScan(startpoint);
 	}
 }
 

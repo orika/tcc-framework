@@ -24,5 +24,5 @@ public interface LogManager {
 	
 	boolean checkLocalLogMgrAlive();
 
-	LogScanner getLogScanner();
+	LogScanner beginScan(long startpoint) throws LogException;
 }

@@ -3,6 +3,7 @@ package com.netease.backend.coordinator;
 import org.apache.log4j.Logger;
 
 import com.netease.backend.coordinator.monitor.TccMonitor;
+import com.netease.backend.coordinator.processor.RetryProcessor;
 import com.netease.backend.coordinator.recover.RecoverManager;
 import com.netease.backend.coordinator.transaction.TxTable;
 
@@ -10,8 +11,10 @@ public class TccContainer {
 	
 	private static final Logger logger = Logger.getLogger("TccContainer");
 
-	public TccContainer(TccMonitor monitor, RecoverManager recoverManager, TxTable txTable) {
+	public TccContainer(TccMonitor monitor, RecoverManager recoverManager, 
+			TxTable txTable, RetryProcessor processor) {
 		logger.info("Tcc Service initializing...");
+		processor.start();
 		recoverManager.init();
 		monitor.start();
 		txTable.beginExpiring();

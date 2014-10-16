@@ -77,8 +77,14 @@ public class Transaction {
 	public void confirm(List<Procedure> procList) throws IllegalActionException {
 		if (status.compareAndSet(Action.REGISTERED, Action.CONFIRM))
 			this.procList = procList;
-		else 
-			throw new IllegalActionException(uuid, status.get(), Action.CONFIRM);
+		else {
+			try{
+				throw new IllegalActionException(uuid, status.get(), Action.CONFIRM);
+			} catch (IllegalActionException e) {
+				e.printStackTrace();
+				throw e;
+			}
+		}
 	}
 	
 	public void cancel(List<Procedure> procList) throws IllegalActionException {
@@ -101,7 +107,7 @@ public class Transaction {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Transaction ").append(uuid);
-		if (status.get() != Action.REGISTERED) {
+		if (status.get() != Action.REGISTERED && status.get() != Action.EXPIRE) {
 			builder.append(" action:").append(status.get().name());
 			builder.append(" service").append(procList);
 		}

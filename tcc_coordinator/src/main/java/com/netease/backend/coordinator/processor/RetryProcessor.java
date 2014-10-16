@@ -31,6 +31,7 @@ public class RetryProcessor implements Runnable {
 	private Lock lock = new ReentrantLock();
 	private Condition isSpotFree = lock.newCondition();
 	private volatile boolean stop = false;
+	private Thread thread = null;
 	
 	public void setTxManager(TxManager txManager) {
 		this.txManager = txManager;
@@ -46,6 +47,11 @@ public class RetryProcessor implements Runnable {
 		this.watchers = new ResultWatcher[parallelism];
 		for (int i = 0; i < parallelism; i++)
 			watchers[i] = new ResultWatcher(i);
+	}
+	
+	public void start() {
+		thread = new Thread(this);
+		thread.start();
 	}
 
 	@Override
@@ -151,7 +157,7 @@ public class RetryProcessor implements Runnable {
 		
 		Task(Transaction tx, int times) {
 			this.tx = tx;
-			this.ts = System.currentTimeMillis();
+			this.ts = 0;
 			this.times = times;
 		}
 
