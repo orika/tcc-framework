@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Calendar;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;
@@ -34,8 +34,11 @@ public class DbUtil {
 	private static int STREAM_SIZE = 100;
 	private CoordinatorConfig config = null;
 	
-	public DbUtil(CoordinatorConfig config) {
+	public DbUtil(CoordinatorConfig config, BasicDataSource localDataSource, BasicDataSource systemDataSource) throws CoordinatorException {
 		this.config = config;
+		this.localDataSource = localDataSource;
+		this.systemDataSource = systemDataSource;
+		initLocalDb();
 	}
 	
 	public BasicDataSource getLocalDataSource() {
@@ -71,8 +74,6 @@ public class DbUtil {
 			localRset = localPstmt.executeQuery();
 			if (localRset.next())
 				serverId = localRset.getInt(1);
-			else
-				throw new CoordinatorException("Cannot fetch local ServerId");
 		} catch (SQLException e) {
 			logger.error("Read COORDINATOR_INFO table error", e);
 			throw new CoordinatorException("Cannot fetch local ServerId");
@@ -89,7 +90,7 @@ public class DbUtil {
 			}	
 		}
 		
-		// if local serverId is -1 means the node is not initiated
+		// if local serverId not exist means the node is not initiated
 		// register this node to system database and get a unique serverId
 		if (serverId == -1) {
 			// if have no server id, take one from system db
@@ -126,13 +127,14 @@ public class DbUtil {
 				}	
 			}
 			
-			// Update new ServerId to local DB
+			// insert new ServerId to local DB
 			try {
 				localConn = localDataSource.getConnection();
-				localPstmt = localConn.prepareStatement("UPDATE COORDINATOR_INFO SET SERVER_ID = ?");
+				localPstmt = localConn.prepareStatement("INSERT INTO COORDINATOR_INFO(SERVER_ID, CHECKPOINT) VALUES(?, ?)");
 				
 				// set update value
 				localPstmt.setInt(1, serverId);
+				localPstmt.setLong(2, 0);
 				
 				localPstmt.executeUpdate();
 			} catch (SQLException e) {
@@ -726,11 +728,16 @@ public class DbUtil {
 				"KEY `IDX_TIME_STAMP` (`TRX_TIMESTAMP`)" +
 				") ENGINE=InnoDB DEFAULT CHARSET=utf8";
 		
-		// get current date to specify partition info
-		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyymmdd");
-		String dateString = sdf.format(date);
-		long millTime = date.getTime();
+		// get tomorrow 00:00:00 date to specify partition info
+		Calendar  date = Calendar.getInstance();
+		date.set(Calendar.HOUR, 0);
+		date.set(Calendar.SECOND, 0);
+		date.set(Calendar.MINUTE, 0);
+		date.set(Calendar.MILLISECOND, 0);
+		date.add(Calendar.DATE, 1);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String dateString = sdf.format(date.getTime());
+		long millTime = date.getTimeInMillis();
 		String createCoordinatorLogTableSql = "CREATE TABLE `COORDINATOR_LOG` (" +
 				"`LOG_ID` bigint(20) NOT NULL AUTO_INCREMENT," +
 				"`TRX_ID` bigint(20) NOT NULL," +
@@ -739,11 +746,11 @@ public class DbUtil {
 				"`TRX_CONTENT` varbinary(4096) DEFAULT NULL," +
 				"PRIMARY KEY (`LOG_ID`,`TRX_TIMESTAMP`)," +
 				"KEY `IDX_TIMESTAMP` (`TRX_TIMESTAMP`)" +
-				") ENGINE=InnoDB DEFAULT CHARSET=utf8" +
+				") ENGINE=InnoDB DEFAULT CHARSET=utf8 " +
 				"PARTITION BY RANGE(`TRX_TIMESTAMP`)(" +
 				"   PARTITION p" +
 				dateString +
-				"VALUES LESS THAN (" +
+				" VALUES LESS THAN (" +
 				millTime +
 				") ENGINE = InnoDB" +
 				")";
@@ -754,8 +761,10 @@ public class DbUtil {
 			localPstmt.executeUpdate();
 			localPstmt.close();
 			localPstmt = localConn.prepareStatement(createHeuristicInfoTableSql);
+			localPstmt.executeUpdate();
 			localPstmt.close();
 			localPstmt = localConn.prepareStatement(createCoordinatorLogTableSql);
+			localPstmt.executeUpdate();
 		} catch (SQLException e) {
 			logger.error("Init local database error.", e);
 			throw new CoordinatorException("Init local database error");
