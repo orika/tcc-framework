@@ -222,7 +222,7 @@ public class DbUtil {
 		try {
 			systemConn = systemDataSource.getConnection();
 			systemPstmt = systemConn.prepareStatement("SELECT TRX_ID FROM HEURISTIC_TRX_INFO"
-					+ "WHERE TRX_ID = ?");
+					+ " WHERE TRX_ID = ?");
 			
 			systemPstmt.setLong(1, uuid);
 			systemRset = systemPstmt.executeQuery();
