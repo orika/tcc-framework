@@ -1,10 +1,13 @@
 package com.netease.backend.coordinator.util;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;
@@ -671,5 +674,102 @@ public class DbUtil {
 				logger.error("Write monitor record error.", e);
 			}
 		}
+	}
+
+	/**
+	 * Description: check and init local database
+	 * @throws CoordinatorException
+	 */
+	public void initLocalDb() throws CoordinatorException {
+		// check whether local database is already inited
+		Connection localConn = null;
+		PreparedStatement localPstmt = null;
+		ResultSet localRset = null;
+		DatabaseMetaData localDbmd = null;
+		
+		try {
+			localConn = localDataSource.getConnection();
+			localDbmd = localConn.getMetaData();
+			localRset = localDbmd.getTables("tcc", null, 
+					"COORDINATOR_LOG", new String[]{"TABLE"});
+			if (localRset.next()) {
+				return;
+			}
+		} catch (SQLException e) {
+			logger.error("Read local database error.", e);
+			throw new CoordinatorException("Read local database error");
+		}  finally {
+			try {
+				if (localRset != null)
+					localRset.close();
+				if (localConn != null)
+					localConn.close();
+			} catch (SQLException e) {
+				logger.error("Read local database error.", e);
+			}
+			
+		}
+		
+		// Create table
+		String createCoordinatorInfoTableSql = "CREATE TABLE `COORDINATOR_INFO` (" + 
+				"`SERVER_ID` int(11) NOT NULL," +
+				"`CHECKPOINT` bigint(20) NOT NULL," +
+				"PRIMARY KEY (`SERVER_ID`)" +
+				") ENGINE=InnoDB DEFAULT CHARSET=utf8";
+		
+		String createHeuristicInfoTableSql = "CREATE TABLE `HEURISTIC_TRX_INFO` (" +
+				"` TRX_ID` bigint(20) NOT NULL," +
+				"`TRX_ACTION` tinyint(4) NOT NULL," +
+				"`TRX_HEURISTIC_CODE` smallint(6) NOT NULL," +
+				"`TRX_TIMESTAMP` bigint(20) NOT NULL," +
+				"`TRX_CONTENT` varbinary(4096) DEFAULT NULL," +
+				"PRIMARY KEY (` TRX_ID`)," +
+				"KEY `IDX_TIME_STAMP` (`TRX_TIMESTAMP`)" +
+				") ENGINE=InnoDB DEFAULT CHARSET=utf8";
+		
+		// get current date to specify partition info
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyymmdd");
+		String dateString = sdf.format(date);
+		long millTime = date.getTime();
+		String createCoordinatorLogTableSql = "CREATE TABLE `COORDINATOR_LOG` (" +
+				"`LOG_ID` bigint(20) NOT NULL AUTO_INCREMENT," +
+				"`TRX_ID` bigint(20) NOT NULL," +
+				"`TRX_STATUS` tinyint(4) NOT NULL," +
+				"`TRX_TIMESTAMP` bigint(20) NOT NULL," +
+				"`TRX_CONTENT` varbinary(4096) DEFAULT NULL," +
+				"PRIMARY KEY (`LOG_ID`,`TRX_TIMESTAMP`)," +
+				"KEY `IDX_TIMESTAMP` (`TRX_TIMESTAMP`)" +
+				") ENGINE=InnoDB DEFAULT CHARSET=utf8" +
+				"PARTITION BY RANGE(`TRX_TIMESTAMP`)(" +
+				"   PARTITION p" +
+				dateString +
+				"VALUES LESS THAN (" +
+				millTime +
+				") ENGINE = InnoDB" +
+				")";
+		
+		try {
+			localConn = localDataSource.getConnection();
+			localPstmt = localConn.prepareStatement(createCoordinatorInfoTableSql);
+			localPstmt.executeUpdate();
+			localPstmt.close();
+			localPstmt = localConn.prepareStatement(createHeuristicInfoTableSql);
+			localPstmt.close();
+			localPstmt = localConn.prepareStatement(createCoordinatorLogTableSql);
+		} catch (SQLException e) {
+			logger.error("Init local database error.", e);
+			throw new CoordinatorException("Init local database error");
+		} finally {
+			try {
+				if (localPstmt != null)
+					localPstmt.close();
+				if (localConn != null)
+					localPstmt.close();
+			} catch (SQLException e) {
+				logger.error("Init local database error.", e);
+			}
+		}
+		
 	}
 }
