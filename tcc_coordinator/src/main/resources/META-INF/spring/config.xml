@@ -6,8 +6,11 @@
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 	
 	<bean id  =  "config" class  =  "com.netease.backend.coordinator.config.CoordinatorConfig">
-		<property name = "bgMaxThreadNum" value = "100" />
+		<property name = "bgMaxThreadNum" value = "20" />
 		<property name = "retryParallelism" value = "20" />
+		<property name = "expireTime" value = "2000" />
+		<property name = "ckptInterval" value = "2000" />
+		<property name = "rdsIp" value = "10.180.17.70:3306" />
 	</bean>
 	
 	<bean id = "localDataSource" class = "org.apache.commons.dbcp.BasicDataSource"
@@ -19,7 +22,7 @@
 		 maxWait：最大等待秒数，单位毫秒，超时会报错误信息；
 		-->
 		<property name = "driverClassName" value = "com.mysql.jdbc.Driver" />
-		<property name = "url" value = "jdbc:mysql://10.180.17.56:3306/tcc" />
+		<property name = "url" value = "jdbc:mysql://10.180.17.70:3306/tcc" />
 		<property name = "username" value = "tcc" />
 		<property name = "password" value = "tcc" />
 		<property name = "initialSize" value = "10"/>
@@ -32,13 +35,13 @@
 	<bean id = "systemDataSource" class = "org.apache.commons.dbcp.BasicDataSource"
 		destroy-method = "close">
 		<property name = "driverClassName" value = "com.mysql.jdbc.Driver" />
-		<property name = "url" value = "jdbc:mysql://10.180.17.56:3306/tcc_global" />
+		<property name = "url" value = "jdbc:mysql://10.180.17.70:3306/tcc_global" />
 		<property name = "username" value = "tcc" />
 		<property name = "password" value = "tcc" />
-		<property name = "initialSize" value = "1"/>
+		<property name = "initialSize" value = "5"/>
 		<property name = "maxActive" value = "10" />
-		<property name = "maxIdle" value = "2" />
-		<property name = "minIdle" value = "2" />
+		<property name = "maxIdle" value = "10" />
+		<property name = "minIdle" value = "10" />
 		<property name = "maxWait" value = "2000" />
 	</bean>
 	

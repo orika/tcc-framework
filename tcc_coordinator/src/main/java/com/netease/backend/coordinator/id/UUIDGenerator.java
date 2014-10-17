@@ -9,9 +9,6 @@
 package com.netease.backend.coordinator.id;
 
 public interface UUIDGenerator {
-	/**
-	 * Description: get next unique trxId called uuid
-	 * @return next uuid
-	 */
+	void init(long lastUUID);
 	long next();
 }

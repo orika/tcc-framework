@@ -167,7 +167,7 @@ public class TccManager implements ApplicationContextAware {
 				else
 					proc.setSequence(cancelSeq[i]);
 				proc.setService(getServiceName(participants[i]));
-				confirmList.add(proc);
+				cancelList.add(proc);
 			}
 			
 			for (int i = 0; i < participants.length; i++) {
@@ -177,7 +177,7 @@ public class TccManager implements ApplicationContextAware {
 				else
 					proc.setSequence(expireSeq[i]);
 				proc.setService(getServiceName(participants[i]));
-				confirmList.add(proc);
+				expireList.add(proc);
 			}
 		}
 

@@ -186,7 +186,7 @@ public class DbUtil {
 			
 			// set insert values
 			localPstmt.setLong(1, tx.getUUID());
-			localPstmt.setInt(2, logType.ordinal());
+			localPstmt.setInt(2, logType.getCode());
 			localPstmt.setLong(3, tx.getLastTimeStamp());
 			localPstmt.setBytes(4, trxContent);
 			
@@ -203,7 +203,6 @@ public class DbUtil {
 			} catch (SQLException e) {
 				logger.error("Write log error.", e);
 			}
-			
 		}
 	}
 
@@ -249,13 +248,14 @@ public class DbUtil {
 		// insert record to Expire_trx_info to avoid other node to confirm/cancel
 		try {
 			systemConn = systemDataSource.getConnection();
-			systemPstmt = systemConn.prepareStatement("INSERT IGNORE INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION)" +
-					" VALUES(?,?)");
+			systemPstmt = systemConn.prepareStatement("INSERT IGNORE INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION, TRX_TIMESTAMP)" +
+					" VALUES(?,?,?)");
 			
 			systemPstmt.setLong(1, uuid);
-			systemPstmt.setInt(2, Action.EXPIRE.ordinal());
-			
-			res = systemPstmt.executeUpdate();
+			systemPstmt.setInt(2, Action.EXPIRE.getCode());
+			systemPstmt.setLong(3, System.currentTimeMillis());
+			systemPstmt.executeUpdate();
+			res = systemPstmt.getUpdateCount();
 		} catch (SQLException e) {
 			logger.error("Check expired error.", e);
 			throw new LogException("Check expire error");
@@ -281,7 +281,7 @@ public class DbUtil {
 				systemRset = systemPstmt.executeQuery();
 				// if other node confirm or cancel this trx , then checkfailed
 				if (systemRset.next()) {
-					if (systemRset.getInt(1) != Action.EXPIRE.ordinal()) {
+					if (systemRset.getInt(1) != Action.EXPIRE.getCode()) {
 						return false;
 					} else { 
 						return true;
@@ -392,8 +392,7 @@ public class DbUtil {
 			pstmt.setLong(1, startpoint);
 			pstmt.setFetchSize(STREAM_SIZE);
 			ResultSet rset = pstmt.executeQuery();
-			
-			return new LogScannerImp(conn, pstmt, rset);
+			return new LogScannerImp(this, conn, pstmt, rset);
 		} catch (SQLException e) {
 			logger.error("Start read log error.", e);
 			throw new LogException("Start read log error");
@@ -476,7 +475,7 @@ public class DbUtil {
 					" VALUES(?,?)");
 			
 			systemPstmt.setLong(1, uuid);
-			systemPstmt.setInt(2, Action.REGISTERED.ordinal());
+			systemPstmt.setInt(2, Action.REGISTERED.getCode());
 			
 			res = systemPstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -505,7 +504,7 @@ public class DbUtil {
 				
 				if (systemRset.next()) {
 					// if other node expire this trx , then checkfailed
-					if (systemRset.getInt(1) != Action.REGISTERED.ordinal()) {
+					if (systemRset.getInt(1) != Action.REGISTERED.getCode()) {
 						return false;
 					} else { 
 						return true;

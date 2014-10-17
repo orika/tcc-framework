@@ -42,6 +42,10 @@ public class Transaction {
 	public void setEndTime(long endTime) {
 		this.endTime = endTime;
 	}
+	
+	public long getElapsed() {
+		return endTime - beginTime;
+	}
 
 	public List<Procedure> getExpireList() {
 		return expireList;
@@ -77,8 +81,9 @@ public class Transaction {
 	public void confirm(List<Procedure> procList) throws IllegalActionException {
 		if (status.compareAndSet(Action.REGISTERED, Action.CONFIRM))
 			this.procList = procList;
-		else 
+		else {
 			throw new IllegalActionException(uuid, status.get(), Action.CONFIRM);
+		}
 	}
 	
 	public void cancel(List<Procedure> procList) throws IllegalActionException {
@@ -97,11 +102,19 @@ public class Transaction {
 		return endTime == -1 ? (beginTime == -1 ? createTime : beginTime) : endTime;
 	}
 	
+	public boolean isExpired(long timestamp) {
+		if (status.get() == Action.EXPIRE)
+			return true;
+		if (status.get() == Action.REGISTERED)
+			return createTime < timestamp;
+		return false;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Transaction ").append(uuid);
-		if (status.get() != Action.REGISTERED) {
+		if (status.get() != Action.REGISTERED && status.get() != Action.EXPIRE) {
 			builder.append(" action:").append(status.get().name());
 			builder.append(" service").append(procList);
 		}

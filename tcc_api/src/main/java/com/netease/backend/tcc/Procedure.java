@@ -18,6 +18,8 @@ public class Procedure implements Comparable<Procedure>, Serializable {
 	
 	private int sequence;
 	
+	private transient int index = 0;
+	
 	private List<Object> parameters;
 	
 	public Procedure() {
@@ -25,6 +27,14 @@ public class Procedure implements Comparable<Procedure>, Serializable {
 	
 	public Procedure(String service) {
 		this.service = service;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public int getSequence() {

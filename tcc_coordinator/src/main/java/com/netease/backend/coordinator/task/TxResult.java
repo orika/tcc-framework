@@ -4,7 +4,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.tcc.error.HeuristicsException;
 
 public class TxResult {
@@ -13,20 +12,15 @@ public class TxResult {
 	private HeuristicsException exception;
 	private Worker[] workers;
 	private long uuid;
-	private volatile TxResultWatcher watcher = null;
 	
-	public TxResult(long uuid, int count, TxResultWatcher watcher) {
+	public TxResult(long uuid, int count) {
 		this.uuid = uuid;
 		this.countDown = new CountDownLatch(count);
 		this.workers = new Worker[count];
-		this.watcher = watcher;
 	}
 	
 	private void releaseOne() {
 		countDown.countDown();
-		if (watcher != null && countDown.getCount() == 0) {
-			watcher.notifyResult(this);
-		}
 	}
 	
 	private void interrupt() {
@@ -76,12 +70,6 @@ public class TxResult {
 			return false;
 		}
 		return true;
-	}
-	
-	public void setWatcher(TxResultWatcher watcher) {
-		this.watcher = watcher;
-		if (countDown.getCount() == 0)
-			watcher.notifyResult(this);
 	}
 	
 	private class Worker {

@@ -18,10 +18,10 @@ public class LogException extends CoordinatorException {
 	 */
 	private static final long serialVersionUID = -8019056627152712074L;
 	
-	/**
-	 * Constructor
-	 * @param message
-	 */
+	public LogException(String message, Throwable t) {
+		super(message, t);
+	}
+	
 	public LogException(String message) {
 		super(message);
 	}

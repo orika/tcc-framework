@@ -1,32 +1,32 @@
 package com.netease.backend.coordinator.metric;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class ActionMetric implements Metric{
 	
-	private AtomicInteger count = new AtomicInteger(0);
-	private AtomicInteger time = new AtomicInteger(0);
-	private AtomicInteger maxTime = new AtomicInteger(0);
+	private AtomicLong count = new AtomicLong(0);
+	private AtomicLong time = new AtomicLong(0);
+	private AtomicLong maxTime = new AtomicLong(0);
 
-	int getCount() {
+	long getCount() {
 		return count.get();
 	}
 	
-	int getAvgTime() {
+	long getAvgTime() {
 		if (count.get() == 0)
 			return 0;
 		return time.get() / count.get();
 	}
 	
-	int getMaxTime() {
+	long getMaxTime() {
 		return maxTime.get();
 	}
 	
-	public void addCompleted(int time) {
+	public void addCompleted(long time) {
 		count.incrementAndGet();
 		this.time.addAndGet(time);
 		while (true) {
-			int t = maxTime.get();
+			long t = maxTime.get();
 			if (time > t) {
 				if (maxTime.compareAndSet(t, time))
 					break;

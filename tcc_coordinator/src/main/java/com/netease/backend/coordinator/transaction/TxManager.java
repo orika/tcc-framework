@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.id.IdGenerator;
 import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogManager;
+import com.netease.backend.coordinator.metric.GlobalMetric;
+import com.netease.backend.coordinator.processor.ExpireProcessor;
+import com.netease.backend.coordinator.processor.RetryProcessor;
 import com.netease.backend.coordinator.processor.TccProcessor;
-import com.netease.backend.coordinator.task.TxResultWatcher;
 import com.netease.backend.tcc.Procedure;
 import com.netease.backend.tcc.error.CoordinatorException;
 import com.netease.backend.tcc.error.HeuristicsException;
@@ -21,23 +24,45 @@ public class TxManager {
 	private TxTable txTable = null;
 	private LogManager logManager = null;
 	private TccProcessor tccProcessor = null;
-
-	public void setIdGenerator(IdGenerator idGenerator) {
+	private RetryProcessor retryProcessor = null;
+	private ExpireProcessor expireProcessor = null;
+	private GlobalMetric metric = null;
+	
+	public TxManager(CoordinatorConfig config, LogManager logManager, IdGenerator idGenerator) {
+		this.tccProcessor = new TccProcessor(config);
+		this.retryProcessor = new RetryProcessor(config, tccProcessor);
+		this.expireProcessor = new ExpireProcessor(retryProcessor);
+		this.txTable = new TxTable(config, expireProcessor, logManager);
+		this.metric = new GlobalMetric(txTable);
 		this.idGenerator = idGenerator;
-	}
-
-	public void setTxTable(TxTable txTable) {
-		this.txTable = txTable;
-	}
-
-	public void setLogManager(LogManager logManager) {
 		this.logManager = logManager;
+		expireProcessor.setTxTable(txTable);
+		retryProcessor.setTxManager(this);
+	}
+	
+	public void beginExpire() {
+		txTable.beginExpiring();
+	}
+	
+	public TxTable getTxTable() {
+		return txTable;
+	}
+	
+	public void recover() throws CoordinatorException {
+		retryProcessor.recover(txTable.getTxMap().values().iterator());
+	}
+	
+	public void enableRetry() {
+		retryProcessor.start();
+	}
+	
+	public GlobalMetric getGlobalMetric() {
+		return metric;
 	}
 
-	public void setTccProcessor(TccProcessor tccProcessor) {
-		this.tccProcessor = tccProcessor;
-	}
-
+	/*
+	 * register is not added to metric right now
+	 */
 	public Transaction createTx(List<Procedure> procList) throws LogException {
 		Transaction tx = new Transaction(idGenerator.getNextUUID(), procList);
 		tx.setCreateTime(System.currentTimeMillis());
@@ -45,6 +70,7 @@ public class TxManager {
 		txTable.put(tx);
 		if (logger.isDebugEnabled()) 
 			logger.debug("register: " + tx);
+		metric.incCompleted(Action.REGISTERED, System.currentTimeMillis() - tx.getCreateTime());
 		return tx;
 	}
 	
@@ -54,7 +80,7 @@ public class TxManager {
 		try {
 			if (logger.isDebugEnabled())
 				logger.debug("perform:" + tx);
-			tccProcessor.perform(uuid, procList);
+			tccProcessor.perform(uuid, procList, false);
 			finish(uuid, action);
 		} catch (HeuristicsException e) {
 			heuristic(tx, action, e);
@@ -68,7 +94,7 @@ public class TxManager {
 		try {
 			if (logger.isDebugEnabled())
 				logger.debug("perform timeout " + timeout + ":" + tx);
-			tccProcessor.perform(uuid, procList, timeout);
+			tccProcessor.perform(uuid, procList, timeout, false);
 			finish(uuid, action);
 		} catch (HeuristicsException e) {
 			heuristic(tx, action, e);
@@ -82,8 +108,6 @@ public class TxManager {
 			tx = new Transaction(uuid, null);
 			txTable.put(tx);
 		}
-		if (logger.isDebugEnabled())
-			logger.debug("begin " + tx);
 		switch (action) {
 			case CONFIRM:
 				tx.confirm(procList);
@@ -94,8 +118,11 @@ public class TxManager {
 			default:
 				throw new IllegalActionException(uuid, tx.getAction(), action);
 		}
+		if (logger.isDebugEnabled())
+			logger.debug("begin " + tx);
 		tx.setBeginTime(System.currentTimeMillis());
 		logManager.logBegin(tx, action);
+		metric.incRunningCount(action);
 		return tx;
 	}
 	
@@ -111,54 +138,40 @@ public class TxManager {
 		} catch (LogException e) {
 			logger.warn("log finish failed:" + tx.getUUID());
 		}
+		metric.incCompleted(action, tx.getElapsed());
 	}
 	
 	public void heuristic(Transaction tx, Action action, HeuristicsException e) throws LogException {
 		tx.setEndTime(System.currentTimeMillis());
 		logManager.logHeuristics(tx, action, e);
+		txTable.remove(tx.getUUID());
 		logger.info("tx " + tx.getUUID() + " heuristics code:" + e.getCode());
+		metric.incHeuristics();
 	}
 	
 	
-	public void retryAsync(Transaction tx, TxResultWatcher watcher) throws HeuristicsException, LogException {
+	public void retry(Transaction tx) throws LogException {
 		Action action = tx.getAction();
-		if (action == Action.EXPIRE && !logManager.checkExpire(tx.getUUID())) {
+		if ((action == Action.EXPIRE || action == Action.REGISTERED) && !logManager.checkExpire(tx.getUUID())) {
 			if (logger.isDebugEnabled())
 				logger.debug("Transaction " + tx.getUUID() + " check expire false");
 			return;
 		}
-		performAsync(tx, action, watcher);
+		perform(tx, action);
 	}
 	
-	/*public void expire(Transaction tx) throws HeuristicsException, CoordinatorException {
-		if (!logManager.checkExpire(tx.getUUID())) {
+	private void perform(Transaction tx, Action action) throws LogException {
+		long uuid = tx.getUUID();
+		tx.setBeginTime(System.currentTimeMillis());
+		metric.incRunningCount(action);
+		try {
+			tccProcessor.perform(uuid, tx.getProcList(action), true);
+		} catch (HeuristicsException e) {
+			heuristic(tx, action, e);
 			return;
 		}
-		tx.expire();
-		perform(tx, Action.EXPIRE);
-	}*/
-	
-/*	private void perform(Transaction tx, Action action) throws LogException, HeuristicsException {
-		long uuid = tx.getUUID();
-		tx.setBeginTime(System.currentTimeMillis());
-		logManager.logBegin(tx, action);
-		tccProcessor.perform(uuid, tx.getProcList(action));
-		txTable.remove(uuid);
-		tx.setEndTime(System.currentTimeMillis());
-		try {
-			logManager.logFinish(tx, action);
-		} catch (LogException e) {
-			logger.warn("log finish failed:" + tx.getUUID());
-		}
-	}*/
-	
-	private void performAsync(Transaction tx, Action action, TxResultWatcher watcher) throws LogException {
-		long uuid = tx.getUUID();
-		tx.setBeginTime(System.currentTimeMillis());
-		logManager.logBegin(tx, action);
-		tccProcessor.performAsync(uuid, tx.getProcList(action), watcher, true);
 		if (logger.isDebugEnabled())
-			logger.debug("perform aync:" + tx);
+			logger.debug("perform background :" + tx);
 		txTable.remove(uuid);
 		tx.setEndTime(System.currentTimeMillis());
 		try {
@@ -166,5 +179,6 @@ public class TxManager {
 		} catch (LogException e) {
 			logger.warn("log finish failed:" + tx.getUUID());
 		}
+		metric.incCompleted(action, tx.getElapsed());
 	}
 }

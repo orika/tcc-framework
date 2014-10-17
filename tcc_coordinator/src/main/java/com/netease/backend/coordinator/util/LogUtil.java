@@ -1,7 +1,9 @@
 package com.netease.backend.coordinator.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
@@ -17,22 +19,42 @@ public class LogUtil {
 			oo = new ObjectOutputStream(bo);
 			oo.writeObject(procList);
 			result = bo.toByteArray();
+			return result;
 		} catch (IOException e) {
-			
+			e.printStackTrace();
 		} finally {
 			try {
-				oo.close();
+				bo.close();
+				if (oo != null)
+					oo.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-	
-		return result;
+		throw new IllegalArgumentException("can not serialize proclist");
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public static List<Procedure> deserialize(byte[] procs) {
-		return null;
+		ByteArrayInputStream bo = new ByteArrayInputStream(procs);
+		ObjectInputStream oo = null;
+		try {
+			oo = new ObjectInputStream(bo);
+			return (List<Procedure>) oo.readObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				bo.close();
+				if (oo != null)
+					oo.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		throw new IllegalArgumentException("can not deserialize proclist");
 	}
 }

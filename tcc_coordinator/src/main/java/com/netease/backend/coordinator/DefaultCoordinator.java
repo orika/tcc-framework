@@ -37,6 +37,7 @@ public class DefaultCoordinator implements Coordinator {
 	
 	public short confirm(int sequenceId, long uuid, List<Procedure> procedures) 
 			throws CoordinatorException {
+		logger.debug("process:" + procedures);
 		for (Procedure proc : procedures) {
 			if (proc.getMethod() == null)
 				proc.setMethod(ServiceTask.CONFIRM);
@@ -54,6 +55,7 @@ public class DefaultCoordinator implements Coordinator {
 	
 	public short confirm(int sequenceId, final long uuid, long timeout, final List<Procedure> procedures) 
 			throws CoordinatorException {
+		logger.debug("process:" + procedures);
 		for (Procedure proc : procedures) {
 			if (proc.getMethod() == null)
 				proc.setMethod(ServiceTask.CONFIRM);
@@ -72,6 +74,7 @@ public class DefaultCoordinator implements Coordinator {
 	@Override
 	public short cancel(int sequenceId, long uuid, List<Procedure> procedures) 
 			throws CoordinatorException {
+		logger.debug("process:" + procedures);
 		for (Procedure proc : procedures) {
 			if (proc.getMethod() == null)
 				proc.setMethod(ServiceTask.CANCEL);
@@ -90,6 +93,7 @@ public class DefaultCoordinator implements Coordinator {
 	@Override
 	public short cancel(int sequenceId, long uuid, long timeout, List<Procedure> procedures) 
 			throws CoordinatorException {
+		logger.debug("process:" + procedures);
 		for (Procedure proc : procedures) {
 			if (proc.getMethod() == null)
 				proc.setMethod(ServiceTask.CANCEL);

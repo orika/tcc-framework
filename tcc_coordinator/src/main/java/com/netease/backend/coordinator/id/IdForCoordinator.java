@@ -9,6 +9,7 @@
 
 package com.netease.backend.coordinator.id;
 
+
 public interface IdForCoordinator {
 	/**
 	 * Description: get server id
