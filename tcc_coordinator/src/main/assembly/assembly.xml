@@ -21,16 +21,35 @@
 	<includeBaseDirectory>true</includeBaseDirectory>
 	<fileSets>
 		<fileSet>
-			<directory>${project.build.directory}/dubbo/META-INF/assembly/bin</directory>
-			<outputDirectory>bin</outputDirectory>
+            <directory>${project.build.directory}</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+        </fileSet>
+		<fileSet>
+			<directory>src/main/resources/META_INF</directory>
+			<outputDirectory>conf</outputDirectory>
 			<fileMode>0755</fileMode>
 		</fileSet>
 		<fileSet>
-			<directory>src/main/assembly/conf</directory>
-			<outputDirectory>conf</outputDirectory>
-			<fileMode>0644</fileMode>
+			<directory>src/main/resources/scripts</directory>
+			<outputDirectory>scripts</outputDirectory>
+			<fileMode>0755</fileMode>
 		</fileSet>
 	</fileSets>
+	<files>
+		<file>
+			<source>src/main/resources/log4j.xml</source>
+			<outputDirectory>conf</outputDirectory>
+			<fileMode>0755</fileMode>
+		</file>
+		<file>
+			<source>src/main/resources/dubbo.properties</source>
+			<outputDirectory>conf</outputDirectory>
+			<fileMode>0755</fileMode>
+		</file>
+	</files>
 	<dependencySets>
 		<dependencySet>
 			<outputDirectory>lib</outputDirectory>

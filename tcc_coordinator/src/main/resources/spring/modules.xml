@@ -33,6 +33,7 @@
 		<property name="txManager" ref="txManager" />
 		<property name="logMgr" ref="logManager" />
 		<property name="idForCoordinator" ref="idForCoordinator" />
+		<property name="dbUtil" ref="dbUtil" />
 	</bean>
 	
 	<bean id = "txManager" class = "com.netease.backend.coordinator.transaction.TxManager">

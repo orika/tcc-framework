@@ -70,7 +70,23 @@
                	 	<target>1.6</target> 
                 	<encoding>UTF8</encoding> 
           		</configuration> 
-       	 	</plugin> 
+       	 	</plugin>
+			  <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                    </archive>
+                    <excludes>
+                        <exclude>**/*.xml</exclude>
+                        <exclude>**/*.properties</exclude>
+						<exclude>**/*.sql</exclude>
+						<exclude>**/*.lst</exclude>
+						<exclude>**/*.py</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
