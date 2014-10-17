@@ -6,7 +6,6 @@ import com.netease.om.Monitor;
 public class MonitorUtil {
 	
 	public void writeMonitorRec(MonitorRecord rec) {
-		// TODO Auto-generated method stub
 		Monitor.setAttributeCount("CUR_TRX_NUM", rec.getCurTrxNum());
 		Monitor.setAttributeCount("CUR_PROCESS_TRX_NUM", rec.getCurProcessTrxNum());
 		Monitor.setAttributeCount("REGISTED_TRX_NUM", rec.getRegistTrxNum());

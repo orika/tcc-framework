@@ -1,8 +1,15 @@
+/**
+ * @Description:			Monitor of Tcc coordinator
+ * Copy Right:				Netease
+ * Project:					TCC
+ * JDK Version				jdk-1.6
+ * @version					1.0
+ * @author					huwei				
+ */
 package com.netease.backend.coordinator.monitor;
 
 import com.netease.backend.coordinator.util.DbUtil;
 import com.netease.backend.coordinator.util.MonitorUtil;
-import com.netease.om.Monitor;
 
 public class DBTccMonitor extends TccMonitor {
 	
@@ -23,7 +30,10 @@ public class DBTccMonitor extends TccMonitor {
 	
 	@Override
 	public void write(MonitorRecord rec) throws MonitorException {
+		// record in monitor platform
 		monUtil.writeMonitorRec(rec);
+		
+		// record in system database
 		dbUtil.writeMonitorRec(rec);
 	}
 }

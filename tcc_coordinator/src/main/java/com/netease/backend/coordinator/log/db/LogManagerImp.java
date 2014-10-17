@@ -1,3 +1,12 @@
+/**
+ * @Description:			LogManager implemention
+ * Copy Right:				Netease
+ * Project:					TCC
+ * JDK Version				jdk-1.6
+ * @version					1.0
+ * @author					huwei				
+ */
+
 package com.netease.backend.coordinator.log.db;
 
 import org.apache.log4j.Logger;
@@ -94,13 +103,11 @@ public class LogManagerImp implements LogManager {
 
 	@Override
 	public void setCheckpoint(long checkpoint) throws LogException {
-		// TODO Auto-generated method stub
 		this.dbUtil.setCheckpoint(checkpoint);
 	}
 
 	@Override
 	public long getCheckpoint() throws LogException {
-		// TODO Auto-generated method stub
 		long checkpoint = this.dbUtil.getCheckpoint();
 		return checkpoint;
 	}
@@ -114,14 +121,12 @@ public class LogManagerImp implements LogManager {
 
 	@Override
 	public boolean checkLocalLogMgrAlive() {
-		// TODO Auto-generated method stub
 		boolean res = this.dbUtil.checkLocaLogMgrAlive();
 		return res;
 	}
 
 	@Override
 	public LogScanner beginScan(long startpoint) throws LogException {
-		// TODO Auto-generated method stub
 		return dbUtil.beginScan(startpoint);
 	}
 

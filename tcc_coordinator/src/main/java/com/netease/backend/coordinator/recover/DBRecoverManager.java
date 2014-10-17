@@ -5,12 +5,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.netease.backend.coordinator.id.IdForCoordinator;
-import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogManager;
 import com.netease.backend.coordinator.log.LogRecord;
 import com.netease.backend.coordinator.log.LogScanner;
 import com.netease.backend.coordinator.log.LogType;
-import com.netease.backend.coordinator.log.db.LogScannerImp;
 import com.netease.backend.coordinator.processor.RetryProcessor;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.coordinator.transaction.TxTable;
@@ -87,9 +85,9 @@ public class DBRecoverManager implements RecoverManager {
 				case TRX_END_CANCEL:
 				case TRX_END_EXPIRE:
 				case TRX_HEURESTIC:
+					// if trx is finish or heuristic, remove it from txtable
 					this.txTable.remove(uuid);
 					break;
-					
 				}
 				// update max Uuid
 				if (this.idForCoordinator.isUuidOwn(trx.getUUID()) &&
