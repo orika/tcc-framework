@@ -72,8 +72,10 @@ public class DbUtil {
 			localConn = localDataSource.getConnection();
 			localPstmt = localConn.prepareStatement("SELECT SERVER_ID FROM COORDINATOR_INFO");
 			localRset = localPstmt.executeQuery();
-			if (localRset.next())
+			if (localRset.next()) {
 				serverId = localRset.getInt(1);
+				return serverId;
+			}
 		} catch (SQLException e) {
 			logger.error("Read COORDINATOR_INFO table error", e);
 			throw new CoordinatorException("Cannot fetch local ServerId");
@@ -92,16 +94,26 @@ public class DbUtil {
 		
 		// if local serverId not exist means the node is not initiated
 		// register this node to system database and get a unique serverId
-		if (serverId == -1) {
-			// if have no server id, take one from system db
-			Connection sysConn = null;
-			PreparedStatement sysPstmt = null;
-			ResultSet sysRset = null;
-			try {
-				sysConn = systemDataSource.getConnection();
+		// if have no server id, take one from system db
+		Connection sysConn = null;
+		PreparedStatement sysPstmt = null;
+		ResultSet sysRset = null;
+		try {
+			sysConn = systemDataSource.getConnection();
+			sysPstmt = sysConn.prepareStatement("SELECT SERVER_ID FROM SERVER_INFO WHERE SERVER_IP = ? AND RDS_IP = ?");
+			
+			sysPstmt.setString(1, config.getServerIp());
+			sysPstmt.setString(2, config.getRdsIp());
+			sysRset = sysPstmt.executeQuery();
+			if (sysRset.next()) {
+				serverId = sysRset.getInt(1);
+			} else {
+				// if not exist in system db, then alloc one 
+				sysRset.close();
+				sysPstmt.close();
+				
 				sysPstmt = sysConn.prepareStatement("Insert into SERVER_INFO(SERVER_IP, RDS_IP) values (?, ?)", Statement.RETURN_GENERATED_KEYS);
 				
-				// set insert value
 				sysPstmt.setString(1, config.getServerIp());
 				sysPstmt.setString(2, config.getRdsIp());
 				
@@ -111,47 +123,48 @@ public class DbUtil {
 					serverId = sysRset.getInt(1);
 				else
 					throw new CoordinatorException("Cannot get a new ServerId");
+			}
+		} catch (SQLException e) {
+			logger.error("Write SERVER_INFO table error", e);
+			throw new CoordinatorException("Cannot get a new ServerId");
+		} finally {
+			try {
+				if (sysRset != null)
+					sysRset.close();
+				if (sysPstmt != null)
+					sysPstmt.close();
+				if (sysConn != null)
+					sysConn.close();
 			} catch (SQLException e) {
 				logger.error("Write SERVER_INFO table error", e);
-				throw new CoordinatorException("Cannot get a new ServerId");
-			} finally {
-				try {
-					if (sysRset != null)
-						sysRset.close();
-					if (sysPstmt != null)
-						sysPstmt.close();
-					if (sysConn != null)
-						sysConn.close();
-				} catch (SQLException e) {
-					logger.error("Write SERVER_INFO table error", e);
-				}	
-			}
+			}	
+		}
+		
+		// insert new ServerId to local DB
+		try {
+			localConn = localDataSource.getConnection();
+			localPstmt = localConn.prepareStatement("INSERT INTO COORDINATOR_INFO(SERVER_ID, CHECKPOINT) VALUES(?, ?)");
 			
-			// insert new ServerId to local DB
+			// set update value
+			localPstmt.setInt(1, serverId);
+			localPstmt.setLong(2, 0);
+			
+			localPstmt.executeUpdate();
+		} catch (SQLException e) {
+			logger.error("Write COORDINATOR_INFO table error", e);
+			throw new CoordinatorException("Cannot update local ServerId");
+		} finally {
 			try {
-				localConn = localDataSource.getConnection();
-				localPstmt = localConn.prepareStatement("INSERT INTO COORDINATOR_INFO(SERVER_ID, CHECKPOINT) VALUES(?, ?)");
-				
-				// set update value
-				localPstmt.setInt(1, serverId);
-				localPstmt.setLong(2, 0);
-				
-				localPstmt.executeUpdate();
+				if (localPstmt != null)
+					localPstmt.close();
+				if (localConn != null)
+					localConn.close();
 			} catch (SQLException e) {
 				logger.error("Write COORDINATOR_INFO table error", e);
-				throw new CoordinatorException("Cannot update local ServerId");
-			} finally {
-				try {
-					if (localPstmt != null)
-						localPstmt.close();
-					if (localConn != null)
-						localConn.close();
-				} catch (SQLException e) {
-					logger.error("Write COORDINATOR_INFO table error", e);
-				}	
-			}
-			
-		} 
+			}	
+		}
+		
+	
 		return serverId;
 	}
 
@@ -729,15 +742,22 @@ public class DbUtil {
 				") ENGINE=InnoDB DEFAULT CHARSET=utf8";
 		
 		// get tomorrow 00:00:00 date to specify partition info
-		Calendar  date = Calendar.getInstance();
+		Calendar date = Calendar.getInstance();
 		date.set(Calendar.HOUR, 0);
 		date.set(Calendar.SECOND, 0);
 		date.set(Calendar.MINUTE, 0);
 		date.set(Calendar.MILLISECOND, 0);
 		date.add(Calendar.DATE, 1);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		String dateString = sdf.format(date.getTime());
-		long millTime = date.getTimeInMillis();
+		// get tomorrow
+		String dateString1 = sdf.format(date.getTime());
+		long millTime1 = date.getTimeInMillis();
+		
+		// get the day after tomorrow
+		date.add(Calendar.DATE, 1);
+		String dateString2 = sdf.format(date.getTime());
+		long millTime2 = date.getTimeInMillis(); 
+		
 		String createCoordinatorLogTableSql = "CREATE TABLE `COORDINATOR_LOG` (" +
 				"`LOG_ID` bigint(20) NOT NULL AUTO_INCREMENT," +
 				"`TRX_ID` bigint(20) NOT NULL," +
@@ -749,9 +769,14 @@ public class DbUtil {
 				") ENGINE=InnoDB DEFAULT CHARSET=utf8 " +
 				"PARTITION BY RANGE(`TRX_TIMESTAMP`)(" +
 				"   PARTITION p" +
-				dateString +
+				dateString1 +
 				" VALUES LESS THAN (" +
-				millTime +
+				millTime1 +
+				") ENGINE = InnoDB, " +
+				"   PARTITION p" +
+				dateString2 +
+				" VALUES LESS THAN (" +
+				millTime2 +
 				") ENGINE = InnoDB" +
 				")";
 		
