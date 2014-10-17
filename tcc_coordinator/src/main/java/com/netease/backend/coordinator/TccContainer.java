@@ -1,5 +1,7 @@
 package com.netease.backend.coordinator;
 
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
 
 import com.netease.backend.coordinator.id.UUIDGenerator;
@@ -35,8 +37,10 @@ public class TccContainer {
 		txManager.beginExpire();
 	}
 	
-	public static void main(String[] args) {
-		com.alibaba.dubbo.container.Main.main(new String[0]);
+	public static void main(String[] args) throws IOException {
+		System.setProperty("dubbo.spring.config", "classpath*:/spring/*.xml");
+		com.alibaba.dubbo.container.Main.main(args);
 		logger.info("Tcc Service initializing...");
+		System.in.read();
 	}
 }

@@ -33,7 +33,6 @@
 		<property name="txManager" ref="txManager" />
 		<property name="logMgr" ref="logManager" />
 		<property name="idForCoordinator" ref="idForCoordinator" />
-		<property name="dbUtil" ref="dbUtil" />
 	</bean>
 	
 	<bean id = "txManager" class = "com.netease.backend.coordinator.transaction.TxManager">
@@ -58,8 +57,8 @@
 	</bean>
 	
 	<bean id = "dbUtil" class = "com.netease.backend.coordinator.util.DbUtil">
-		<constructor-arg ref= "config"/>
-		<property name = "localDataSource" ref = "localDataSource" />
-		<property name = "systemDataSource" ref = "systemDataSource" />
+		<constructor-arg index = "0" ref= "config"/>
+		<constructor-arg index = "1" ref= "localDataSource"/>
+		<constructor-arg index = "2" ref= "systemDataSource"/>
 	</bean>
 </beans>

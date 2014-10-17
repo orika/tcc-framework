@@ -9,11 +9,9 @@ import com.netease.backend.coordinator.log.LogManager;
 import com.netease.backend.coordinator.log.LogRecord;
 import com.netease.backend.coordinator.log.LogScanner;
 import com.netease.backend.coordinator.log.LogType;
-import com.netease.backend.coordinator.processor.RetryProcessor;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.coordinator.transaction.TxManager;
 import com.netease.backend.coordinator.transaction.TxTable;
-import com.netease.backend.coordinator.util.DbUtil;
 import com.netease.backend.coordinator.util.LogUtil;
 import com.netease.backend.tcc.Procedure;
 import com.netease.backend.tcc.error.CoordinatorException;
@@ -27,10 +25,7 @@ public class DBRecoverManager implements RecoverManager {
 	private IdForCoordinator idForCoordinator = null;
 	private long lastMaxUUID = 0;
 
-	private DbUtil dbUtil = null;
 
-	public void setRetryProcessor(RetryProcessor retryProcessor) {
-	}
 
 
 	public void setIdForCoordinator(IdForCoordinator idForCoordinator) {
@@ -46,21 +41,12 @@ public class DBRecoverManager implements RecoverManager {
 		this.logMgr = logMgr;
 	}
 	
-	public void setDbUtil(DbUtil dbUtil) {
-		this.dbUtil = dbUtil;
-	}
-
-	public void initLocalDb() throws CoordinatorException  {
-		dbUtil.initLocalDb();
-	}
 
 	@Override
 	public void init() {
 		logger.info("begin recovering transaction table");
 		LogScanner logScanner = null;
 		try {
-			// init local database
-			initLocalDb();
 			// recover from log
 			long checkpoint = logMgr.getCheckpoint();
 			logScanner = logMgr.beginScan(checkpoint);
