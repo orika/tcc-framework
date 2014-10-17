@@ -32,6 +32,7 @@ public class DbUtil {
 	private BasicDataSource localDataSource = null;
 	private BasicDataSource systemDataSource = null;
 	private static int STREAM_SIZE = 100;
+	private static int PARTITION_NUM = 14;
 	private CoordinatorConfig config = null;
 	
 	public DbUtil(CoordinatorConfig config, BasicDataSource localDataSource, BasicDataSource systemDataSource) throws CoordinatorException {
@@ -741,7 +742,7 @@ public class DbUtil {
 				"KEY `IDX_TIME_STAMP` (`TRX_TIMESTAMP`)" +
 				") ENGINE=InnoDB DEFAULT CHARSET=utf8";
 		
-		// get tomorrow 00:00:00 date to specify partition info
+		// get  date to specify partition info, partition number is 14 day by default
 		Calendar date = Calendar.getInstance();
 		date.set(Calendar.HOUR, 0);
 		date.set(Calendar.SECOND, 0);
@@ -749,14 +750,6 @@ public class DbUtil {
 		date.set(Calendar.MILLISECOND, 0);
 		date.add(Calendar.DATE, 1);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		// get tomorrow
-		String dateString1 = sdf.format(date.getTime());
-		long millTime1 = date.getTimeInMillis();
-		
-		// get the day after tomorrow
-		date.add(Calendar.DATE, 1);
-		String dateString2 = sdf.format(date.getTime());
-		long millTime2 = date.getTimeInMillis(); 
 		
 		String createCoordinatorLogTableSql = "CREATE TABLE `COORDINATOR_LOG` (" +
 				"`LOG_ID` bigint(20) NOT NULL AUTO_INCREMENT," +
@@ -767,19 +760,27 @@ public class DbUtil {
 				"PRIMARY KEY (`LOG_ID`,`TRX_TIMESTAMP`)," +
 				"KEY `IDX_TIMESTAMP` (`TRX_TIMESTAMP`)" +
 				") ENGINE=InnoDB DEFAULT CHARSET=utf8 " +
-				"PARTITION BY RANGE(`TRX_TIMESTAMP`)(" +
-				"   PARTITION p" +
-				dateString1 +
-				" VALUES LESS THAN (" +
-				millTime1 +
-				") ENGINE = InnoDB, " +
-				"   PARTITION p" +
-				dateString2 +
-				" VALUES LESS THAN (" +
-				millTime2 +
-				") ENGINE = InnoDB" +
-				")";
+				"PARTITION BY RANGE(`TRX_TIMESTAMP`)(";
 		
+		String[] dateStrings = new String[PARTITION_NUM];
+		long[] millTimes = new long[PARTITION_NUM];
+		for (int i = 0; i < PARTITION_NUM;  i++) {
+			dateStrings[i] = sdf.format(date.getTime());
+			millTimes[i] = date.getTimeInMillis() / 1000;
+			date.add(Calendar.DATE, 1);
+			createCoordinatorLogTableSql += "   PARTITION p" +
+												dateStrings[i] +
+												" VALUES LESS THAN (" +
+												millTimes[i] +
+												") ENGINE = InnoDB";
+			if (i != PARTITION_NUM - 1) {
+				createCoordinatorLogTableSql += ", "; 
+			} else {
+				createCoordinatorLogTableSql += ")";
+			}
+		}
+		
+	
 		try {
 			localConn = localDataSource.getConnection();
 			localPstmt = localConn.prepareStatement(createCoordinatorInfoTableSql);
