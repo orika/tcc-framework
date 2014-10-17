@@ -10,6 +10,7 @@ public class CoordinatorConfig {
 	private int retryParallelism = 20;
 	private int expireTime = 10800000;
 	private int ckptInterval = 30000;
+	private int monitorInterval = 60000;
 	
 	public String getServerIp() {
 		if (serverIp == null)
@@ -59,5 +60,13 @@ public class CoordinatorConfig {
 
 	public void setCkptInterval(int ckptInterval) {
 		this.ckptInterval = ckptInterval;
+	}
+
+	public int getMonitorInterval() {
+		return monitorInterval;
+	}
+
+	public void setMonitorInterval(int monitorInterval) {
+		this.monitorInterval = monitorInterval;
 	}
 }

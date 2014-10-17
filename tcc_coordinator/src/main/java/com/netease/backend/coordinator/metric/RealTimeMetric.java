@@ -2,19 +2,20 @@ package com.netease.backend.coordinator.metric;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.netease.backend.coordinator.transaction.Action;
 import com.netease.backend.coordinator.transaction.TxTable;
 
 public class RealTimeMetric implements Metric {
 	
-	private List<AtomicInteger> actions = new ArrayList<AtomicInteger>();
+	private List<AtomicLong> actions = new ArrayList<AtomicLong>();
 	private TxTable txTable = null;
 	
-	public RealTimeMetric() {
-		for (int i = 0, j = Action.values().length; i < j; i++) {
-			actions.add(new AtomicInteger(0));
+	public RealTimeMetric(TxTable txTable) {
+		this.txTable = txTable;
+		for (long i = 0, j = Action.values().length; i < j; i++) {
+			actions.add(new AtomicLong(0));
 		}
 	}
 	
@@ -26,25 +27,25 @@ public class RealTimeMetric implements Metric {
 		actions.get(action.getCode()).decrementAndGet();
 	}
 	
-	public int getAllActionCount() {
-		int count = 0;
-		for (AtomicInteger ai : actions) {
+	public long getAllActionCount() {
+		long count = 0;
+		for (AtomicLong ai : actions) {
 			count += ai.get();
 		}
 		return count;
 	}
 	
-	public int getActionCount(Action action) {
+	public long getActionCount(Action action) {
 		return actions.get(action.getCode()).get();
 	}
 	
-	public int getActiveTxCount() {
+	public long getActiveTxCount() {
 		return txTable.getTxMap().size();
 	}
 
 	@Override
 	public void reset() {
-		for (AtomicInteger ai : actions) {
+		for (AtomicLong ai : actions) {
 			ai.set(0);
 		}
 	}

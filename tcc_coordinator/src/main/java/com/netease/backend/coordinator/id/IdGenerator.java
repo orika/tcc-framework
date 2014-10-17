@@ -23,5 +23,4 @@ public class IdGenerator {
 	public long getNextUUID() {
 		return uuidGenerator.next();
 	}
-	
 }

@@ -9,9 +9,9 @@ public interface ISale extends Participant {
 	
 	int getItemCount();
 	
-	void sell(int count);
+	void sell(long uuid, int count);
 	
-	void refond(int count);
+	void refond(long uuid, int count);
 	
 	void reserve(long uuid, int count);
 	

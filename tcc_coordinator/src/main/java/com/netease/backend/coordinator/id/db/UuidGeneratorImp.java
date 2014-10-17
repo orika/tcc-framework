@@ -2,14 +2,12 @@ package com.netease.backend.coordinator.id.db;
 
 import com.netease.backend.coordinator.id.IdForCoordinator;
 import com.netease.backend.coordinator.id.UUIDGenerator;
-import com.netease.backend.coordinator.recover.RecoverManager;
 
 public class UuidGeneratorImp implements UUIDGenerator {
 	private IdForCoordinator serverIdDist = null;
 	private SequenceIdGenerator seqGen = new SequenceIdGenerator();
 	
-	public UuidGeneratorImp(IdForCoordinator serverIdDist, RecoverManager recoverManager) {
-		seqGen.setSeqId(recoverManager.getLastMaxUUID() & SequenceIdGenerator.sequenceIdMask);
+	public UuidGeneratorImp(IdForCoordinator serverIdDist) {
 		this.serverIdDist = serverIdDist;
 	}
 
@@ -36,5 +34,10 @@ public class UuidGeneratorImp implements UUIDGenerator {
 		long seqId = this.seqGen.nextSeqId();
 		long uuid = (serverId << 48) | (seqId & SequenceIdGenerator.sequenceIdMask); 
 		return uuid;
+	}
+
+	@Override
+	public void init(long lastUUID) {
+		seqGen.setSeqId(lastUUID & SequenceIdGenerator.sequenceIdMask);
 	}
 }

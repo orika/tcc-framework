@@ -58,10 +58,10 @@ public class DbUtil {
 		ResultSet localRset = null;
 		try {
 			localConn = localDataSource.getConnection();
-			localPstmt = localConn.prepareStatement("SELECT SERVERID FROM COORDINATOR_INFO");
+			localPstmt = localConn.prepareStatement("SELECT SERVER_ID FROM COORDINATOR_INFO");
 			localRset = localPstmt.executeQuery();
 			if (localRset.next())
-				serverId = localRset.getInt("SERVERID");
+				serverId = localRset.getInt(1);
 			else
 				throw new CoordinatorException("Cannot fetch local ServerId");
 		} catch (SQLException e) {
@@ -118,7 +118,7 @@ public class DbUtil {
 			// Update new ServerId to local DB
 			try {
 				localConn = localDataSource.getConnection();
-				localPstmt = localConn.prepareStatement("UPDATE COORDINATOR_INFO SET SERVERID = ?");
+				localPstmt = localConn.prepareStatement("UPDATE COORDINATOR_INFO SET SERVER_ID = ?");
 				
 				// set update value
 				localPstmt.setInt(1, serverId);
@@ -196,7 +196,7 @@ public class DbUtil {
 		int res = 0;
 		try {
 			systemConn = systemDataSource.getConnection();
-			systemPstmt = systemConn.prepareStatement("INSERT INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION, TRX_TIMESTAMP)" +
+			systemPstmt = systemConn.prepareStatement("INSERT IGNORE INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION, TRX_TIMESTAMP)" +
 					" VALUES(?,?,?)");
 			
 			systemPstmt.setLong(1, uuid);
@@ -211,6 +211,8 @@ public class DbUtil {
 			try {
 				if (systemPstmt != null)
 					systemPstmt.close();
+				if (systemConn != null)
+					systemConn.close();
 			} catch (SQLException e) {
 				logger.error("Check expired error.", e);
 			}
@@ -220,6 +222,7 @@ public class DbUtil {
 		// must duplicate key, then check the action
 		if (res == 0) {
 			try {
+				systemConn = systemDataSource.getConnection();
 				systemPstmt = systemConn.prepareStatement("SELECT TRX_ACTION FROM EXPIRE_TRX_INFO WHERE TRX_ID = ?");
 				systemPstmt.setLong(1, uuid);
 				systemRset = systemPstmt.executeQuery();
@@ -392,6 +395,8 @@ public class DbUtil {
 			try {
 				if (systemPstmt != null)
 					systemPstmt.close();
+				if (systemConn != null)
+					systemConn.close();
 			} catch (SQLException e) {
 				logger.error("Check action in recover error.", e);
 			}
@@ -401,6 +406,7 @@ public class DbUtil {
 		// must duplicate key, then check the action
 		if (res == 0) {
 			try {
+				systemConn = this.systemDataSource.getConnection();
 				systemPstmt = systemConn.prepareStatement("SELECT TRX_ACTION FROM EXPIRE_TRX_INFO WHERE TRX_ID = ?");
 				systemPstmt.setLong(1, uuid);
 				systemRset = systemPstmt.executeQuery();

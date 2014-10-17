@@ -22,9 +22,11 @@ public class TxTable extends TimerTask {
 	private long expireTime;
 	private long checkInterval;
 
-	public TxTable(CoordinatorConfig config) {
+	public TxTable(CoordinatorConfig config, ExpireProcessor expireProcessor, LogManager logManager) {
 		this.expireTime = config.getExpireTime();
 		this.checkInterval = config.getCkptInterval();
+		this.expireProcessor = expireProcessor;
+		this.logManager = logManager;
 	}
 	
 	public long getExpireTime() {
@@ -35,17 +37,13 @@ public class TxTable extends TimerTask {
 		this.expireTime = expireTime;
 	}
 	
-	public void setExpireProcessor(ExpireProcessor expireProcessor) {
-		this.expireProcessor = expireProcessor;
-	}
-
 	public void setLogManager(LogManager logManager) {
 		this.logManager = logManager;
 	}
 
 	@Override
 	public void run() {
-		long now = System.currentTimeMillis() - expireTime;
+		long expireTs = System.currentTimeMillis() - expireTime;
 		long checkpoint = Long.MAX_VALUE;
 		int count = 0;
 		for (Iterator<Transaction> it = table.values().iterator(); it.hasNext(); ) {
@@ -53,7 +51,7 @@ public class TxTable extends TimerTask {
 			long lastTs = tx.getLastTimeStamp();
 			if (lastTs < checkpoint)
 				checkpoint = lastTs;
-			if (tx.getCreateTime() < now) {
+			if (tx.isExpired(expireTs)) {
 				expireProcessor.process(tx);
 				it.remove();
 				count++;

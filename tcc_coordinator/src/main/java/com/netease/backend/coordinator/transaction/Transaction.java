@@ -42,6 +42,10 @@ public class Transaction {
 	public void setEndTime(long endTime) {
 		this.endTime = endTime;
 	}
+	
+	public long getElapsed() {
+		return endTime - beginTime;
+	}
 
 	public List<Procedure> getExpireList() {
 		return expireList;
@@ -78,12 +82,7 @@ public class Transaction {
 		if (status.compareAndSet(Action.REGISTERED, Action.CONFIRM))
 			this.procList = procList;
 		else {
-			try{
-				throw new IllegalActionException(uuid, status.get(), Action.CONFIRM);
-			} catch (IllegalActionException e) {
-				e.printStackTrace();
-				throw e;
-			}
+			throw new IllegalActionException(uuid, status.get(), Action.CONFIRM);
 		}
 	}
 	
@@ -101,6 +100,14 @@ public class Transaction {
 	
 	public long getLastTimeStamp() {
 		return endTime == -1 ? (beginTime == -1 ? createTime : beginTime) : endTime;
+	}
+	
+	public boolean isExpired(long timestamp) {
+		if (status.get() == Action.EXPIRE)
+			return true;
+		if (status.get() == Action.REGISTERED)
+			return createTime < timestamp;
+		return false;
 	}
 	
 	@Override

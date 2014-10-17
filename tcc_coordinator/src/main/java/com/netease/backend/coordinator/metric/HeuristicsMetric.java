@@ -1,12 +1,12 @@
 package com.netease.backend.coordinator.metric;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class HeuristicsMetric implements Metric {
 	
-	private AtomicInteger count;
+	private AtomicLong count = new AtomicLong(0);
 	
-	public int getCount() {
+	public long getCount() {
 		return count.get();
 	}
 	

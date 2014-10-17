@@ -19,6 +19,6 @@ public class SequenceIdGenerator {
 	}
 	
 	public long nextSeqId() {
-		return this.seqId.addAndGet(1);
+		return this.seqId.incrementAndGet();
 	}
 }

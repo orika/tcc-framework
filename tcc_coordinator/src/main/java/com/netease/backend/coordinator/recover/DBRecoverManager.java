@@ -11,6 +11,7 @@ import com.netease.backend.coordinator.log.LogScanner;
 import com.netease.backend.coordinator.log.LogType;
 import com.netease.backend.coordinator.processor.RetryProcessor;
 import com.netease.backend.coordinator.transaction.Transaction;
+import com.netease.backend.coordinator.transaction.TxManager;
 import com.netease.backend.coordinator.transaction.TxTable;
 import com.netease.backend.coordinator.util.LogUtil;
 import com.netease.backend.tcc.Procedure;
@@ -20,21 +21,18 @@ public class DBRecoverManager implements RecoverManager {
 	
 	private static final Logger logger = Logger.getLogger(DBRecoverManager.class);
 	private TxTable txTable = null;
+	private TxManager txManager = null;
 	private LogManager logMgr = null;
 	private IdForCoordinator idForCoordinator = null;
 	private long lastMaxUUID = 0;
-	private RetryProcessor retryProcessor = null;
-
-	public void setRetryProcessor(RetryProcessor retryProcessor) {
-		this.retryProcessor = retryProcessor;
-	}
 
 	public void setIdForCoordinator(IdForCoordinator idForCoordinator) {
 		this.idForCoordinator = idForCoordinator;
 	}
 
-	public void setTxTable(TxTable txTable) {
-		this.txTable = txTable;
+	public void setTxManager(TxManager txManager) {
+		this.txManager = txManager;
+		this.txTable = txManager.getTxTable();
 	}
 
 	public void setLogMgr(LogManager logMgr) {
@@ -91,13 +89,14 @@ public class DBRecoverManager implements RecoverManager {
 				}
 				// update max Uuid
 				if (this.idForCoordinator.isUuidOwn(trx.getUUID()) &&
-						trx.getUUID() > lastMaxUUID){
-					lastMaxUUID = trx.getUUID();
+						uuid > lastMaxUUID){
+					lastMaxUUID = uuid;
 				}
 			}
 			logScanner.endScan();
 			logger.info("Transaction table has been recovered");
-			retryProcessor.recover();
+			logger.info("Last Max UUID " + lastMaxUUID);
+			txManager.recover();
 		} catch (CoordinatorException e) {
 			logger.error("DBRecoverManager init failed.", e);
 			System.exit(1);
@@ -108,5 +107,4 @@ public class DBRecoverManager implements RecoverManager {
 	public long getLastMaxUUID() {
 		return lastMaxUUID;
 	}
-
 }

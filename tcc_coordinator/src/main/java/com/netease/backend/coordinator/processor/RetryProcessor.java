@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -11,93 +12,87 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.log4j.Logger;
 
 import com.netease.backend.coordinator.config.CoordinatorConfig;
-import com.netease.backend.coordinator.task.TxResult;
-import com.netease.backend.coordinator.task.TxResultWatcher;
+import com.netease.backend.coordinator.log.LogException;
+import com.netease.backend.coordinator.task.TxLogWatcher;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.coordinator.transaction.TxManager;
-import com.netease.backend.coordinator.transaction.TxTable;
 import com.netease.backend.tcc.error.CoordinatorException;
-import com.netease.backend.tcc.error.HeuristicsException;
 
 public class RetryProcessor implements Runnable {
 	
 	private Logger logger = Logger.getLogger("RetryProcessor");
 	
-	private Task spots[];
-	private TxResultWatcher watchers[];
+	private AtomicInteger parallelism;
 	private TxManager txManager = null;
-	private TxTable txTable = null;
 	private DelayQueue<Task> retryQueue = new DelayQueue<Task>();
 	private Lock lock = new ReentrantLock();
 	private Condition isSpotFree = lock.newCondition();
-	private volatile boolean stop = false;
 	private Thread thread = null;
+	private BgExecutor bgExecutor = null;
+	private RecoverLogWatcher watcher = new RecoverLogWatcher();
+	private volatile boolean stop = false;
+	//optimize notify count
+	private volatile boolean isBlocked = false;
 	
 	public void setTxManager(TxManager txManager) {
 		this.txManager = txManager;
 	}
 
-	public void setTxTable(TxTable txTable) {
-		this.txTable = txTable;
-	}
-
-	public RetryProcessor(CoordinatorConfig config) {
-		int parallelism = config.getRetryParallelism();
-		this.spots = new Task[parallelism];
-		this.watchers = new ResultWatcher[parallelism];
-		for (int i = 0; i < parallelism; i++)
-			watchers[i] = new ResultWatcher(i);
+	public RetryProcessor(CoordinatorConfig config, TccProcessor processor) {
+		this.parallelism = new AtomicInteger(config.getRetryParallelism());
+		this.bgExecutor = processor.getBgExecutor();
 	}
 	
 	public void start() {
 		thread = new Thread(this);
 		thread.start();
 	}
+	
+	public void stop() {
+		this.stop = true;
+		thread.interrupt();
+	}
 
 	@Override
 	public void run() {
 		while (!stop && !Thread.interrupted()) {
-			lock.lock();
-			for (int i = 0; i < spots.length; i++) {
-				if (spots[i] == null) {
-					try {
-						spots[i] = retryQueue.take();
-						try {
-							spots[i].execute(watchers[i]);
-						} catch (Exception e) {
-							if (spots[i].delay(10000))
-								retryQueue.offer(spots[i]);
-							else
-								logger.error(spots[i].getFailedDescrip());
-						}
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					} 
+			try {
+				for (int i = 0, j = parallelism.get(); i < j; i++) {
+					Task task = retryQueue.take();
+					bgExecutor.execute(task);
 				}
+			} catch (InterruptedException e) {
+				continue;
 			}
+			lock.lock();
+			if (parallelism.get() > 0) {
+				lock.unlock();
+				continue;
+			}
+			isBlocked = true;
 			isSpotFree.awaitUninterruptibly();
 			lock.unlock();
 		}
 	}
 	
-	public void recover() throws CoordinatorException {
+	public void recover(Iterator<Transaction> it) throws CoordinatorException {
 		int confirmCount = 0;
 		int cancelCount = 0;
 		int expireCount = 0;
-		for (Iterator<Transaction> it = txTable.getTxMap().values().iterator(); it.hasNext(); ) {
+		while (it.hasNext()) {
 			Transaction tx = it.next();
 			switch (tx.getAction()) {
 				case CANCEL:
 					cancelCount++;
-					process(tx, 1);
+					process(tx, 1, watcher);
 					break;
 				case CONFIRM:
 					confirmCount++;
-					process(tx, 1);
+					process(tx, 1, watcher);
 					break;
 				case EXPIRE:
 					expireCount++;
-					process(tx, 1);
+					process(tx, 1, watcher);
 					break;
 				default:
 					break;
@@ -112,6 +107,7 @@ public class RetryProcessor implements Runnable {
 		while (retryQueue.size() != 0) {
 			try {
 				Thread.sleep(1000);
+				count++;
 			} catch (InterruptedException e) {
 				throw new CoordinatorException(e);
 			}
@@ -123,47 +119,54 @@ public class RetryProcessor implements Runnable {
 	/*
 	 * failed or success, just drop it
 	 */
-	private void processResult(int index, TxResult result) {
-		spots[index] = null;
-		txTable.remove(result.getUUID());
+	private void processResult(Transaction tx) {
 		lock.lock();
-		isSpotFree.signalAll();
+		parallelism.decrementAndGet();
+		if (isBlocked) {
+			isBlocked = false;
+			isSpotFree.signalAll();
+		}
 		lock.unlock();
 	}
 	
-	public void process(Transaction tx, int times) {
-		retryQueue.offer(new Task(tx, times));
+	public void process(Transaction tx, int times, TxLogWatcher watcher) {
+		retryQueue.offer(new Task(tx, times, watcher));
 	}
 	
-	private class ResultWatcher implements TxResultWatcher {
-		
-		private int index;
-		
-		public ResultWatcher(int index) {
-			this.index = index;
-		}
+	private class RecoverLogWatcher implements TxLogWatcher {
 
 		@Override
-		public void notifyResult(TxResult result) {
-			processResult(index, result);
+		public void processError(Transaction tx) {
+			Task task = new Task(tx, 2, this);
+			task.delay(10000);
+			retryQueue.offer(task);
 		}
 	}
 	
-	private class Task implements Delayed {
+	private class Task implements Delayed, Runnable {
 		
 		private Transaction tx;
 		private long ts;
 		private int times = 1;
+		private TxLogWatcher watcher = null;
 		
-		Task(Transaction tx, int times) {
+		Task(Transaction tx, int times, TxLogWatcher watcher) {
 			this.tx = tx;
 			this.ts = 0;
 			this.times = times;
+			this.watcher = watcher;
 		}
-
-		public void execute(TxResultWatcher watcher) throws HeuristicsException, CoordinatorException {
+		
+		@Override
+		public void run() {
 			times--;
-			txManager.retryAsync(tx, watcher);
+			try {
+				txManager.retry(tx);
+			} catch (LogException e) {
+				if (watcher != null)
+					watcher.processError(tx);
+			}
+			processResult(tx);
 		}
 
 		@Override
@@ -185,11 +188,11 @@ public class RetryProcessor implements Runnable {
 			return true;
 		}
 		
-		public String getFailedDescrip() {
+		/*public String getFailedDescrip() {
 			StringBuilder builder = new StringBuilder();
 			builder.append("Retry ").append(tx.getAction().name())
 				.append(" failed, uuid:").append(tx.getUUID());
 			return builder.toString();
-		}
+		}*/
 	}
 }

@@ -9,7 +9,6 @@ import java.util.concurrent.Executors;
 import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.task.ServiceTask;
 import com.netease.backend.coordinator.task.TxResult;
-import com.netease.backend.coordinator.task.TxResultWatcher;
 import com.netease.backend.tcc.Procedure;
 import com.netease.backend.tcc.error.HeuristicsException;
 
@@ -22,9 +21,9 @@ public class TccProcessor {
 		this.bgExecutor = new BgExecutor(config.getBgMaxThreadNum());
 	}
 
-	public void perform(long uuid, List<Procedure> procedures) 
+	public void perform(long uuid, List<Procedure> procedures, boolean isBg) 
 			throws HeuristicsException {
-		TxResult result = performAsync(uuid, procedures, null, false);
+		TxResult result = performAsync(uuid, procedures, isBg);
 		try {
 			result.await();
 		} catch (InterruptedException e) {
@@ -35,9 +34,9 @@ public class TccProcessor {
 		}
 	}
 	
-	public void perform(final long uuid, final List<Procedure> procedures, long timeout) 
+	public void perform(long uuid, final List<Procedure> procedures, long timeout, boolean isBg) 
 			throws HeuristicsException {
-		TxResult result = performAsync(uuid, procedures, null, false);
+		TxResult result = performAsync(uuid, procedures, isBg);
 		boolean isOk = false;
 		try {
 			isOk = result.await(timeout);
@@ -49,7 +48,7 @@ public class TccProcessor {
 		}
 	}
 	
-	public TxResult performAsync(long uuid, List<Procedure> procedures, TxResultWatcher watcher, boolean isBackground) 
+	public TxResult performAsync(long uuid, List<Procedure> procedures, boolean isBackground) 
 			throws HeuristicsException {
 		Collections.sort(procedures);
 		TxResult result = null;
@@ -63,11 +62,14 @@ public class TccProcessor {
 					it.remove();
 					continue;
 				}
-				count++;
-				if (lastOne != null && lastOne.getSequence() != cur.getSequence())
+				if (lastOne != null && lastOne.getSequence() != cur.getSequence()) {
 					break;
+				} else {
+					count++;
+					lastOne = cur;
+				}
 			}
-			result = new TxResult(uuid, count, watcher);
+			result = new TxResult(uuid, count);
 			for (Iterator<Procedure> it = procedures.iterator(); it.hasNext() && count > 0; count--) {
 				Procedure cur = it.next();
 				if (count == 1) {
@@ -90,5 +92,9 @@ public class TccProcessor {
 			}
 		}
 		return result;
+	}
+	
+	public BgExecutor getBgExecutor() {
+		return bgExecutor;
 	}
 }
