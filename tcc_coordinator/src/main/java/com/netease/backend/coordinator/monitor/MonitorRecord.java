@@ -15,7 +15,10 @@ public class MonitorRecord {
 	private long maxConfirmTime;
 	private long avgCancelTime;
 	private long maxCancelTime;
+
 	
+
+
 	public MonitorRecord(int serverId, long timestamp, long curTrxNum,
 			long curProcessTrxNum, long registTrxNum, long confirmTrxNum,
 			long cancelTrxNum, long expireTrxNum, long avgRegistTime,

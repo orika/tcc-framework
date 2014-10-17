@@ -1,3 +1,12 @@
+/**
+ * @Description:			Log Type enum
+ * Copy Right:				Netease
+ * Project:					TCC
+ * JDK Version				jdk-1.6
+ * @version					1.0
+ * @author					huwei				
+ */
+
 package com.netease.backend.coordinator.log;
 
 public enum LogType {

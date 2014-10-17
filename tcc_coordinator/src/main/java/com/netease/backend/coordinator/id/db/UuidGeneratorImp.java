@@ -29,7 +29,8 @@ public class UuidGeneratorImp implements UUIDGenerator {
 
 	@Override
 	public long next() {
-		// TODO Auto-generated method stub
+		// use serverId for high 16 bit 
+		// sequenceId for low 48 bit
 		int serverId = this.serverIdDist.get(); 
 		long seqId = this.seqGen.nextSeqId();
 		long uuid = (serverId << 48) | (seqId & SequenceIdGenerator.sequenceIdMask); 

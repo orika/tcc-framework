@@ -1,11 +1,50 @@
-[checkinvade]
-ip= 10.120.150.25
+[COORDINATOR_LOG]
+ip= 10.180.17.56
 port= 3306
 user = tcc
 password = tcc
 tablename = COORDINATOR_LOG
 database = tcc
-keeppartition = 14
-extendpartition = 3
+keeppartition = 28
+extendpartition = 14
 interval = 1
-daytime = 86400 
+daytime = 86400000 
+
+
+[EXPIRE_TRX_INFO]
+ip= 10.180.17.56
+port= 3306
+user = tcc
+password = tcc
+tablename = EXPIRE_TRX_INFO
+database = tcc_global
+keeppartition = 8
+extendpartition = 4
+interval = 7
+daytime = 86400000
+
+
+[HEURISTIC_TRX_INFO]
+ip= 10.180.17.56
+port= 3306
+user = tcc
+password = tcc
+tablename = HEURISTIC_TRX_INFO
+database = tcc_global
+keeppartition = 8
+extendpartition = 4
+interval = 7
+daytime = 86400000 
+
+
+[SERVER_MONITOR]
+ip= 10.180.17.56
+port= 3306
+user = tcc
+password = tcc
+tablename = SERVER_MONITOR
+database = tcc_global
+keeppartition = 8
+extendpartition = 4
+interval = 7
+daytime = 86400000 
