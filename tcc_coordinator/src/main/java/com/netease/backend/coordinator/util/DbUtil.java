@@ -766,7 +766,7 @@ public class DbUtil {
 		long[] millTimes = new long[PARTITION_NUM];
 		for (int i = 0; i < PARTITION_NUM;  i++) {
 			dateStrings[i] = sdf.format(date.getTime());
-			millTimes[i] = date.getTimeInMillis() / 1000;
+			millTimes[i] = date.getTimeInMillis();
 			date.add(Calendar.DATE, 1);
 			createCoordinatorLogTableSql += "   PARTITION p" +
 												dateStrings[i] +
