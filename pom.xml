@@ -26,6 +26,8 @@
 	<modules>
 		<module>tcc_api</module>
 		<module>tcc_coordinator</module>
+		<module>tcc_demo_consumer</module>
+		<module>tcc_demo_server</module>
 	</modules>
 	<properties>
 		<skip_maven_deploy>true</skip_maven_deploy>
