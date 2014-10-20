@@ -28,7 +28,7 @@
             </includes>
         </fileSet>
 		<fileSet>
-			<directory>src/main/resources/META_INF</directory>
+			<directory>src/main/resources/spring</directory>
 			<outputDirectory>conf</outputDirectory>
 			<fileMode>0755</fileMode>
 		</fileSet>
