@@ -19,60 +19,22 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.netease</groupId>
-		<artifactId>tcc</artifactId>
-		<version>0.1</version>
+		<artifactId>tcc_demo</artifactId>
+		<version>${demoVersion}</version>
 	</parent>
-	<artifactId>tcc_demo_consumer</artifactId>
+	<artifactId>tcc_demo_api</artifactId>
 	<version>${project.parent.version}</version>
 	<packaging>jar</packaging>
 	<description>The demo consumer module of tcc project</description>
 	<properties>
-		<skip_maven_deploy>false</skip_maven_deploy>
+		<skip_maven_deploy>true</skip_maven_deploy>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>com.netease</groupId>
 			<artifactId>tcc_api</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>dubbo</artifactId>
-			<version>2.4.9</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.apache.zookeeper</groupId>
-		    <artifactId>zookeeper</artifactId>
-		    <version>3.3.3</version>
-		</dependency>
-		<dependency>
-		    <groupId>com.github.sgroschupf</groupId>
-		    <artifactId>zkclient</artifactId>
-		    <version>0.1</version>
-		</dependency>
-		<dependency>
-		    <groupId>mysql</groupId>
-		    <artifactId>mysql-connector-java</artifactId>
-		    <version>5.1.31</version>
-		</dependency>
-		<dependency>
-		    <groupId>commons-dbcp</groupId>
-    		<artifactId>commons-dbcp</artifactId>
-    		<version>1.4</version>
-		</dependency>
-		<dependency>
-    		<groupId>com.netease</groupId>
-   			<artifactId>monitor-jar</artifactId>
-    		<version>2.0.4</version>
+			<version>${applicationVersion}</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -87,22 +49,6 @@
                 	<encoding>UTF8</encoding> 
           		</configuration> 
        	 	</plugin> 
-       	 	<plugin>
-            	<groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                    </archive>
-                    <excludes>
-                        <exclude>**/*.xml</exclude>
-                        <exclude>**/*.properties</exclude>
-						<exclude>**/*.sql</exclude>
-						<exclude>**/*.lst</exclude>
-						<exclude>**/*.py</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
                 <configuration>

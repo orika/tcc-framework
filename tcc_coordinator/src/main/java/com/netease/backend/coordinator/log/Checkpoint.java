@@ -14,13 +14,24 @@ public class Checkpoint {
 	public long getTimestamp() {
 		return timestamp;
 	}
+	
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
+	
 	public long getMaxUuid() {
 		return maxUuid;
 	}
+	
 	public void setMaxUuid(long maxUuid) {
 		this.maxUuid = maxUuid;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Timestamp:").append(timestamp);
+		builder.append("/MaxUUID:").append(maxUuid);
+		return builder.toString();
 	}
 }

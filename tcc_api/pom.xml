@@ -20,11 +20,11 @@
 	<parent>
 		<groupId>com.netease</groupId>
 		<artifactId>tcc</artifactId>
-		<version>0.1</version>
+		<version>1</version>
 	</parent>
 	<artifactId>tcc_api</artifactId>
 	<packaging>jar</packaging>
-	<version>${project.parent.version}</version>
+	<version>${applicationVersion}</version>
 	<description>The tcc api</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

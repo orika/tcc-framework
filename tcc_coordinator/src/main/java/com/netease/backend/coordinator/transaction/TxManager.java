@@ -32,7 +32,7 @@ public class TxManager {
 		this.tccProcessor = new TccProcessor(config);
 		this.retryProcessor = new RetryProcessor(config, tccProcessor);
 		this.expireProcessor = new ExpireProcessor(retryProcessor);
-		this.txTable = new TxTable(config, expireProcessor, logManager);
+		this.txTable = new TxTable(config, expireProcessor, logManager, idGenerator);
 		this.metric = new GlobalMetric(txTable);
 		this.idGenerator = idGenerator;
 		this.logManager = logManager;

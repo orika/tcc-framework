@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.netease</groupId>
+		<artifactId>tcc</artifactId>
+		<version>1</version>
+	</parent>
+	<artifactId>tcc_demo</artifactId>
+	<version>${demoVersion}</version>
+	<packaging>pom</packaging>
+	<name>${project.artifactId}</name>
+	<description>The demo module of tcc project</description>
+	<properties>
+		<skip_maven_deploy>true</skip_maven_deploy>
+	</properties>
+	<modules>
+		<module>tcc_demo_api</module>
+		<module>tcc_demo_server</module>
+		<module>tcc_demo_consumer</module>
+	</modules>
+</project>

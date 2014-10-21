@@ -1,5 +1,6 @@
 package com.netease.backend.coordinator.processor;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,11 +48,16 @@ public class ExpireProcessor {
 		
 		@Override
 		public void processError(Transaction tx) {
+			filterSet.remove(tx);
 		}
 
 		@Override
 		public void processSuccess(Transaction tx) {
 			filterSet.remove(tx);
 		}
+	}
+	
+	public Set<Transaction> getExpiringTxSet() {
+		return Collections.unmodifiableSet(filterSet);
 	}
 }

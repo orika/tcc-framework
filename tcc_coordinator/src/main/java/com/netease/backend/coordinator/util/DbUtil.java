@@ -75,7 +75,7 @@ public class DbUtil {
 				return serverId;
 			}
 		} catch (SQLException e) {
-			throw new CoordinatorException("Cannot fetch local ServerId");
+			throw new CoordinatorException("Cannot fetch local ServerId", e);
 		} finally {
 			try {
 				if (localRset != null)
@@ -119,10 +119,10 @@ public class DbUtil {
 				if (sysRset.next())
 					serverId = sysRset.getInt(1);
 				else
-					throw new CoordinatorException("Cannot get a new ServerId");
+					throw new CoordinatorException("Cannot get a coordinator id by inserting");
 			}
 		} catch (SQLException e) {
-			throw new CoordinatorException("Cannot get a new ServerId");
+			throw new CoordinatorException("Cannot get a new ServerId", e);
 		} finally {
 			try {
 				if (sysRset != null)
@@ -147,7 +147,7 @@ public class DbUtil {
 			
 			localPstmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new CoordinatorException("Cannot update local ServerId");
+			throw new CoordinatorException("Cannot update local ServerId", e);
 		} finally {
 			try {
 				if (localPstmt != null)
@@ -692,7 +692,7 @@ public class DbUtil {
 				return;
 			}
 		} catch (SQLException e) {
-			throw new CoordinatorException("Read local database error");
+			throw new CoordinatorException("Read local database error", e);
 		}  finally {
 			try {
 				if (localRset != null)

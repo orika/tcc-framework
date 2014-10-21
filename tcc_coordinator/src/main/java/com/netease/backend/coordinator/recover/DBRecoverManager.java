@@ -15,7 +15,6 @@ import com.netease.backend.coordinator.transaction.TxManager;
 import com.netease.backend.coordinator.transaction.TxTable;
 import com.netease.backend.coordinator.util.LogUtil;
 import com.netease.backend.tcc.Procedure;
-import com.netease.backend.tcc.error.CoordinatorException;
 
 public class DBRecoverManager implements RecoverManager {
 	
@@ -25,9 +24,6 @@ public class DBRecoverManager implements RecoverManager {
 	private LogManager logMgr = null;
 	private IdForCoordinator idForCoordinator = null;
 	private long lastMaxUUID = 0;
-
-
-
 
 	public void setIdForCoordinator(IdForCoordinator idForCoordinator) {
 		this.idForCoordinator = idForCoordinator;
@@ -41,7 +37,6 @@ public class DBRecoverManager implements RecoverManager {
 	public void setLogMgr(LogManager logMgr) {
 		this.logMgr = logMgr;
 	}
-	
 
 	@Override
 	public void init() {

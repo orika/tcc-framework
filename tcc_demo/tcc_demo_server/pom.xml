@@ -19,8 +19,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.netease</groupId>
-		<artifactId>tcc</artifactId>
-		<version>0.1</version>
+		<artifactId>tcc_demo</artifactId>
+		<version>${demoVersion}</version>
 	</parent>
 	<artifactId>tcc_demo_server</artifactId>
 	<version>${project.parent.version}</version>
@@ -33,7 +33,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.netease</groupId>
-			<artifactId>tcc_api</artifactId>
+			<artifactId>tcc_demo_api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

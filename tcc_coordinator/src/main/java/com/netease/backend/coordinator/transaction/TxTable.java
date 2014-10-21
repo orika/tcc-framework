@@ -9,6 +9,8 @@ import org.apache.log4j.Logger;
 import org.jboss.netty.util.internal.ConcurrentHashMap;
 
 import com.netease.backend.coordinator.config.CoordinatorConfig;
+import com.netease.backend.coordinator.id.IdGenerator;
+import com.netease.backend.coordinator.log.Checkpoint;
 import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogManager;
 import com.netease.backend.coordinator.processor.ExpireProcessor;
@@ -19,14 +21,17 @@ public class TxTable extends TimerTask {
 	private Map<Long, Transaction> table = new ConcurrentHashMap<Long, Transaction>();
 	private ExpireProcessor expireProcessor = null;
 	private LogManager logManager = null;
+	private IdGenerator idGenerator = null;
 	private long expireTime;
 	private long checkInterval;
 
-	public TxTable(CoordinatorConfig config, ExpireProcessor expireProcessor, LogManager logManager) {
+	public TxTable(CoordinatorConfig config, ExpireProcessor expireProcessor, LogManager logManager,
+			IdGenerator idGenerator) {
 		this.expireTime = config.getExpireTime();
 		this.checkInterval = config.getCkptInterval();
 		this.expireProcessor = expireProcessor;
 		this.logManager = logManager;
+		this.idGenerator = idGenerator;
 	}
 	
 	public long getExpireTime() {
@@ -60,9 +65,9 @@ public class TxTable extends TimerTask {
 		logger.info("total transaction count:" + table.size());
 		if (cpTime != Long.MAX_VALUE) {
 			try {
-				// Todo:set timestamp and maxuuid
-				logManager.setCheckpoint(null);
-				logger.info("set checkpoint:" + cpTime + " / " );
+				Checkpoint cp = new Checkpoint(cpTime, idGenerator.getNextUUID());
+				logManager.setCheckpoint(cp);
+				logger.info("set checkpoint:" + cp);
 			} catch (LogException e) {
 				logger.error("set checkpoint error.", e);
 			}

@@ -24,8 +24,8 @@
 		-->
 		<property name = "driverClassName" value = "com.mysql.jdbc.Driver" />
 		<property name = "url" value = "jdbc:mysql://10.120.146.129:3306/tcc" />
-		<property name = "username" value = "tcc" />
-		<property name = "password" value = "tcc" />
+		<property name = "username" value = "qs" />
+		<property name = "password" value = "123456" />
 		<property name = "initialSize" value = "10"/>
 		<property name = "maxActive" value = "100" />
 		<property name = "maxIdle" value = "20" />
@@ -37,8 +37,8 @@
 		destroy-method = "close">
 		<property name = "driverClassName" value = "com.mysql.jdbc.Driver" />
 		<property name = "url" value = "jdbc:mysql://10.120.146.129:3306/tcc_global" />
-		<property name = "username" value = "tcc" />
-		<property name = "password" value = "tcc" />
+		<property name = "username" value = "qs" />
+		<property name = "password" value = "123456" />
 		<property name = "initialSize" value = "5"/>
 		<property name = "maxActive" value = "10" />
 		<property name = "maxIdle" value = "10" />

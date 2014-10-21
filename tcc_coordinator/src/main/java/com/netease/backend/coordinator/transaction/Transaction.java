@@ -94,6 +94,8 @@ public class Transaction {
 	}
 	
 	public void expire() throws IllegalActionException {
+		if (status.get() == Action.EXPIRE)
+			return;
 		if (!status.compareAndSet(Action.REGISTERED, Action.EXPIRE))
 			throw new IllegalActionException(uuid, status.get(), Action.EXPIRE);
 	}
