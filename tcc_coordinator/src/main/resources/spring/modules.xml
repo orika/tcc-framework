@@ -9,9 +9,6 @@
 		<constructor-arg ref= "txManager"/>
 	</bean>
 	<dubbo:service interface="com.netease.backend.tcc.Coordinator" ref="coordinator"/>
-	<dubbo:reference id="payment" interface="com.netease.backend.tcc.demo.IPayment" />
-	<dubbo:reference id="sale" interface="com.netease.backend.tcc.demo.ISale" />
-	<dubbo:reference id="order" interface="com.netease.backend.tcc.demo.IOrder" />
 	
 	<bean id = "tccContainer" class = "com.netease.backend.coordinator.TccContainer" init-method="start">
 		<constructor-arg index = "0" ref= "tccMonitor"/>

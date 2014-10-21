@@ -32,7 +32,7 @@ public class DefaultCoordinator implements Coordinator {
 			return tx.getUUID();
 		} catch (Exception e) {
 			logger.error("transaction register error", e);
-			throw new CoordinatorException(e.getMessage());
+			throw new CoordinatorException(e.getMessage(), e);
 		}
 	}
 	

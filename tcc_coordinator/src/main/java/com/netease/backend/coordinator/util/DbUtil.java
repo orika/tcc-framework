@@ -32,7 +32,8 @@ public class DbUtil {
 	private static int PARTITION_NUM = 14;
 	private CoordinatorConfig config = null;
 	
-	public DbUtil(CoordinatorConfig config, BasicDataSource localDataSource, BasicDataSource systemDataSource) throws CoordinatorException {
+	public DbUtil(CoordinatorConfig config, BasicDataSource localDataSource, 
+			BasicDataSource systemDataSource) throws CoordinatorException {
 		this.config = config;
 		this.localDataSource = localDataSource;
 		this.systemDataSource = systemDataSource;
@@ -139,12 +140,11 @@ public class DbUtil {
 		// insert new ServerId to local DB
 		try {
 			localConn = localDataSource.getConnection();
-			localPstmt = localConn.prepareStatement("INSERT INTO COORDINATOR_INFO(SERVER_ID, CHECKPOINT) VALUES(?, ?)");
-			
+			localPstmt = localConn.prepareStatement("INSERT INTO COORDINATOR_INFO(SERVER_ID, CHECKPOINT, MAX_UUID) VALUES(?, ?, ?)");
 			// set update value
 			localPstmt.setInt(1, serverId);
 			localPstmt.setLong(2, 0);
-			
+			localPstmt.setLong(3, 0);
 			localPstmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new CoordinatorException("Cannot update local ServerId", e);
@@ -202,7 +202,7 @@ public class DbUtil {
 			
 			localPstmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new LogException("Write log error");
+			throw new LogException("Write log error", e);
 		} finally {
 			try {
 				if (localPstmt != null)
@@ -239,7 +239,7 @@ public class DbUtil {
 				return false;
 			}
 		} catch (SQLException e) {
-			throw new LogException("Check expire error");
+			throw new LogException("Check expire error", e);
 		} finally {
 			try {
 				if (systemRset != null)
@@ -265,7 +265,7 @@ public class DbUtil {
 			systemPstmt.executeUpdate();
 			res = systemPstmt.getUpdateCount();
 		} catch (SQLException e) {
-			throw new LogException("Check expire error");
+			throw new LogException("Check expire error", e);
 		} finally {
 			try {
 				if (systemPstmt != null)
@@ -294,10 +294,10 @@ public class DbUtil {
 						return true;
 					}
 				} else {
-					throw new LogException("Check expire error");
+					throw new RuntimeException("the expire record disappeared, why?");
 				}
 			} catch (SQLException e) {
-				throw new LogException("Check expire error");
+				throw new LogException("Check expire error", e);
 			} finally {
 				try {
 					if (systemRset != null)
@@ -334,7 +334,7 @@ public class DbUtil {
 			
 			localPstmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new LogException("Update checkpoint error");
+			throw new LogException("Update checkpoint error", e);
 		} finally {
 			try {
 				if (localPstmt != null)
@@ -368,10 +368,10 @@ public class DbUtil {
 				timestamp = localRset.getLong(1);
 				maxUuid = localRset.getLong(2);
 			} else {
-				throw new LogException("Read checkpoint error");
+				throw new LogException("No checkpoint record found in local db");
 			}
 		} catch (SQLException e) {
-			throw new LogException("Read checkpoint error");
+			throw new LogException("Read checkpoint error", e);
 		} finally {
 			try {
 				if (localPstmt != null)
@@ -401,7 +401,7 @@ public class DbUtil {
 			ResultSet rset = pstmt.executeQuery();
 			return new LogScannerImp(this, conn, pstmt, rset);
 		} catch (SQLException e) {
-			throw new LogException("Start read log error");
+			throw new LogException("Start read log error", e);
 		} 
 	}
 	
@@ -415,7 +415,7 @@ public class DbUtil {
 		try {
 			return rset.next();
 		} catch (SQLException e) {
-			throw new LogException("Read log has next error");
+			throw new LogException("Read log has next error", e);
 		}
 	}
 
@@ -433,7 +433,7 @@ public class DbUtil {
 			byte[] procs = rset.getBytes("TRX_CONTENT");
 			return new LogRecord(uuid, logType, timestamp, procs);
 		} catch (SQLException e) {
-			throw new LogException("Read next log error");
+			throw new LogException("Read next log error", e);
 		}	
 	}
 
@@ -455,7 +455,7 @@ public class DbUtil {
 			if (conn != null)
 				conn.close();
 		} catch (SQLException e) {
-			throw new LogException("Ene read log error");
+			throw new LogException("Ene read log error", e);
 		}
 	}
 
@@ -482,7 +482,7 @@ public class DbUtil {
 			
 			res = systemPstmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new LogException("Check action in recover error");
+			throw new LogException("Check action in recover error", e);
 		} finally {
 			try {
 				if (systemPstmt != null)
@@ -503,7 +503,6 @@ public class DbUtil {
 				systemPstmt = systemConn.prepareStatement("SELECT TRX_ACTION FROM EXPIRE_TRX_INFO WHERE TRX_ID = ?");
 				systemPstmt.setLong(1, uuid);
 				systemRset = systemPstmt.executeQuery();
-				
 				if (systemRset.next()) {
 					// if other node expire this trx , then checkfailed
 					if (systemRset.getInt(1) != Action.REGISTERED.getCode()) {
@@ -512,10 +511,10 @@ public class DbUtil {
 						return true;
 					}
 				} else {
-					throw new LogException("Check action in recover error");
+					throw new RuntimeException("expire record disappear from sysdb, why?");
 				}
 			} catch (SQLException e) {
-				throw new LogException("Check action in recover error");
+				throw new LogException("Check action in recover error", e);
 			} finally {
 				try {
 					if (systemRset != null)
@@ -538,7 +537,6 @@ public class DbUtil {
 	 * @return true if rds is alive
 	 */
 	public boolean checkLocaLogMgrAlive() {
-		// TODO Auto-generated method stub	
 		Connection localConn = null;
 		PreparedStatement localPstmt = null;
 		ResultSet localRset = null;
@@ -580,7 +578,6 @@ public class DbUtil {
 	 */
 	public void writeHeuristicRec(Transaction tx, Action action,
 			HeuristicsException e, boolean isLocal) throws LogException {
-		// TODO Auto-generated method stub
 		BasicDataSource dataSource = isLocal ? this.localDataSource : this.systemDataSource;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -610,7 +607,7 @@ public class DbUtil {
 			
 			pstmt.executeUpdate();
 		} catch (SQLException e1) {
-			throw new LogException("Write heuristic record error");
+			throw new LogException("Write heuristic record error", e1);
 		} finally {
 			try {
 				if (pstmt != null)
@@ -630,7 +627,6 @@ public class DbUtil {
 	 * @throws MonitorException
 	 */
 	public void writeMonitorRec(MonitorRecord rec) throws MonitorException {
-		// TODO Auto-generated method stub
 		Connection systemConn = null;
 		PreparedStatement systemPstmt = null;
 		
@@ -660,7 +656,7 @@ public class DbUtil {
 			
 			systemPstmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new MonitorException("Write monitor record error");
+			throw new MonitorException("Write monitor record error", e);
 		} finally {
 			try {
 				if (systemPstmt != null)
@@ -709,17 +705,17 @@ public class DbUtil {
 		String createCoordinatorInfoTableSql = "CREATE TABLE `COORDINATOR_INFO` (" + 
 				"`SERVER_ID` int(11) NOT NULL," +
 				"`CHECKPOINT` bigint(20) NOT NULL," +
-				"`MAX_UUD` bigint(20) NOT NULL," +
+				"`MAX_UUID` bigint(20) NOT NULL," +
 				"PRIMARY KEY (`SERVER_ID`)" +
 				") ENGINE=InnoDB DEFAULT CHARSET=utf8";
 		
 		String createHeuristicInfoTableSql = "CREATE TABLE `HEURISTIC_TRX_INFO` (" +
-				"` TRX_ID` bigint(20) NOT NULL," +
+				"`TRX_ID` bigint(20) NOT NULL," +
 				"`TRX_ACTION` tinyint(4) NOT NULL," +
 				"`TRX_HEURISTIC_CODE` smallint(6) NOT NULL," +
 				"`TRX_TIMESTAMP` bigint(20) NOT NULL," +
 				"`TRX_CONTENT` varbinary(4096) DEFAULT NULL," +
-				"PRIMARY KEY (` TRX_ID`)," +
+				"PRIMARY KEY (`TRX_ID`)," +
 				"KEY `IDX_TIME_STAMP` (`TRX_TIMESTAMP`)" +
 				") ENGINE=InnoDB DEFAULT CHARSET=utf8";
 		
@@ -761,7 +757,6 @@ public class DbUtil {
 			}
 		}
 		
-	
 		try {
 			localConn = localDataSource.getConnection();
 			localPstmt = localConn.prepareStatement(createCoordinatorInfoTableSql);
@@ -773,7 +768,7 @@ public class DbUtil {
 			localPstmt = localConn.prepareStatement(createCoordinatorLogTableSql);
 			localPstmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new CoordinatorException("Init local database error");
+			throw new CoordinatorException("Init local database error", e);
 		} finally {
 			try {
 				if (localPstmt != null)

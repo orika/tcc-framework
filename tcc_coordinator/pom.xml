@@ -21,6 +21,11 @@
 			<version>${applicationVersion}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.netease</groupId>
+			<artifactId>tcc_demo_api</artifactId>
+			<version>${demoVersion}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>dubbo</artifactId>
 			<version>2.4.9</version>

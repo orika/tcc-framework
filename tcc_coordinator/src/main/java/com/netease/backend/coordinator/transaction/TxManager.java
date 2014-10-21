@@ -71,8 +71,7 @@ public class TxManager {
 		if (logger.isDebugEnabled()) 
 			logger.debug("register: " + tx);
 		metric.incCompleted(Action.REGISTERED, System.currentTimeMillis() - tx.getCreateTime());
-//		return tx;
-		throw new LogException("this is a log exception");
+		return tx;
 	}
 	
 	public void perform(long uuid, Action action, List<Procedure> procList) 
