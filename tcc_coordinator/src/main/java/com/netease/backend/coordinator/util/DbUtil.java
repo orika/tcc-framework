@@ -361,7 +361,7 @@ public class DbUtil {
 		long maxUuid = 0;
 		try {
 			localConn = this.localDataSource.getConnection();
-			localPstmt = localConn.prepareStatement("SELECT CHECKPOINT FROM COORDINATOR_INFO");
+			localPstmt = localConn.prepareStatement("SELECT CHECKPOINT, MAX_UUID FROM COORDINATOR_INFO");
 			
 			localRset = localPstmt.executeQuery();
 			if (localRset.next()) {
@@ -709,6 +709,7 @@ public class DbUtil {
 		String createCoordinatorInfoTableSql = "CREATE TABLE `COORDINATOR_INFO` (" + 
 				"`SERVER_ID` int(11) NOT NULL," +
 				"`CHECKPOINT` bigint(20) NOT NULL," +
+				"`MAX_UUD` bigint(20) NOT NULL," +
 				"PRIMARY KEY (`SERVER_ID`)" +
 				") ENGINE=InnoDB DEFAULT CHARSET=utf8";
 		
