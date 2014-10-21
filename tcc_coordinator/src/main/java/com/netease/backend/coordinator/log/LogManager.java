@@ -61,14 +61,14 @@ public interface LogManager {
 	 * @param checkpoint
 	 * @throws LogException
 	 */
-	void setCheckpoint(long checkpoint) throws LogException;
+	void setCheckpoint(Checkpoint checkpoint) throws LogException;
 	
 	/**
 	 * Description: get checkpoint 
 	 * @return checkpoint
 	 * @throws LogException
 	 */
-	long getCheckpoint() throws LogException;
+	Checkpoint getCheckpoint() throws LogException;
 	
 	/**
 	 * Description: check the action is valid in recovery

@@ -12,6 +12,7 @@ import java.util.Calendar;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import com.netease.backend.coordinator.config.CoordinatorConfig;
+import com.netease.backend.coordinator.log.Checkpoint;
 import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogRecord;
 import com.netease.backend.coordinator.log.LogScanner;
@@ -319,16 +320,17 @@ public class DbUtil {
 	 * @param checkpoint
 	 * @throws LogException
 	 */
-	public void setCheckpoint(long checkpoint) throws LogException {
+	public void setCheckpoint(Checkpoint checkpoint) throws LogException {
 		Connection localConn = null;
 		PreparedStatement localPstmt = null;
 		
 		try {
 			localConn = this.localDataSource.getConnection();
-			localPstmt = localConn.prepareStatement("UPDATE COORDINATOR_INFO SET CHECKPOINT = ?");
+			localPstmt = localConn.prepareStatement("UPDATE COORDINATOR_INFO SET CHECKPOINT = ?, MAX_UUID = ?");
 			
 			// set insert values
-			localPstmt.setLong(1, checkpoint);
+			localPstmt.setLong(1, checkpoint.getTimestamp());
+			localPstmt.setLong(2, checkpoint.getMaxUuid());
 			
 			localPstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -351,18 +353,20 @@ public class DbUtil {
 	 * @return
 	 * @throws LogException
 	 */
-	public long getCheckpoint() throws LogException {
+	public Checkpoint getCheckpoint() throws LogException {
 		Connection localConn = null;
 		PreparedStatement localPstmt = null;
 		ResultSet localRset = null;
-		long checkpoint = 0;
+		long timestamp = 0;
+		long maxUuid = 0;
 		try {
 			localConn = this.localDataSource.getConnection();
 			localPstmt = localConn.prepareStatement("SELECT CHECKPOINT FROM COORDINATOR_INFO");
 			
 			localRset = localPstmt.executeQuery();
 			if (localRset.next()) {
-				checkpoint = localRset.getLong(1);
+				timestamp = localRset.getLong(1);
+				maxUuid = localRset.getLong(2);
 			} else {
 				throw new LogException("Read checkpoint error");
 			}
@@ -379,7 +383,7 @@ public class DbUtil {
 			}
 			
 		}
-		return checkpoint;
+		return new Checkpoint(timestamp, maxUuid);
 	}
 
 	/**
@@ -781,4 +785,5 @@ public class DbUtil {
 		}
 		
 	}
+	
 }

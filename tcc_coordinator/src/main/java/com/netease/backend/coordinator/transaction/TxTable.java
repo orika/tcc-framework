@@ -44,13 +44,13 @@ public class TxTable extends TimerTask {
 	@Override
 	public void run() {
 		long expireTs = System.currentTimeMillis() - expireTime;
-		long checkpoint = Long.MAX_VALUE;
+		long cpTime = Long.MAX_VALUE;
 		int count = 0;
 		for (Iterator<Transaction> it = table.values().iterator(); it.hasNext(); ) {
 			Transaction tx = it.next();
 			long lastTs = tx.getLastTimeStamp();
-			if (lastTs < checkpoint)
-				checkpoint = lastTs;
+			if (lastTs < cpTime)
+				cpTime = lastTs;
 			if (tx.isExpired(expireTs)) {
 				expireProcessor.process(tx);
 				count++;
@@ -58,10 +58,11 @@ public class TxTable extends TimerTask {
 		}
 		logger.info("expire transaction count:" + count);
 		logger.info("total transaction count:" + table.size());
-		if (checkpoint != Long.MAX_VALUE) {
+		if (cpTime != Long.MAX_VALUE) {
 			try {
-				logManager.setCheckpoint(checkpoint);
-				logger.info("set checkpoint:" + checkpoint);
+				// Todo:set timestamp and maxuuid
+				logManager.setCheckpoint(null);
+				logger.info("set checkpoint:" + cpTime + " / " );
 			} catch (LogException e) {
 				logger.error("set checkpoint error.", e);
 			}
