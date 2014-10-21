@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.netease.backend.coordinator.id.IdForCoordinator;
+import com.netease.backend.coordinator.log.Checkpoint;
 import com.netease.backend.coordinator.log.LogManager;
 import com.netease.backend.coordinator.log.LogRecord;
 import com.netease.backend.coordinator.log.LogScanner;
@@ -48,8 +49,10 @@ public class DBRecoverManager implements RecoverManager {
 		LogScanner logScanner = null;
 		try {
 			// recover from log
-			long checkpoint = logMgr.getCheckpoint();
-			logScanner = logMgr.beginScan(checkpoint);
+			Checkpoint checkpoint = logMgr.getCheckpoint();
+			long cpTime = checkpoint.getTimestamp();
+			lastMaxUUID = checkpoint.getMaxUuid();
+			logScanner = logMgr.beginScan(cpTime);
 			while (logScanner.hasNext()){
 				LogRecord logRec = logScanner.next();
 				long uuid = logRec.getTrxId();

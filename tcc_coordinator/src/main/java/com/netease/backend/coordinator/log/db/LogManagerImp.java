@@ -11,6 +11,7 @@ package com.netease.backend.coordinator.log.db;
 
 import org.apache.log4j.Logger;
 
+import com.netease.backend.coordinator.log.Checkpoint;
 import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogManager;
 import com.netease.backend.coordinator.log.LogScanner;
@@ -100,14 +101,13 @@ public class LogManagerImp implements LogManager {
 	}
 
 	@Override
-	public void setCheckpoint(long checkpoint) throws LogException {
+	public void setCheckpoint(Checkpoint checkpoint) throws LogException {
 		this.dbUtil.setCheckpoint(checkpoint);
 	}
 
 	@Override
-	public long getCheckpoint() throws LogException {
-		long checkpoint = this.dbUtil.getCheckpoint();
-		return checkpoint;
+	public Checkpoint getCheckpoint() throws LogException {
+		return this.dbUtil.getCheckpoint();
 	}
 
 	@Override
