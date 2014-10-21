@@ -17,11 +17,9 @@ public class TccContainer {
 	private RecoverManager recoverManager = null;
 	private TxManager txManager = null;
 	private UUIDGenerator uuidGenerator = null;
-	private ServiceContext context = null;
 	
-	public TccContainer(ServiceContext context, TccMonitor monitor, RecoverManager recoverManager, 
+	public TccContainer(TccMonitor monitor, RecoverManager recoverManager, 
 			TxManager txManager, UUIDGenerator uuidGenerator) {
-		this.context = context;
 		this.monitor = monitor;
 		this.recoverManager = recoverManager;
 		this.txManager = txManager;
@@ -29,7 +27,6 @@ public class TccContainer {
 	}
 	
 	public void start() {
-		context.init();
 		txManager.enableRetry();
 		recoverManager.init();
 		uuidGenerator.init(recoverManager.getLastMaxUUID());

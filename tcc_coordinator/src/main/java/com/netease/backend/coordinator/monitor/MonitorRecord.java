@@ -1,5 +1,8 @@
 package com.netease.backend.coordinator.monitor;
 
+import com.netease.backend.coordinator.metric.GlobalMetric;
+import com.netease.backend.coordinator.transaction.Action;
+
 public class MonitorRecord {
 	private int serverId;
 	private long timestamp;
@@ -16,7 +19,22 @@ public class MonitorRecord {
 	private long avgCancelTime;
 	private long maxCancelTime;
 
-	
+	public MonitorRecord(int serverId, GlobalMetric metric) {
+		this.serverId = serverId;
+		this.timestamp = System.currentTimeMillis();
+		this.curTrxNum = metric.getActiveTxCount();
+		this.curProcessTrxNum = metric.getAllRunningCount();
+		this.registTrxNum = metric.getCompletedCount(Action.REGISTERED);
+		this.confirmTrxNum = metric.getCompletedCount(Action.CONFIRM);
+		this.cancelTrxNum = metric.getCompletedCount(Action.CANCEL);
+		this.expireTrxNum = metric.getCompletedCount(Action.EXPIRE);
+		this.avgRegistTime = metric.getAvgTime(Action.REGISTERED);
+		this.avgConfirmTime = metric.getAvgTime(Action.CONFIRM);
+		this.avgCancelTime = metric.getAvgTime(Action.CANCEL);
+		this.maxRegistTime = metric.getMaxTime(Action.REGISTERED);
+		this.maxConfirmTime = metric.getMaxTime(Action.CONFIRM);
+		this.maxCancelTime = metric.getMaxTime(Action.CANCEL);
+	}
 
 
 	public MonitorRecord(int serverId, long timestamp, long curTrxNum,

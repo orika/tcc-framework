@@ -9,6 +9,7 @@
 package com.netease.backend.coordinator.monitor;
 
 import com.netease.backend.coordinator.config.CoordinatorConfig;
+import com.netease.backend.coordinator.id.IdForCoordinator;
 import com.netease.backend.coordinator.transaction.TxManager;
 import com.netease.backend.coordinator.util.DbUtil;
 import com.netease.backend.coordinator.util.MonitorUtil;
@@ -18,18 +19,18 @@ public class DBTccMonitor extends TccMonitor {
 	private DbUtil dbUtil = null;
 	private MonitorUtil monUtil = null;
 	
-	public DBTccMonitor(CoordinatorConfig config, TxManager manager) {
-		super(config.getMonitorInterval(), manager.getGlobalMetric());
+	public DBTccMonitor(CoordinatorConfig config, TxManager manager, IdForCoordinator idForCoordinator) {
+		super(config.getMonitorInterval(), manager.getGlobalMetric(), idForCoordinator);
 	}
 
 	public void setDbUtil(DbUtil dbUtil) {
 		this.dbUtil = dbUtil;
 	}
 	
-	public void setMonitor(MonitorUtil monUtil) {
+	public void setMonitorUtil(MonitorUtil monUtil) {
 		this.monUtil = monUtil;
 	}
-	
+
 	@Override
 	public void write(MonitorRecord rec) throws MonitorException {
 		// record in monitor platform

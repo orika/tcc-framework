@@ -100,7 +100,7 @@ public class DBRecoverManager implements RecoverManager {
 			logger.info("Transaction table has been recovered");
 			logger.info("Last Max UUID " + lastMaxUUID);
 			txManager.recover();
-		} catch (CoordinatorException e) {
+		} catch (Exception e) {
 			logger.error("DBRecoverManager init failed.", e);
 			System.exit(1);
 		}

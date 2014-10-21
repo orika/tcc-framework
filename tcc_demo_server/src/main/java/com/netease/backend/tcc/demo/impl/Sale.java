@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.netease.backend.tcc.ParticipantImpl;
+import com.netease.backend.tcc.DefaultParticipant;
 import com.netease.backend.tcc.demo.ISale;
 import com.netease.backend.tcc.error.ParticipantException;
 
-public class Sale extends ParticipantImpl implements ISale {
+public class Sale extends DefaultParticipant implements ISale {
 	
 	private static final int SUM = 100000;
 	private AtomicInteger itemCount = new AtomicInteger(SUM);

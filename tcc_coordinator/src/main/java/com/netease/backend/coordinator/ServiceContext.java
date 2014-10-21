@@ -59,18 +59,4 @@ public class ServiceContext implements ApplicationContextAware {
 			throw new ParticipantException("service " + name + " is not find in coordinator");
 		}
 	}
-	
-	public void init() {
-		for (String beanId : applicationContext.getBeanNamesForType(rootType)) {
-			Object bean = applicationContext.getBean(beanId);
-			Class<?>[] cls = bean.getClass().getInterfaces();
-			for (int i = cls.length - 1; i >= 0; i--) {
-				String typeName = cls[i].getName();
-				if (rootType.isAssignableFrom(cls[i])) {
-					Participant pt = (Participant) bean;
-					serviceMap.put(typeName, pt);
-				}
-			}
-		}
-	}
 }

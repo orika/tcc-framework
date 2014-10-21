@@ -3,12 +3,12 @@ package com.netease.backend.tcc.demo.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.netease.backend.tcc.ParticipantImpl;
+import com.netease.backend.tcc.DefaultParticipant;
 import com.netease.backend.tcc.demo.IPayment;
 import com.netease.backend.tcc.demo.impl.Bank.Customer;
 import com.netease.backend.tcc.error.ParticipantException;
 
-public class Payment extends ParticipantImpl implements IPayment {
+public class Payment extends DefaultParticipant implements IPayment {
 
 	private Bank bank = new Bank();
 	

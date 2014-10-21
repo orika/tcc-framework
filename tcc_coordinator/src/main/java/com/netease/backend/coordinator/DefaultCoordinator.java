@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.task.ServiceTask;
 import com.netease.backend.coordinator.transaction.Action;
+import com.netease.backend.coordinator.transaction.IllegalActionException;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.coordinator.transaction.TxManager;
 import com.netease.backend.tcc.Coordinator;
@@ -29,9 +30,9 @@ public class DefaultCoordinator implements Coordinator {
 			Transaction tx = null;
 			tx = txManager.createTx(expireGroups);
 			return tx.getUUID();
-		} catch (LogException e) {
+		} catch (Exception e) {
 			logger.error("transaction register error", e);
-			throw e;
+			throw new CoordinatorException(e.getMessage());
 		}
 	}
 	
@@ -47,9 +48,12 @@ public class DefaultCoordinator implements Coordinator {
 			return 0;
 		} catch (HeuristicsException e) {
 			return e.getCode();
-		} catch (CoordinatorException e) {
+		} catch (IllegalActionException e) {
 			logger.error("transaction " + uuid + " confirm error.", e);
-			throw e;
+			throw new CoordinatorException(e);
+		} catch (LogException e) {
+			logger.error("transaction " + uuid + " confirm error.", e);
+			throw new CoordinatorException(e);
 		}
 	} 
 	
@@ -65,9 +69,12 @@ public class DefaultCoordinator implements Coordinator {
 			return TccCode.OK;
 		} catch (HeuristicsException e) {
 			return e.getCode();
-		} catch (CoordinatorException e) {
+		}  catch (IllegalActionException e) {
 			logger.error("transaction " + uuid + " confirm error.", e);
-			throw e;
+			throw new CoordinatorException(e);
+		} catch (LogException e) {
+			logger.error("transaction " + uuid + " confirm error.", e);
+			throw new CoordinatorException(e);
 		}
 	}
 
@@ -84,9 +91,12 @@ public class DefaultCoordinator implements Coordinator {
 			return TccCode.OK;
 		} catch (HeuristicsException e) {
 			return e.getCode();
-		} catch (CoordinatorException e) {
-			logger.error("transaction " + uuid + " confirm error.", e);
-			throw e;
+		} catch (IllegalActionException e) {
+			logger.error("transaction " + uuid + " cancel error.", e);
+			throw new CoordinatorException(e);
+		} catch (LogException e) {
+			logger.error("transaction " + uuid + " cancel error.", e);
+			throw new CoordinatorException(e);
 		}
 	}
 
@@ -103,9 +113,12 @@ public class DefaultCoordinator implements Coordinator {
 			return TccCode.OK;
 		} catch (HeuristicsException e) {
 			return e.getCode();
-		} catch (CoordinatorException e) {
-			logger.error("transaction " + uuid + " confirm error.", e);
-			throw e;
+		} catch (IllegalActionException e) {
+			logger.error("transaction " + uuid + " cancel error.", e);
+			throw new CoordinatorException(e);
+		} catch (LogException e) {
+			logger.error("transaction " + uuid + " cancel error.", e);
+			throw new CoordinatorException(e);
 		}
 	}
 }

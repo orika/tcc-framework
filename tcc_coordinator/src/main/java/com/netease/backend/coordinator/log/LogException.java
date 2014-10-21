@@ -9,9 +9,8 @@
 
 package com.netease.backend.coordinator.log;
 
-import com.netease.backend.tcc.error.CoordinatorException;
 
-public class LogException extends CoordinatorException {
+public class LogException extends Exception {
 
 	/**
 	 * 

@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 
 import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.log.LogException;
-import com.netease.backend.coordinator.task.TxLogWatcher;
+import com.netease.backend.coordinator.task.TxRetryWatcher;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.coordinator.transaction.TxManager;
 import com.netease.backend.tcc.error.CoordinatorException;
@@ -29,7 +29,7 @@ public class RetryProcessor implements Runnable {
 	private Condition isSpotFree = lock.newCondition();
 	private Thread thread = null;
 	private BgExecutor bgExecutor = null;
-	private RecoverLogWatcher watcher = new RecoverLogWatcher();
+	private RetryWatcher watcher = new RetryWatcher();
 	private volatile boolean stop = false;
 	//optimize notify count
 	private volatile boolean isBlocked = false;
@@ -129,17 +129,21 @@ public class RetryProcessor implements Runnable {
 		lock.unlock();
 	}
 	
-	public void process(Transaction tx, int times, TxLogWatcher watcher) {
+	public void process(Transaction tx, int times, TxRetryWatcher watcher) {
 		retryQueue.offer(new Task(tx, times, watcher));
 	}
 	
-	private class RecoverLogWatcher implements TxLogWatcher {
+	private class RetryWatcher implements TxRetryWatcher {
 
 		@Override
 		public void processError(Transaction tx) {
 			Task task = new Task(tx, 2, this);
 			task.delay(10000);
 			retryQueue.offer(task);
+		}
+
+		@Override
+		public void processSuccess(Transaction tx) {
 		}
 	}
 	
@@ -148,9 +152,9 @@ public class RetryProcessor implements Runnable {
 		private Transaction tx;
 		private long ts;
 		private int times = 1;
-		private TxLogWatcher watcher = null;
+		private TxRetryWatcher watcher = null;
 		
-		Task(Transaction tx, int times, TxLogWatcher watcher) {
+		Task(Transaction tx, int times, TxRetryWatcher watcher) {
 			this.tx = tx;
 			this.ts = 0;
 			this.times = times;
@@ -165,8 +169,9 @@ public class RetryProcessor implements Runnable {
 			} catch (LogException e) {
 				if (watcher != null)
 					watcher.processError(tx);
+			} finally {
+				processResult(tx);
 			}
-			processResult(tx);
 		}
 
 		@Override

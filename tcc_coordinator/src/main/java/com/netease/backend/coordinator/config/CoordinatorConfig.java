@@ -11,6 +11,7 @@ public class CoordinatorConfig {
 	private int expireTime = 10800000;
 	private int ckptInterval = 30000;
 	private int monitorInterval = 60000;
+	private String productName = "TCC";
 	
 	public String getServerIp() {
 		if (serverIp == null)
@@ -68,5 +69,13 @@ public class CoordinatorConfig {
 
 	public void setMonitorInterval(int monitorInterval) {
 		this.monitorInterval = monitorInterval;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
 }

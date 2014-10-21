@@ -53,7 +53,6 @@ public class TxTable extends TimerTask {
 				checkpoint = lastTs;
 			if (tx.isExpired(expireTs)) {
 				expireProcessor.process(tx);
-				it.remove();
 				count++;
 			}
 		}

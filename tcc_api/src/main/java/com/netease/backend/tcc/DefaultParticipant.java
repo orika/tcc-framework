@@ -9,7 +9,7 @@ import java.util.Map;
 import com.netease.backend.tcc.error.ParticipantException;
 
 
-public abstract class ParticipantImpl implements Participant {
+public abstract class DefaultParticipant implements Participant {
 	
 	private MethodPool mpool = new MethodPool();
 	private static final Map<Class<?>, Class<?>> TYPE_CONVERT = new HashMap<Class<?>, Class<?>>();

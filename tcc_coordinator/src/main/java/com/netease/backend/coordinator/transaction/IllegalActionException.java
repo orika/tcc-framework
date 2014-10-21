@@ -1,8 +1,7 @@
 package com.netease.backend.coordinator.transaction;
 
-import com.netease.backend.tcc.error.CoordinatorException;
 
-public class IllegalActionException extends CoordinatorException {
+public class IllegalActionException extends Exception {
 
 	/**
 	 * 
@@ -14,7 +13,8 @@ public class IllegalActionException extends CoordinatorException {
 	private Action second;
 	
 	public IllegalActionException(long uuid, Action first, Action second) {
-		super("tx " + uuid + " illegal action switch:" + first + " to " + second);
+		super(new StringBuilder().append("tx ").append(uuid).append(" illegal action switch:")
+				.append(first).append(" to ").append(second).toString());
 		this.uuid = uuid;
 		this.first = first;
 		this.second = second;

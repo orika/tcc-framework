@@ -1,9 +1,15 @@
 package com.netease.backend.coordinator.util;
 
+import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.monitor.MonitorRecord;
 import com.netease.om.Monitor;
 
 public class MonitorUtil {
+	
+	public MonitorUtil(CoordinatorConfig config) {
+		Monitor monitor = Monitor.getInstance(config.getProductName());
+		monitor.init();
+	}
 	
 	public void writeMonitorRec(MonitorRecord rec) {
 		Monitor.setAttributeCount("CUR_TRX_NUM", rec.getCurTrxNum());

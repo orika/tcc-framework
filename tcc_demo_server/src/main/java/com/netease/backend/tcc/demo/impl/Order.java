@@ -1,11 +1,11 @@
 package com.netease.backend.tcc.demo.impl;
 
-import com.netease.backend.tcc.ParticipantImpl;
+import com.netease.backend.tcc.DefaultParticipant;
 import com.netease.backend.tcc.demo.IOrder;
 import com.netease.backend.tcc.error.ParticipantException;
 
 
-public class Order extends ParticipantImpl implements IOrder {
+public class Order extends DefaultParticipant implements IOrder {
 	
 	private Payment payment;
 	private Sale sale;

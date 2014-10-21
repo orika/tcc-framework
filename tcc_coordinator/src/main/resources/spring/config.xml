@@ -10,7 +10,8 @@
 		<property name = "retryParallelism" value = "20" />
 		<property name = "expireTime" value = "10000" />
 		<property name = "ckptInterval" value = "10000" />
-		<property name = "rdsIp" value = "10.180.17.70:3306" />
+		<property name = "rdsIp" value = "10.120.146.129:3306" />
+		<property name = "monitorInterval" value = "300000" />
 	</bean>
 	
 	<bean id = "localDataSource" class = "org.apache.commons.dbcp.BasicDataSource"
@@ -22,7 +23,7 @@
 		 maxWait：最大等待秒数，单位毫秒，超时会报错误信息；
 		-->
 		<property name = "driverClassName" value = "com.mysql.jdbc.Driver" />
-		<property name = "url" value = "jdbc:mysql://10.180.17.70:3306/tcc" />
+		<property name = "url" value = "jdbc:mysql://10.120.146.129:3306/tcc" />
 		<property name = "username" value = "tcc" />
 		<property name = "password" value = "tcc" />
 		<property name = "initialSize" value = "10"/>
@@ -35,7 +36,7 @@
 	<bean id = "systemDataSource" class = "org.apache.commons.dbcp.BasicDataSource"
 		destroy-method = "close">
 		<property name = "driverClassName" value = "com.mysql.jdbc.Driver" />
-		<property name = "url" value = "jdbc:mysql://10.180.17.70:3306/tcc_global" />
+		<property name = "url" value = "jdbc:mysql://10.120.146.129:3306/tcc_global" />
 		<property name = "username" value = "tcc" />
 		<property name = "password" value = "tcc" />
 		<property name = "initialSize" value = "5"/>

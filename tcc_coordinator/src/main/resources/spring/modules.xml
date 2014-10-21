@@ -14,11 +14,10 @@
 	<dubbo:reference id="order" interface="com.netease.backend.tcc.demo.IOrder" />
 	
 	<bean id = "tccContainer" class = "com.netease.backend.coordinator.TccContainer" init-method="start">
-		<constructor-arg index = "0" ref= "serviceContext"/>
-		<constructor-arg index = "1" ref= "tccMonitor"/>
-		<constructor-arg index = "2" ref= "recoverManager"/>
-		<constructor-arg index = "3" ref= "txManager"/>
-		<constructor-arg index = "4" ref= "uuidGenerator"/>
+		<constructor-arg index = "0" ref= "tccMonitor"/>
+		<constructor-arg index = "1" ref= "recoverManager"/>
+		<constructor-arg index = "2" ref= "txManager"/>
+		<constructor-arg index = "3" ref= "uuidGenerator"/>
 	</bean>
 	
 	<bean id="serviceContext" class="com.netease.backend.coordinator.ServiceContext"/>
@@ -26,7 +25,9 @@
 	<bean id = "tccMonitor" class = "com.netease.backend.coordinator.monitor.DBTccMonitor">
 		<constructor-arg index = "0" ref= "config"/>
 		<constructor-arg index = "1" ref= "txManager"/>
+		<constructor-arg index = "2" ref= "idForCoordinator"/>
 		<property name="dbUtil" ref="dbUtil" />
+		<property name="monitorUtil" ref="monitorUtil"/>
 	</bean>
 	
 	<bean id = "recoverManager" class = "com.netease.backend.coordinator.recover.DBRecoverManager">
@@ -60,5 +61,8 @@
 		<constructor-arg index = "0" ref= "config"/>
 		<constructor-arg index = "1" ref= "localDataSource"/>
 		<constructor-arg index = "2" ref= "systemDataSource"/>
+	</bean>
+	<bean id = "monitorUtil" class = "com.netease.backend.coordinator.util.MonitorUtil">
+		<constructor-arg index = "0" ref= "config"/>
 	</bean>
 </beans>

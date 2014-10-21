@@ -36,7 +36,6 @@ public class TxManager {
 		this.metric = new GlobalMetric(txTable);
 		this.idGenerator = idGenerator;
 		this.logManager = logManager;
-		expireProcessor.setTxTable(txTable);
 		retryProcessor.setTxManager(this);
 	}
 	
@@ -66,16 +65,18 @@ public class TxManager {
 	public Transaction createTx(List<Procedure> procList) throws LogException {
 		Transaction tx = new Transaction(idGenerator.getNextUUID(), procList);
 		tx.setCreateTime(System.currentTimeMillis());
+		metric.incRunningCount(Action.REGISTERED);
 		logManager.logRegister(tx);
 		txTable.put(tx);
 		if (logger.isDebugEnabled()) 
 			logger.debug("register: " + tx);
 		metric.incCompleted(Action.REGISTERED, System.currentTimeMillis() - tx.getCreateTime());
-		return tx;
+//		return tx;
+		throw new LogException("this is a log exception");
 	}
 	
 	public void perform(long uuid, Action action, List<Procedure> procList) 
-			throws CoordinatorException, HeuristicsException {
+			throws LogException, HeuristicsException, IllegalActionException {
 		Transaction tx = begin(uuid, action, procList);
 		try {
 			if (logger.isDebugEnabled())
@@ -89,7 +90,7 @@ public class TxManager {
 	}
 	
 	public void perform(long uuid, Action action, List<Procedure> procList, long timeout) 
-			throws CoordinatorException, HeuristicsException {
+			throws LogException, HeuristicsException, IllegalActionException {
 		Transaction tx = begin(uuid, action, procList);
 		try {
 			if (logger.isDebugEnabled())
@@ -102,7 +103,8 @@ public class TxManager {
 		}
 	}
 	
-	private Transaction begin(long uuid, Action action, List<Procedure> procList) throws CoordinatorException {
+	private Transaction begin(long uuid, Action action, List<Procedure> procList) 
+			throws LogException, IllegalActionException {
 		Transaction tx = txTable.get(uuid);
 		if (tx == null) {
 			tx = new Transaction(uuid, null);
@@ -131,6 +133,7 @@ public class TxManager {
 		if (tx == null)
 			throw new RuntimeException("finish a null transaction!!");
 		tx.setEndTime(System.currentTimeMillis());
+		metric.incCompleted(action, tx.getElapsed());
 		try {
 			logManager.logFinish(tx, action);
 			if (logger.isDebugEnabled())
@@ -138,7 +141,6 @@ public class TxManager {
 		} catch (LogException e) {
 			logger.warn("log finish failed:" + tx.getUUID());
 		}
-		metric.incCompleted(action, tx.getElapsed());
 	}
 	
 	public void heuristic(Transaction tx, Action action, HeuristicsException e) throws LogException {
@@ -174,11 +176,11 @@ public class TxManager {
 			logger.debug("perform background :" + tx);
 		txTable.remove(uuid);
 		tx.setEndTime(System.currentTimeMillis());
+		metric.incCompleted(action, tx.getElapsed());
 		try {
 			logManager.logFinish(tx, action);
 		} catch (LogException e) {
 			logger.warn("log finish failed:" + tx.getUUID());
 		}
-		metric.incCompleted(action, tx.getElapsed());
 	}
 }
