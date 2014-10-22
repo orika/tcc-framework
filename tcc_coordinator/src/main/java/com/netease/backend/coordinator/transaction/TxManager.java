@@ -212,7 +212,7 @@ public class TxManager {
 	}
 	
 	private boolean checkOverFlow() {
-		final long count = metric.getActiveTxCount();
+		final long count = metric.getAllRunningCount();
 		if (count > alarmRunningTx) {
 			monitorUtil.alertAll(MonitorUtil.RUNNING_COUNT_OF, new AlarmMsg() {
 				@Override
