@@ -22,7 +22,6 @@ public class DefaultCoordinator implements Coordinator {
 	private TxManager txManager = null;
 	
 	public DefaultCoordinator(TccContainer container) {
-		container.start();
 		this.txManager = container.getTxManager();
 	}
 
