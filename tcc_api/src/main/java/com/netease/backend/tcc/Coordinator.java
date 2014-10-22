@@ -29,4 +29,9 @@ public interface Coordinator {
 	short cancel(int sequenceId, long uuid, List<Procedure> procedures) throws CoordinatorException;
 	
 	short cancel(int sequenceId, long uuid, long timeout, List<Procedure> procedures) throws CoordinatorException;
+	
+	/*
+	 * for test
+	 */
+	int getTxTableSize();
 }

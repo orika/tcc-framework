@@ -86,8 +86,12 @@ public class TxTable extends TimerTask {
 		return table.remove(uuid);
 	}
 	
-	public Map<Long, Transaction> getTxMap() {
-		return table;
+	public Iterator<Transaction> getTxIterator() {
+		return table.values().iterator();
+	}
+	
+	public int getSize() {
+		return table.size();
 	}
 	
 	public void beginExpiring() {

@@ -35,8 +35,15 @@ public class TccContainer {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		System.setProperty("dubbo.spring.config", "classpath*:/spring/*.xml");
+		if (args.length != 0)
+			System.setProperty("dubbo.spring.config", args[0]);
+		else
+			System.setProperty("dubbo.spring.config", "classpath*:/spring/*.xml");
 		com.alibaba.dubbo.container.Main.main(args);
 		logger.info("Tcc Service initializing...");
+	}
+	
+	public TxManager getTxManager() {
+		return txManager;
 	}
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import com.netease.backend.tcc.Coordinator;
 import com.netease.backend.tcc.Participant;
 import com.netease.backend.tcc.error.ParticipantException;
 
@@ -58,5 +59,13 @@ public class ServiceContext implements ApplicationContextAware {
 			}
 			throw new ParticipantException("service " + name + " is not find in coordinator");
 		}
+	}
+	
+	public static Coordinator getCoordinator() {
+		return (Coordinator) applicationContext.getBean("coordinator");
+	}
+	
+	public static Object getBean(String beanId) {
+		return applicationContext.getBean(beanId);
 	}
 }

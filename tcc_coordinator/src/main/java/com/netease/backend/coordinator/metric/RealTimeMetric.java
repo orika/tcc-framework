@@ -11,6 +11,7 @@ public class RealTimeMetric implements Metric {
 	
 	private List<AtomicLong> actions = new ArrayList<AtomicLong>();
 	private TxTable txTable = null;
+	private AtomicLong allCount = new AtomicLong(0);
 	
 	public RealTimeMetric(TxTable txTable) {
 		this.txTable = txTable;
@@ -20,19 +21,17 @@ public class RealTimeMetric implements Metric {
 	}
 	
 	public void incAction(Action action) {
+		allCount.incrementAndGet();
 		actions.get(action.getCode()).incrementAndGet();
 	}
 	
 	public void decAction(Action action) {
+		allCount.decrementAndGet();
 		actions.get(action.getCode()).decrementAndGet();
 	}
 	
 	public long getAllActionCount() {
-		long count = 0;
-		for (AtomicLong ai : actions) {
-			count += ai.get();
-		}
-		return count;
+		return allCount.get();
 	}
 	
 	public long getActionCount(Action action) {
@@ -40,13 +39,10 @@ public class RealTimeMetric implements Metric {
 	}
 	
 	public long getActiveTxCount() {
-		return txTable.getTxMap().size();
+		return txTable.getSize();
 	}
 
 	@Override
 	public void reset() {
-		for (AtomicLong ai : actions) {
-			ai.set(0);
-		}
 	}
 }

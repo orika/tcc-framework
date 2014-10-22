@@ -6,7 +6,7 @@
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 	
 	<bean id="coordinator" class="com.netease.backend.coordinator.DefaultCoordinator" >
-		<constructor-arg ref= "txManager"/>
+		<constructor-arg ref= "tccContainer"/>
 	</bean>
 	<dubbo:service interface="com.netease.backend.tcc.Coordinator" ref="coordinator"/>
 	
@@ -37,6 +37,7 @@
 		<constructor-arg index = "0" ref="config"/>
 		<constructor-arg index = "1" ref= "logManager"/>
 		<constructor-arg index = "2" ref= "idGenerator"/>
+		<constructor-arg index = "3" ref= "monitorUtil"/>
 	</bean>
 	
 	<bean id = "idGenerator" class = "com.netease.backend.coordinator.id.IdGenerator">

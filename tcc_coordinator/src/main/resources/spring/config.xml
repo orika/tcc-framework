@@ -6,14 +6,16 @@
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 	
 	<bean id  =  "config" class  =  "com.netease.backend.coordinator.config.CoordinatorConfig">
-		<property name = "bgMaxThreadNum" value = "20" />
+		<property name = "bgThreadNum" value = "20" />
 		<property name = "retryParallelism" value = "20" />
 		<property name = "expireTime" value = "10000" />
 		<property name = "ckptInterval" value = "10000" />
 		<property name = "rdsIp" value = "10.120.146.129:3306" />
 		<property name = "monitorInterval" value = "300000" />
+		<property name = "alarmRunningTx" value = "1" />
+		<property name = "alarmTxCount" value = "1" />
 	</bean>
-	
+
 	<bean id = "localDataSource" class = "org.apache.commons.dbcp.BasicDataSource"
 		destroy-method = "close">
 		<!--

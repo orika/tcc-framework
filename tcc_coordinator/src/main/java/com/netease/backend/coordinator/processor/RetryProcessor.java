@@ -3,6 +3,7 @@ package com.netease.backend.coordinator.processor;
 import java.util.Iterator;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
@@ -28,19 +29,17 @@ public class RetryProcessor implements Runnable {
 	private Lock lock = new ReentrantLock();
 	private Condition isSpotFree = lock.newCondition();
 	private Thread thread = null;
-	private BgExecutor bgExecutor = null;
+	private ExecutorService executor = null;
 	private RetryWatcher watcher = new RetryWatcher();
 	private volatile boolean stop = false;
 	//optimize notify count
 	private volatile boolean isBlocked = false;
 	
-	public void setTxManager(TxManager txManager) {
-		this.txManager = txManager;
-	}
-
-	public RetryProcessor(CoordinatorConfig config, TccProcessor processor) {
+	public RetryProcessor(CoordinatorConfig config, TxManager txManager, 
+			ExecutorService executor) {
 		this.parallelism = new AtomicInteger(config.getRetryParallelism());
-		this.bgExecutor = processor.getBgExecutor();
+		this.txManager = txManager;
+		this.executor = executor;
 	}
 	
 	public void start() {
@@ -59,7 +58,7 @@ public class RetryProcessor implements Runnable {
 			try {
 				for (int i = 0, j = parallelism.get(); i < j; i++) {
 					Task task = retryQueue.take();
-					bgExecutor.execute(task);
+					executor.execute(task);
 				}
 			} catch (InterruptedException e) {
 				continue;
@@ -166,6 +165,8 @@ public class RetryProcessor implements Runnable {
 			times--;
 			try {
 				txManager.retry(tx);
+				if (watcher != null)
+					watcher.processSuccess(tx);
 			} catch (LogException e) {
 				if (watcher != null)
 					watcher.processError(tx);

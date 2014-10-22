@@ -21,8 +21,9 @@ public class DefaultCoordinator implements Coordinator {
 	private static final Logger logger = Logger.getLogger("Coordinator");
 	private TxManager txManager = null;
 	
-	public DefaultCoordinator(TxManager txManager) {
-		this.txManager = txManager;
+	public DefaultCoordinator(TccContainer container) {
+		container.start();
+		this.txManager = container.getTxManager();
 	}
 
 	public long begin(int sequenceId, List<Procedure> expireGroups) throws CoordinatorException {
@@ -120,5 +121,10 @@ public class DefaultCoordinator implements Coordinator {
 			logger.error("transaction " + uuid + " cancel error.", e);
 			throw new CoordinatorException(e);
 		}
+	}
+
+	@Override
+	public int getTxTableSize() {
+		return txManager.getTxTable().getSize();
 	}
 }

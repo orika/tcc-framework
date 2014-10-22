@@ -15,10 +15,10 @@ import com.netease.backend.tcc.error.HeuristicsException;
 public class TccProcessor {
 	
 	private ExecutorService threadPool = Executors.newCachedThreadPool();
-	private BgExecutor bgExecutor = null;
+	private ExecutorService bgExecutor = null;
 	
-	public TccProcessor(CoordinatorConfig config) {
-		this.bgExecutor = new BgExecutor(config.getBgMaxThreadNum());
+	public TccProcessor(CoordinatorConfig config, ExecutorService bgExecutor) {
+		this.bgExecutor = bgExecutor;
 	}
 
 	public void perform(long uuid, List<Procedure> procedures, boolean isBg) 
@@ -92,9 +92,5 @@ public class TccProcessor {
 			}
 		}
 		return result;
-	}
-	
-	public BgExecutor getBgExecutor() {
-		return bgExecutor;
 	}
 }

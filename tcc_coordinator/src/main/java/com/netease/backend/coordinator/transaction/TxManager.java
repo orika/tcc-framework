@@ -1,6 +1,8 @@
 package com.netease.backend.coordinator.transaction;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 
@@ -9,9 +11,11 @@ import com.netease.backend.coordinator.id.IdGenerator;
 import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogManager;
 import com.netease.backend.coordinator.metric.GlobalMetric;
+import com.netease.backend.coordinator.monitor.AlarmMsg;
 import com.netease.backend.coordinator.processor.ExpireProcessor;
 import com.netease.backend.coordinator.processor.RetryProcessor;
 import com.netease.backend.coordinator.processor.TccProcessor;
+import com.netease.backend.coordinator.util.MonitorUtil;
 import com.netease.backend.tcc.Procedure;
 import com.netease.backend.tcc.error.CoordinatorException;
 import com.netease.backend.tcc.error.HeuristicsException;
@@ -27,16 +31,29 @@ public class TxManager {
 	private RetryProcessor retryProcessor = null;
 	private ExpireProcessor expireProcessor = null;
 	private GlobalMetric metric = null;
+	private MonitorUtil monitorUtil = null;
+	private long maxRunningTx = 0;
+	private long alarmRunningTx = 0;
+	private int maxTxCount = 0;
+	private int alarmTxCount = 0;
+	private String rdsIp = null;
 	
-	public TxManager(CoordinatorConfig config, LogManager logManager, IdGenerator idGenerator) {
-		this.tccProcessor = new TccProcessor(config);
-		this.retryProcessor = new RetryProcessor(config, tccProcessor);
+	public TxManager(CoordinatorConfig config, LogManager logManager, IdGenerator idGenerator, 
+			MonitorUtil monitorUtil) {
+		ExecutorService bgExecutor = Executors.newFixedThreadPool(config.getBgThreadNum());
+		this.tccProcessor = new TccProcessor(config, bgExecutor);
+		this.retryProcessor = new RetryProcessor(config, this, bgExecutor);
 		this.expireProcessor = new ExpireProcessor(retryProcessor);
 		this.txTable = new TxTable(config, expireProcessor, logManager, idGenerator);
 		this.metric = new GlobalMetric(txTable);
 		this.idGenerator = idGenerator;
 		this.logManager = logManager;
-		retryProcessor.setTxManager(this);
+		this.monitorUtil = monitorUtil;
+		this.maxRunningTx = config.getMaxRunningTx();
+		this.alarmRunningTx = config.getAlarmRunningTx();
+		this.maxTxCount = config.getMaxTxCount();
+		this.alarmTxCount = config.getAlarmTxCount();
+		this.rdsIp = config.getRdsIp();
 	}
 	
 	public void beginExpire() {
@@ -48,7 +65,7 @@ public class TxManager {
 	}
 	
 	public void recover() throws CoordinatorException {
-		retryProcessor.recover(txTable.getTxMap().values().iterator());
+		retryProcessor.recover(txTable.getTxIterator());
 	}
 	
 	public void enableRetry() {
@@ -62,7 +79,11 @@ public class TxManager {
 	/*
 	 * register is not added to metric right now
 	 */
-	public Transaction createTx(List<Procedure> procList) throws LogException {
+	public Transaction createTx(List<Procedure> procList) throws LogException, CoordinatorException {
+		if (checkOverFlow())
+			throw new CoordinatorException("reject,running tx count is overflow at " + maxRunningTx);
+		if (checkTxCount())
+			throw new CoordinatorException("reject,txTable size blooms at " + maxTxCount);
 		Transaction tx = new Transaction(idGenerator.getNextUUID(), procList);
 		tx.setCreateTime(System.currentTimeMillis());
 		metric.incRunningCount(Action.REGISTERED);
@@ -75,7 +96,7 @@ public class TxManager {
 	}
 	
 	public void perform(long uuid, Action action, List<Procedure> procList) 
-			throws LogException, HeuristicsException, IllegalActionException {
+			throws LogException, HeuristicsException, IllegalActionException, CoordinatorException {
 		Transaction tx = begin(uuid, action, procList);
 		try {
 			if (logger.isDebugEnabled())
@@ -89,7 +110,7 @@ public class TxManager {
 	}
 	
 	public void perform(long uuid, Action action, List<Procedure> procList, long timeout) 
-			throws LogException, HeuristicsException, IllegalActionException {
+			throws LogException, HeuristicsException, IllegalActionException, CoordinatorException {
 		Transaction tx = begin(uuid, action, procList);
 		try {
 			if (logger.isDebugEnabled())
@@ -103,11 +124,15 @@ public class TxManager {
 	}
 	
 	private Transaction begin(long uuid, Action action, List<Procedure> procList) 
-			throws LogException, IllegalActionException {
+			throws LogException, IllegalActionException, CoordinatorException {
 		Transaction tx = txTable.get(uuid);
-		if (tx == null) {
+		boolean isLocalTx = tx != null;
+		if (!isLocalTx) {
+			if (checkOverFlow())
+				throw new CoordinatorException("reject,running tx count is overflow at " + maxRunningTx);
+			if (checkTxCount())
+				throw new CoordinatorException("reject,txTable size blooms at " + maxTxCount);
 			tx = new Transaction(uuid, null);
-			txTable.put(tx);
 		}
 		switch (action) {
 			case CONFIRM:
@@ -123,6 +148,9 @@ public class TxManager {
 			logger.debug("begin " + tx);
 		tx.setBeginTime(System.currentTimeMillis());
 		logManager.logBegin(tx, action);
+		if (isLocalTx) {
+			txTable.put(tx);
+		}
 		metric.incRunningCount(action);
 		return tx;
 	}
@@ -181,5 +209,39 @@ public class TxManager {
 		} catch (LogException e) {
 			logger.warn("log finish failed:" + tx.getUUID());
 		}
+	}
+	
+	private boolean checkOverFlow() {
+		final long count = metric.getActiveTxCount();
+		if (count > alarmRunningTx) {
+			monitorUtil.alertAll(MonitorUtil.RUNNING_COUNT_OF, new AlarmMsg() {
+				@Override
+				public String getContent() {
+					StringBuilder builder = new StringBuilder();
+					builder.append("id:").append(idGenerator.getCoordinatorId()).append(" \n");
+					builder.append("rds ip:").append(rdsIp).append(" \n");
+					builder.append("current running tx count:").append(count);
+					return builder.toString();
+				}
+			});
+		}
+		return count > maxRunningTx;
+	}
+	
+	private boolean checkTxCount() {
+		final int size = txTable.getSize();
+		if (size > alarmTxCount) {
+			monitorUtil.alertAll(MonitorUtil.TX_COUNT_OF, new AlarmMsg() {
+				@Override
+				public String getContent() {
+					StringBuilder builder = new StringBuilder();
+					builder.append("id:").append(idGenerator.getCoordinatorId()).append(" \n");
+					builder.append("rds ip:").append(rdsIp).append(" \n");
+					builder.append("current txTable size:").append(size);
+					return builder.toString();
+				}
+			});
+		}
+		return size > maxTxCount;
 	}
 }
