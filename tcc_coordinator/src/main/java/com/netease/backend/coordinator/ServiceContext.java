@@ -62,7 +62,10 @@ public class ServiceContext implements ApplicationContextAware {
 	}
 	
 	public static Coordinator getCoordinator() {
-		return (Coordinator) applicationContext.getBean("coordinator");
+		Object obj = applicationContext.getBean("coordinator");
+		if (obj == null)
+			return null;
+		return (Coordinator) obj;
 	}
 	
 	public static Object getBean(String beanId) {

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	
+	<bean id="coord" class="com.netease.backend.coordinator.DefaultCoordinator" >
+		<constructor-arg ref= "tccContainer"/>
+	</bean>
+	<dubbo:service interface="com.netease.backend.tcc.Coordinator" ref="coord"/>
+	
+	<bean id = "tccContainer" class = "com.netease.backend.coordinator.TccContainer" init-method="start">
+		<constructor-arg index = "0" ref= "tccMonitor"/>
+		<constructor-arg index = "1" ref= "recoverManager"/>
+		<constructor-arg index = "2" ref= "txManager"/>
+		<constructor-arg index = "3" ref= "uuidGenerator"/>
+	</bean>
+	
+	<bean id="serviceContext" class="com.netease.backend.coordinator.ServiceContext"/>
+	
+	<bean id = "tccMonitor" class = "com.netease.backend.coordinator.monitor.DBTccMonitor">
+		<constructor-arg index = "0" ref= "config"/>
+		<constructor-arg index = "1" ref= "txManager"/>
+		<constructor-arg index = "2" ref= "idForCoordinator"/>
+		<property name="dbUtil" ref="dbUtil" />
+		<property name="monitorUtil" ref="monitorUtil"/>
+	</bean>
+	
+	<bean id = "recoverManager" class = "com.netease.backend.coordinator.recover.DBRecoverManager">
+		<property name="txManager" ref="txManager" />
+		<property name="logMgr" ref="logManager" />
+		<property name="idForCoordinator" ref="idForCoordinator" />
+	</bean>
+	
+	<bean id = "txManager" class = "com.netease.backend.coordinator.transaction.TxManager">
+		<constructor-arg index = "0" ref="config"/>
+		<constructor-arg index = "1" ref= "logManager"/>
+		<constructor-arg index = "2" ref= "idGenerator"/>
+		<constructor-arg index = "3" ref= "monitorUtil"/>
+	</bean>
+	
+	<bean id = "idGenerator" class = "com.netease.backend.coordinator.id.IdGenerator">
+		<property name="idForCoordinator" ref="idForCoordinator" />
+		<property name="uuidGenerator" ref="uuidGenerator" />
+	</bean>
+	<bean id = "idForCoordinator" class = "com.netease.backend.coordinator.id.db.ServerIdDistributor">
+		<constructor-arg ref="dbUtil"/>
+	</bean>
+	<bean id = "uuidGenerator" class = "com.netease.backend.coordinator.id.db.UuidGeneratorImp">
+		<constructor-arg index = "0" ref= "idForCoordinator"/>
+	</bean>
+	
+	<bean id = "logManager" class = "com.netease.backend.coordinator.log.db.LogManagerImp">
+		<property name="dbUtil" ref="dbUtil" />
+	</bean>
+	
+	<bean id = "dbUtil" class = "com.netease.backend.coordinator.util.DbUtil">
+		<constructor-arg index = "0" ref= "config"/>
+		<constructor-arg index = "1" ref= "localDataSource"/>
+		<constructor-arg index = "2" ref= "systemDataSource"/>
+	</bean>
+	<bean id = "monitorUtil" class = "com.netease.backend.coordinator.util.MonitorUtil">
+		<constructor-arg index = "0" ref= "config"/>
+	</bean>
+</beans>

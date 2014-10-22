@@ -39,7 +39,7 @@ public class TccContainer {
 			System.setProperty("dubbo.spring.config", args[0]);
 		else
 			System.setProperty("dubbo.spring.config", "classpath*:/spring/*.xml");
-		com.alibaba.dubbo.container.Main.main(args);
+		com.alibaba.dubbo.container.Main.main(new String[0]);
 		logger.info("Tcc Service initializing...");
 	}
 	

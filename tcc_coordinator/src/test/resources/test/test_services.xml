@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+	
+	<dubbo:reference id="service1" interface="com.netease.backend.coordinator.test.container.Service1"  check="false"/>
+	<dubbo:reference id="service2" interface="com.netease.backend.coordinator.test.container.Service2"  check="false"/>
+	<dubbo:reference id="service3" interface="com.netease.backend.coordinator.test.container.Service3"  check="false"/>
+	<dubbo:reference id="service4" interface="com.netease.backend.coordinator.test.container.Service4"  check="false"/>
+	<dubbo:reference id="service5" interface="com.netease.backend.coordinator.test.container.Service5"  check="false"/>
+	
+	<bean id="container1" class="com.netease.backend.coordinator.test.container.Service1Impl"/>
+	<dubbo:service interface="com.netease.backend.coordinator.test.container.Service1" ref="container1"/>
+	<bean id="container2" class="com.netease.backend.coordinator.test.container.Service2Impl"/>
+	<dubbo:service interface="com.netease.backend.coordinator.test.container.Service2" ref="container2"/>
+	<bean id="container3" class="com.netease.backend.coordinator.test.container.Service3Impl"/>
+	<dubbo:service interface="com.netease.backend.coordinator.test.container.Service3" ref="container3"/>
+	<bean id="container4" class="com.netease.backend.coordinator.test.container.Service4Impl"/>
+	<dubbo:service interface="com.netease.backend.coordinator.test.container.Service4" ref="container4"/>
+	<bean id="container5" class="com.netease.backend.coordinator.test.container.Service5Impl"/>
+	<dubbo:service interface="com.netease.backend.coordinator.test.container.Service5" ref="container5"/>
+	
+	<bean id="containers" class="com.netease.backend.coordinator.test.container.Containers">
+		<constructor-arg index = "0" ref= "container1"/>
+		<constructor-arg index = "1" ref= "container2"/>
+		<constructor-arg index = "2" ref= "container3"/>
+		<constructor-arg index = "3" ref= "container4"/>
+		<constructor-arg index = "4" ref= "container5"/>
+		<constructor-arg index = "5" ref= "service1"/>
+		<constructor-arg index = "6" ref= "service2"/>
+		<constructor-arg index = "7" ref= "service3"/>
+		<constructor-arg index = "8" ref= "service4"/>
+		<constructor-arg index = "9" ref= "service5"/>
+	</bean>
+	
+	<bean id="tccManager" class="com.netease.backend.tcc.TccManager">
+		<property name="coordinator" ref="coordinator" />
+	</bean>
+	<dubbo:reference id="coordinator" interface="com.netease.backend.tcc.Coordinator" timeout = "10000" retries="0" check = "false"/>
+</beans>
