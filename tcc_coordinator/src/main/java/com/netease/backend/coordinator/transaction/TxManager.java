@@ -41,8 +41,9 @@ public class TxManager {
 	public TxManager(CoordinatorConfig config, LogManager logManager, IdGenerator idGenerator, 
 			MonitorUtil monitorUtil) {
 		ExecutorService bgExecutor = Executors.newFixedThreadPool(config.getBgThreadNum());
-		this.tccProcessor = new TccProcessor(config, bgExecutor);
-		this.retryProcessor = new RetryProcessor(config, this, bgExecutor);
+		ExecutorService foreExecutor = Executors.newCachedThreadPool();
+		this.tccProcessor = new TccProcessor(foreExecutor, bgExecutor);
+		this.retryProcessor = new RetryProcessor(config, this, foreExecutor);
 		this.expireProcessor = new ExpireProcessor(retryProcessor);
 		this.txTable = new TxTable(config, expireProcessor, logManager, idGenerator);
 		this.metric = new GlobalMetric(txTable);

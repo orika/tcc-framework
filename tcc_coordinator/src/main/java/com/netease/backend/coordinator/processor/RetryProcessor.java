@@ -5,7 +5,6 @@ import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -23,7 +22,7 @@ public class RetryProcessor implements Runnable {
 	
 	private Logger logger = Logger.getLogger("RetryProcessor");
 	
-	private AtomicInteger parallelism;
+	private int parallelism;
 	private TxManager txManager = null;
 	private DelayQueue<Task> retryQueue = new DelayQueue<Task>();
 	private Lock lock = new ReentrantLock();
@@ -37,13 +36,13 @@ public class RetryProcessor implements Runnable {
 	
 	public RetryProcessor(CoordinatorConfig config, TxManager txManager, 
 			ExecutorService executor) {
-		this.parallelism = new AtomicInteger(config.getRetryParallelism());
+		this.parallelism = config.getRetryParallelism();
 		this.txManager = txManager;
 		this.executor = executor;
 	}
 	
 	public void start() {
-		thread = new Thread(this);
+		thread = new Thread(this, "RetryProcessor");
 		thread.start();
 	}
 	
@@ -55,16 +54,20 @@ public class RetryProcessor implements Runnable {
 	@Override
 	public void run() {
 		while (!stop && !Thread.interrupted()) {
+			int spots = parallelism;
 			try {
-				for (int i = 0, j = parallelism.get(); i < j; i++) {
+				for (int i = 0; i < spots; i++) {
 					Task task = retryQueue.take();
+					if (logger.isDebugEnabled())
+						logger.debug("##retry a task:" + task.tx);
 					executor.execute(task);
 				}
 			} catch (InterruptedException e) {
 				continue;
 			}
 			lock.lock();
-			if (parallelism.get() > 0) {
+			parallelism -= spots;
+			if (parallelism > 0) {
 				lock.unlock();
 				continue;
 			}
@@ -120,7 +123,7 @@ public class RetryProcessor implements Runnable {
 	 */
 	private void processResult(Transaction tx) {
 		lock.lock();
-		parallelism.decrementAndGet();
+		parallelism++;
 		if (isBlocked) {
 			isBlocked = false;
 			isSpotFree.signalAll();

@@ -4,9 +4,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.task.ServiceTask;
 import com.netease.backend.coordinator.task.TxResult;
 import com.netease.backend.tcc.Procedure;
@@ -14,10 +12,11 @@ import com.netease.backend.tcc.error.HeuristicsException;
 
 public class TccProcessor {
 	
-	private ExecutorService threadPool = Executors.newCachedThreadPool();
+	private ExecutorService foreExecutor = null;
 	private ExecutorService bgExecutor = null;
 	
-	public TccProcessor(CoordinatorConfig config, ExecutorService bgExecutor) {
+	public TccProcessor(ExecutorService foreExecutor, ExecutorService bgExecutor) {
+		this.foreExecutor = foreExecutor;
 		this.bgExecutor = bgExecutor;
 	}
 
@@ -78,7 +77,7 @@ public class TccProcessor {
 					if (isBackground)
 						bgExecutor.execute(new ServiceTask(uuid, index++, cur, result));
 					else
-						threadPool.execute(new ServiceTask(uuid, index++, cur, result));
+						foreExecutor.execute(new ServiceTask(uuid, index++, cur, result));
 				}
 				it.remove();
 			}
