@@ -4,21 +4,19 @@ public class TccCode {
 	
 	public static final short OK = 0;
 	
-	public static final short UNDEFINED = (short) 0xFFFF;
-	
 	static boolean isTimeout(short code) {
-		return (code & TccUtils.TIMEOUT_PREFIX) > 0;
+		return (code & TccUtils.TIMEOUT_MASK) == TccUtils.TIMEOUT_MASK;
 	}
 	
-	static boolean isServiceDown(short code) {
-		return code < 0;
+	static boolean isServiceNotFound(short code) {
+		return (code & TccUtils.UNVAILABLE_MASK) == TccUtils.UNVAILABLE_MASK;
 	}
 	
-	public static short getServiceDownCode(int index) {
-		return (short) (index * -1) ;
+	public static short getServiceNotFound(int index) {
+		return (short) (index | TccUtils.UNVAILABLE_MASK) ;
 	}
 	
-	public static short getTimeoutCode(int index) {
-		return (short) (index | TccUtils.TIMEOUT_PREFIX) ;
+	public static short getTimeout(int index) {
+		return (short) (index | TccUtils.TIMEOUT_MASK) ;
 	}
 }

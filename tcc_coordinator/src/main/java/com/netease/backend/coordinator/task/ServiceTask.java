@@ -5,8 +5,7 @@ import java.util.List;
 import com.netease.backend.coordinator.ServiceContext;
 import com.netease.backend.tcc.Participant;
 import com.netease.backend.tcc.Procedure;
-import com.netease.backend.tcc.TccCode;
-import com.netease.backend.tcc.error.HeuristicsException;
+import com.netease.backend.tcc.error.HeuristicsType;
 import com.netease.backend.tcc.error.ParticipantException;
 
 public class ServiceTask implements Runnable {
@@ -29,7 +28,7 @@ public class ServiceTask implements Runnable {
 	
 	@Override
 	public void run() {
-		result.setWorker(index, Thread.currentThread());
+		result.setThread(index, Thread.currentThread());
 		try {
 			Participant participant = ServiceContext.getService(proc.getService());
 			List<Object> params = proc.getParameters();
@@ -44,13 +43,13 @@ public class ServiceTask implements Runnable {
 				participant.invoke(method, params.toArray());
 			result.success(index);
 		} catch (ClassNotFoundException e) {
-			result.failed(index, new HeuristicsException(TccCode.getServiceDownCode(proc.getIndex()), proc));
+			result.failed(index, HeuristicsType.SERVICE_NOT_FOUND, proc);
 		} catch (ParticipantException e) {
-			result.failed(index, new HeuristicsException(e.getErrorCode(), proc));
+			result.failed(index, e.getErrorCode(), proc);
 		} catch (InterruptedException e) {
-			result.failed(index, new HeuristicsException(TccCode.getTimeoutCode(proc.getIndex()), proc));
+			result.failed(index, HeuristicsType.TIMEOUT, proc);
 		} catch (RuntimeException e) {
-			result.failed(index, new HeuristicsException(proc));
+			result.failed(index, HeuristicsType.UNDEFINED, proc);
 		}
 	}
 }

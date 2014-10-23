@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import com.netease.backend.tcc.error.CoordinatorException;
+import com.netease.backend.tcc.error.ParticipantException;
 import com.netease.backend.tcc.error.ServiceDownException;
 import com.netease.backend.tcc.error.TimeoutException;
 
@@ -119,23 +120,29 @@ public class TccManager implements ApplicationContextAware {
 			throws CoordinatorException {
 		if (code == TccCode.OK) {
 			return;
+		} else if (code == TccUtils.UNDEFINED) {
+			throw new CoordinatorException("undefined error code heuristics exception");
 		} else if (TccCode.isTimeout(code)) {
-			Procedure proc = procList.get(code & TccUtils.TIMEOUT_MASK);
+			Procedure proc = procList.get(code ^ TccUtils.TIMEOUT_MASK);
 			throw new TimeoutException(timeout, proc);
-		} else if (TccCode.isServiceDown(code)) {
-			Procedure proc = procList.get(code & TccUtils.UNVAILABLE_MAST);
+		} else if (TccCode.isServiceNotFound(code)) {
+			Procedure proc = procList.get(code ^ TccUtils.UNVAILABLE_MASK);
 			throw new ServiceDownException(proc);
-		}
+		} else
+			throw new ParticipantException("Participant error,code:" + code,  code); 
 	}
 	
 	private void checkResult(short code, List<Procedure> procList) 
 			throws CoordinatorException {
 		if (code == TccCode.OK) {
 			return;
-		} else if (TccCode.isServiceDown(code)) {
-			Procedure proc = procList.get(code & TccUtils.UNVAILABLE_MAST);
+		} else if (code == TccUtils.UNDEFINED) {
+			throw new CoordinatorException("undefined error code heuristics exception");
+		} else if (TccCode.isServiceNotFound(code)) {
+			Procedure proc = procList.get(code ^ TccUtils.UNVAILABLE_MASK);
 			throw new ServiceDownException(proc);
-		}
+		} else
+			throw new ParticipantException("Participant error,code:" + code,  code);
 	}
 	
 	public class CertainTx extends Transaction implements Cloneable {
