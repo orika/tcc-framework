@@ -66,6 +66,8 @@ public class TxManager {
 	}
 	
 	public void recover() throws CoordinatorException {
+		// print txTable
+		txTable.print();
 		retryProcessor.recover(txTable.getTxIterator());
 	}
 	

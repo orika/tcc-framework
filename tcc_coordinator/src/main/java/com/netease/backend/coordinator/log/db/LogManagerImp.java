@@ -97,7 +97,12 @@ public class LogManagerImp implements LogManager {
 			this.dbUtil.writeHeuristicRec(tx, action, e, true);
 		}
 		LogType logType = LogType.TRX_HEURESTIC;
-		this.dbUtil.writeLog(tx, logType);
+		
+		try {
+			this.dbUtil.writeLog(tx, logType);
+		} catch (LogException e2) {
+			logger.error("Write heuristic log error", e2);
+		}
 	}
 
 	@Override

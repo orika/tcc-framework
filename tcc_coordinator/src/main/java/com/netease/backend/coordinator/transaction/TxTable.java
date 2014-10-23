@@ -98,4 +98,15 @@ public class TxTable extends TimerTask {
 		Timer timer = new Timer();
 		timer.schedule(this, 0, checkInterval);
 	}
+	
+	public void print() {
+		if (logger.isDebugEnabled()) {
+			Iterator<Transaction> it = getTxIterator();
+			while (it.hasNext()) {
+				Transaction tx = it.next();
+				logger.debug("Tx uuid:" + tx.getUUID() + "  action: " + tx.getAction() + 
+						"  create_time: " + tx.getCreateTime() + " begin_time: " + tx.getBeginTime());
+			}
+		}
+	}
 }
