@@ -43,7 +43,7 @@ public class TxResult {
 	}
 	
 	public void failed(int index, HeuristicsException exception) {
-		if (this.exception != null) {
+		if (this.exception == null) {
 			this.exception = exception;
 			interrupt();
 		}
@@ -74,10 +74,11 @@ public class TxResult {
 	
 	private class Worker {
 		private Thread thread;
-		private AtomicReference<Status> status;
+		private AtomicReference<Status> status = new AtomicReference<Status>();
 		
 		Worker(Thread thread) {
 			this.thread = thread;
+			this.status.set(Status.WORK);
 		}
 		
 		boolean interrupt() {
