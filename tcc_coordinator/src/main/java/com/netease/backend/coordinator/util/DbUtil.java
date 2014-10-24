@@ -170,19 +170,26 @@ public class DbUtil {
 	 */
 	public void writeLog(Transaction tx, LogType logType) throws LogException {
 		byte[] trxContent = null;
-		
+		long trxTimestamp = 0;
 		switch(logType) {
 		case TRX_BEGIN:
+			trxContent = LogUtil.serialize(tx.getExpireList());
+			trxTimestamp = tx.getCreateTime();
+			break;
 		case TRX_START_EXPIRE:
 			trxContent = LogUtil.serialize(tx.getExpireList());
+			trxTimestamp = tx.getBeginTime();
 			break;
 		case TRX_START_CONFIRM:
 			trxContent = LogUtil.serialize(tx.getConfirmList());
+			trxTimestamp = tx.getBeginTime();
 			break;
 		case TRX_START_CANCEL:
 			trxContent = LogUtil.serialize(tx.getCancelList());
+			trxTimestamp = tx.getBeginTime();
 			break;
 		default:
+			trxTimestamp = tx.getEndTime();
 			trxContent = null;	
 		}
 		
@@ -196,7 +203,7 @@ public class DbUtil {
 			// set insert values
 			localPstmt.setLong(1, tx.getUUID());
 			localPstmt.setInt(2, logType.getCode());
-			localPstmt.setLong(3, tx.getLastTimeStamp());
+			localPstmt.setLong(3, trxTimestamp);
 			localPstmt.setBytes(4, trxContent);
 			
 			localPstmt.executeUpdate();
