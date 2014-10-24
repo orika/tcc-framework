@@ -57,6 +57,6 @@ public class HeuristicsException extends Exception {
 	}
 	
 	public static HeuristicsException getException(short code, Procedure proc) {
-			return new HeuristicsException(code, proc);
+		return new HeuristicsException(code, proc);
 	}
 }
