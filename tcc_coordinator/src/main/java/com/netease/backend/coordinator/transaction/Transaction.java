@@ -101,7 +101,7 @@ public class Transaction {
 	}
 	
 	public long getLastTimeStamp() {
-		return endTime == -1 ? (beginTime == -1 ? createTime : beginTime) : endTime;
+		return endTime == -1 ? createTime : endTime;
 	}
 	
 	public boolean isExpired(long timestamp) {
