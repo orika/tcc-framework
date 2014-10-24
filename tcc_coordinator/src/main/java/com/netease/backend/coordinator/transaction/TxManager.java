@@ -185,6 +185,9 @@ public class TxManager {
 	public void retry(Transaction tx) throws LogException {
 		Action action = tx.getAction();
 		if ((action == Action.EXPIRE || action == Action.REGISTERED) && !logManager.checkExpire(tx.getUUID())) {
+			// if checkExpire return false , it means we can not execute expire any more
+			// remove the tx out of txTable
+			txTable.remove(tx.getUUID());
 			if (logger.isDebugEnabled())
 				logger.debug("Transaction " + tx.getUUID() + " check expire false");
 			return;

@@ -33,7 +33,7 @@ public class UuidGeneratorImp implements UUIDGenerator {
 		// sequenceId for low 48 bit
 		int serverId = this.serverIdDist.get(); 
 		long seqId = this.seqGen.nextSeqId();
-		long uuid = (serverId << 48) | (seqId & SequenceIdGenerator.sequenceIdMask); 
+		long uuid = (((long) serverId) << 48) | (seqId & SequenceIdGenerator.sequenceIdMask); 
 		return uuid;
 	}
 

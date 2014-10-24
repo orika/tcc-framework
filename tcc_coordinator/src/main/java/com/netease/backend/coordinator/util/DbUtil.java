@@ -28,7 +28,6 @@ import com.netease.backend.tcc.error.HeuristicsException;
 public class DbUtil {
 	private BasicDataSource localDataSource = null;
 	private BasicDataSource systemDataSource = null;
-	private static int STREAM_SIZE = 100;
 	private static int PARTITION_NUM = 14;
 	private CoordinatorConfig config = null;
 	
@@ -395,9 +394,10 @@ public class DbUtil {
 	public LogScanner beginScan(long startpoint) throws LogException {
 		try {
 			Connection conn = this.localDataSource.getConnection();
-			PreparedStatement pstmt = conn.prepareStatement("SELECT TRX_ID, TRX_STATUS, TRX_TIMESTAMP, TRX_CONTENT FROM COORDINATOR_LOG WHERE TRX_TIMESTAMP >= ?");
+			PreparedStatement pstmt = conn.prepareStatement("SELECT TRX_ID, TRX_STATUS, TRX_TIMESTAMP, TRX_CONTENT FROM COORDINATOR_LOG WHERE TRX_TIMESTAMP >= ?", 
+					ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 			pstmt.setLong(1, startpoint);
-			pstmt.setFetchSize(STREAM_SIZE);
+			pstmt.setFetchSize(Integer.MIN_VALUE);
 			ResultSet rset = pstmt.executeQuery();
 			return new LogScannerImp(this, conn, pstmt, rset);
 		} catch (SQLException e) {

@@ -47,6 +47,7 @@ public class DBRecoverManager implements RecoverManager {
 			Checkpoint checkpoint = logMgr.getCheckpoint();
 			long cpTime = checkpoint.getTimestamp();
 			lastMaxUUID = checkpoint.getMaxUuid();
+			logger.info("begin recovering checkpoint is " + checkpoint);
 			logScanner = logMgr.beginScan(cpTime);
 			while (logScanner.hasNext()){
 				LogRecord logRec = logScanner.next();
