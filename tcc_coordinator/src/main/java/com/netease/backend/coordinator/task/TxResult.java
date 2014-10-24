@@ -31,6 +31,8 @@ public class TxResult {
 			return;
 		isInterrupted = true;
 		for (Worker worker : workers) {
+			if (worker == null)
+				continue;
 			worker.interrupt();
 		}
 	}
