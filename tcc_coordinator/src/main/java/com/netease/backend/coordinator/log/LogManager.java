@@ -75,8 +75,9 @@ public interface LogManager {
 	 * @param uuid
 	 * @return true if operation is valid
 	 * @throws LogException
+	 * @throws IllegalArgumentException
 	 */
-	boolean checkRetryAction(long uuid) throws LogException;
+	boolean checkRetryAction(long uuid, Action action) throws LogException, IllegalArgumentException;
 	
 	/**
 	 * Description: check local log system(RDS) is still alive

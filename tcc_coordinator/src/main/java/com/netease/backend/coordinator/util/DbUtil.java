@@ -446,20 +446,20 @@ public class DbUtil {
 	 * @return true if action is valid
 	 * @throws LogException
 	 */
-	public boolean checkRetryAction(long uuid) throws LogException {
+	public boolean checkRetryAction(long uuid, Action action) throws LogException, IllegalArgumentException {
 		Connection systemConn = null;
 		PreparedStatement systemPstmt = null;
 		ResultSet systemRset = null;
 		
 		int res = 0;
 		try {
-			// Insert a record to system db, and mark trx action as REGISTED
+			// Insert a record to system db, and mark trx action
 			systemConn = this.systemDataSource.getConnection();
 			systemPstmt = systemConn.prepareStatement("INSERT IGNORE INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION)" +
 					" VALUES(?,?)");
 			
 			systemPstmt.setLong(1, uuid);
-			systemPstmt.setInt(2, Action.REGISTERED.getCode());
+			systemPstmt.setInt(2, action.getCode());
 			
 			systemPstmt.executeUpdate();
 			res = systemPstmt.getUpdateCount();
@@ -487,10 +487,13 @@ public class DbUtil {
 				systemRset = systemPstmt.executeQuery();
 				if (systemRset.next()) {
 					// if other node expire this trx , then checkfailed
-					if (systemRset.getInt(1) != Action.REGISTERED.getCode()) {
+					int actionCode = systemRset.getInt(1);
+					if (actionCode == Action.EXPIRE.getCode()) {
 						return false;
-					} else { 
+					} else if (actionCode == action.getCode()) {
 						return true;
+					} else { 
+						throw new IllegalArgumentException("checkRetryAction pass wrong action argument, it is not match expire_info table");
 					}
 				} else {
 					throw new RuntimeException("expire record disappear from sysdb, why?");

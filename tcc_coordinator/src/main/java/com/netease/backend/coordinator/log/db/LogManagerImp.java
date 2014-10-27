@@ -116,8 +116,8 @@ public class LogManagerImp implements LogManager {
 	}
 
 	@Override
-	public boolean checkRetryAction(long uuid) throws LogException {
-		boolean res = this.dbUtil.checkRetryAction(uuid);
+	public boolean checkRetryAction(long uuid, Action action) throws LogException, IllegalArgumentException{
+		boolean res = this.dbUtil.checkRetryAction(uuid, action);
 		return res;
 	}
 
