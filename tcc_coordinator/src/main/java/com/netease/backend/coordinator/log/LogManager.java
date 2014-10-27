@@ -10,6 +10,7 @@
 package com.netease.backend.coordinator.log;
 
 import com.netease.backend.coordinator.transaction.Action;
+import com.netease.backend.coordinator.transaction.IllegalActionException;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.tcc.error.HeuristicsException;
 
@@ -75,9 +76,9 @@ public interface LogManager {
 	 * @param uuid
 	 * @return true if operation is valid
 	 * @throws LogException
-	 * @throws IllegalArgumentException
+	 * @throws IllegalActionException 
 	 */
-	boolean checkRetryAction(long uuid, Action action) throws LogException, IllegalArgumentException;
+	void checkRetryAction(long uuid, Action action) throws LogException, IllegalActionException;
 	
 	/**
 	 * Description: check local log system(RDS) is still alive

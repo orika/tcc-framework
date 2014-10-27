@@ -17,6 +17,7 @@ import com.netease.backend.coordinator.log.LogManager;
 import com.netease.backend.coordinator.log.LogScanner;
 import com.netease.backend.coordinator.log.LogType;
 import com.netease.backend.coordinator.transaction.Action;
+import com.netease.backend.coordinator.transaction.IllegalActionException;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.coordinator.util.DbUtil;
 import com.netease.backend.tcc.error.HeuristicsException;
@@ -116,9 +117,8 @@ public class LogManagerImp implements LogManager {
 	}
 
 	@Override
-	public boolean checkRetryAction(long uuid, Action action) throws LogException, IllegalArgumentException{
-		boolean res = this.dbUtil.checkRetryAction(uuid, action);
-		return res;
+	public void checkRetryAction(long uuid, Action action) throws LogException, IllegalActionException{
+		this.dbUtil.checkRetryAction(uuid, action);
 	}
 
 	@Override

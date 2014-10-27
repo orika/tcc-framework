@@ -135,6 +135,7 @@ public class TxManager {
 				throw new CoordinatorException("reject,running tx count is overflow at " + maxRunningTx);
 			if (checkTxCount())
 				throw new CoordinatorException("reject,txTable size blooms at " + maxTxCount);
+			logManager.checkRetryAction(uuid, action);
 			tx = new Transaction(uuid, null);
 		}
 		switch (action) {

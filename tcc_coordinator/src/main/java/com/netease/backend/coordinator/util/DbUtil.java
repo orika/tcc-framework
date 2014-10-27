@@ -21,6 +21,7 @@ import com.netease.backend.coordinator.log.db.LogScannerImp;
 import com.netease.backend.coordinator.monitor.MonitorException;
 import com.netease.backend.coordinator.monitor.MonitorRecord;
 import com.netease.backend.coordinator.transaction.Action;
+import com.netease.backend.coordinator.transaction.IllegalActionException;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.tcc.error.CoordinatorException;
 import com.netease.backend.tcc.error.HeuristicsException;
@@ -445,8 +446,9 @@ public class DbUtil {
 	 * @param uuid
 	 * @return true if action is valid
 	 * @throws LogException
+	 * @throws IllegalActionException 
 	 */
-	public boolean checkRetryAction(long uuid, Action action) throws LogException, IllegalArgumentException {
+	public void checkRetryAction(long uuid, Action action) throws LogException, IllegalActionException {
 		Connection systemConn = null;
 		PreparedStatement systemPstmt = null;
 		ResultSet systemRset = null;
@@ -488,15 +490,11 @@ public class DbUtil {
 				if (systemRset.next()) {
 					// if other node expire this trx , then checkfailed
 					int actionCode = systemRset.getInt(1);
-					if (actionCode == Action.EXPIRE.getCode()) {
-						return false;
-					} else if (actionCode == action.getCode()) {
-						return true;
-					} else { 
-						throw new IllegalArgumentException("checkRetryAction pass wrong action argument, it is not match expire_info table");
+					if (actionCode != action.getCode()) {
+						throw new IllegalActionException(uuid, Action.getAction(actionCode), action);
 					}
 				} else {
-					throw new RuntimeException("expire record disappear from sysdb, why?");
+					throw new RuntimeException("action record disappear from sysdb, why?");
 				}
 			} catch (SQLException e) {
 				throw new LogException("Check action in recover error", e);
@@ -514,7 +512,6 @@ public class DbUtil {
 			}
 			
 		}
-		return true;
 	}
 
 	/**
