@@ -233,32 +233,6 @@ public class DbUtil {
 		ResultSet systemRset = null;
 		int res = 0;
 		
-		// check whether the trx is already heuristics
-		try {
-			systemConn = systemDataSource.getConnection();
-			systemPstmt = systemConn.prepareStatement("SELECT TRX_ID FROM HEURISTIC_TRX_INFO"
-					+ " WHERE TRX_ID = ?");
-			
-			systemPstmt.setLong(1, uuid);
-			systemRset = systemPstmt.executeQuery();
-			if (systemRset.next()) {
-				return false;
-			}
-		} catch (SQLException e) {
-			throw new LogException("Check expire error", e);
-		} finally {
-			try {
-				if (systemRset != null)
-					systemRset.close();
-				if (systemPstmt != null)
-					systemPstmt.close();
-				if (systemConn != null)
-					systemConn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
 		// insert record to Expire_trx_info to avoid other node to confirm/cancel
 		try {
 			systemConn = systemDataSource.getConnection();
@@ -472,7 +446,7 @@ public class DbUtil {
 	 * @return true if action is valid
 	 * @throws LogException
 	 */
-	public boolean checkActionInRecover(long uuid) throws LogException {
+	public boolean checkRetryAction(long uuid) throws LogException {
 		Connection systemConn = null;
 		PreparedStatement systemPstmt = null;
 		ResultSet systemRset = null;
@@ -487,7 +461,8 @@ public class DbUtil {
 			systemPstmt.setLong(1, uuid);
 			systemPstmt.setInt(2, Action.REGISTERED.getCode());
 			
-			res = systemPstmt.executeUpdate();
+			systemPstmt.executeUpdate();
+			res = systemPstmt.getUpdateCount();
 		} catch (SQLException e) {
 			throw new LogException("Check action in recover error", e);
 		} finally {

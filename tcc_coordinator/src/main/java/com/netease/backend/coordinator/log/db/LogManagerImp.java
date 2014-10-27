@@ -116,8 +116,8 @@ public class LogManagerImp implements LogManager {
 	}
 
 	@Override
-	public boolean checkActionInRecover(long uuid) throws LogException {
-		boolean res = this.dbUtil.checkActionInRecover(uuid);
+	public boolean checkRetryAction(long uuid) throws LogException {
+		boolean res = this.dbUtil.checkRetryAction(uuid);
 		return res;
 	}
 

@@ -71,12 +71,12 @@ public interface LogManager {
 	Checkpoint getCheckpoint() throws LogException;
 	
 	/**
-	 * Description: check the action is valid in recovery
+	 * Description: check the action is valid if the tx is not belong to current node
 	 * @param uuid
 	 * @return true if operation is valid
 	 * @throws LogException
 	 */
-	boolean checkActionInRecover(long uuid) throws LogException;
+	boolean checkRetryAction(long uuid) throws LogException;
 	
 	/**
 	 * Description: check local log system(RDS) is still alive
