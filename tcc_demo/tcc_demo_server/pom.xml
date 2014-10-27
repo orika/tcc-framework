@@ -27,7 +27,7 @@
 	<packaging>jar</packaging>
 	<description>The demo server module of tcc project</description>
 	<properties>
-		<skip_maven_deploy>false</skip_maven_deploy>
+		<skip_maven_deploy>true</skip_maven_deploy>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>

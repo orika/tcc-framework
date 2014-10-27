@@ -133,4 +133,16 @@
 			</plugin>
 		</plugins>
 	</build>
+	<distributionManagement>
+		<repository>
+			<id>repo</id>
+			<name>repo</name>
+			<url>http://mvn.hz.netease.com/artifactory/libs-releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>snapshots-only</name>
+			<url>http://mvn.hz.netease.com/artifactory/libs-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>

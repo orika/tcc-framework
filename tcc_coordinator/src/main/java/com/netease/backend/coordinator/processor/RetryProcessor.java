@@ -66,14 +66,17 @@ public class RetryProcessor implements Runnable {
 				continue;
 			}
 			lock.lock();
-			parallelism -= spots;
-			if (parallelism > 0) {
+			try {
+				parallelism -= spots;
+				if (parallelism > 0) {
+					continue;
+				}
+				isBlocked = true;
+				isSpotFree.awaitUninterruptibly();
 				lock.unlock();
-				continue;
+			} finally {
+				lock.unlock();
 			}
-			isBlocked = true;
-			isSpotFree.awaitUninterruptibly();
-			lock.unlock();
 		}
 	}
 	
@@ -123,12 +126,15 @@ public class RetryProcessor implements Runnable {
 	 */
 	private void processResult(Transaction tx) {
 		lock.lock();
-		parallelism++;
-		if (isBlocked) {
-			isBlocked = false;
-			isSpotFree.signalAll();
+		try {
+			parallelism++;
+			if (isBlocked) {
+				isBlocked = false;
+				isSpotFree.signalAll();
+			}
+		} finally {
+			lock.unlock();
 		}
-		lock.unlock();
 	}
 	
 	public void process(Transaction tx, int times, TxRetryWatcher watcher) {
