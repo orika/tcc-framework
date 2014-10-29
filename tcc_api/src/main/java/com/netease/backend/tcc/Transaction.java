@@ -75,6 +75,9 @@ public abstract class Transaction {
 			return;
 		} else if (code == TccUtils.UNDEFINED) {
 			throw new CoordinatorException("undefined error code heuristics exception");
+		} else if (TccCode.isTimeout(code)) {
+			Procedure proc = procList.get(code ^ TccUtils.TIMEOUT_MASK);
+			throw new TimeoutException(proc, uuid);
 		} else if (TccCode.isServiceNotFound(code)) {
 			Procedure proc = procList.get(code ^ TccUtils.UNVAILABLE_MASK);
 			throw new ServiceDownException(proc, uuid);
@@ -83,9 +86,8 @@ public abstract class Transaction {
 	}
 	
 	public static void main(String[] args) {
-		byte a = (byte) 0xFF;
-		byte b = (byte) 0xFF;
-		byte c = (byte) 0xFF;
-		System.out.println(a ^ b & c);
+		short a = (short) 16384;
+		System.out.println(TccCode.isTimeout(a));
+		System.out.println(a ^ TccUtils.TIMEOUT_MASK);
 	}
 }

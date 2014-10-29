@@ -17,6 +17,12 @@ public class TimeoutException extends CoordinatorException {
 		this.proc = proc;
 	}
 	
+	public TimeoutException(Procedure proc, long uuid) {
+		super(new StringBuilder().append("uuid ").append(uuid).append(" call ")
+				.append(proc.getService()).toString());
+		this.proc = proc;
+	}
+	
 	public Procedure getProcedure() {
 		return proc;
 	}
