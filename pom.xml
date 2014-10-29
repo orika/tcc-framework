@@ -32,54 +32,27 @@
 		<applicationVersion>1.0-SNAPSHOT</applicationVersion>
 		<demoVersion>1.0</demoVersion>
 		<skip_maven_deploy>true</skip_maven_deploy>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- Common libs -->
 		<spring_version>2.5.6.SEC03</spring_version>
-		<javassist_version>3.15.0-GA</javassist_version>
-		<netty_version>3.2.5.Final</netty_version>
-		<mina_version>1.1.7</mina_version>
-		<grizzly_version>2.1.4</grizzly_version>
-		<httpclient_version>4.1.2</httpclient_version>
-		<hessian_lite_version>3.2.1-fixed-2</hessian_lite_version>
-		<xstream_version>1.4.1</xstream_version>
-		<fastjson_version>1.1.8</fastjson_version>
-		<bsf_version>3.1</bsf_version>
-		<sorcerer_version>0.8</sorcerer_version>
 		<zookeeper_version>3.3.3</zookeeper_version>
 		<zkclient_version>0.1</zkclient_version>
-		<curator_version>1.1.10</curator_version>
-		<jedis_version>2.1.0</jedis_version>
-		<xmemcached_version>1.3.6</xmemcached_version>
-		<cxf_version>2.6.1</cxf_version>
-		<thrift_version>0.8.0</thrift_version>
-		<jfreechart_version>1.0.13</jfreechart_version>
-		<hessian_version>4.0.7</hessian_version>
-		<servlet_version>2.5</servlet_version>
-		<jetty_version>6.1.26</jetty_version>
-		<validation_version>1.0.0.GA</validation_version>
-		<hibernate_validator_version>4.2.0.Final</hibernate_validator_version>
-		<jcache_version>0.4</jcache_version>
-		<sca_version>2.0-M5.1</sca_version>
-		<guice_version>3.0</guice_version>
-		<cglib_version>2.2</cglib_version>
-		<webx_version>3.0.8</webx_version>
+		<mysql_version>5.1.31</mysql_version>
+		<dbcp_version>1.4</dbcp_version>
+		<monitor_version>2.0.4</monitor_version>
 		<!-- Log libs -->
-		<slf4j_version>1.6.2</slf4j_version>
-		<jcl_version>1.1</jcl_version>
 		<log4j_version>1.2.16</log4j_version>
-		<logback_version>1.0.6</logback_version>
 		<!-- Test libs -->
-		<junit_version>4.10</junit_version>
-		<easymock_version>3.0</easymock_version>
-		<jmockit_version>0.999.8</jmockit_version>
-		<!-- Build args -->
-		<!--<argline>-server -Xms64m -Xmx64m -XX:PermSize=64m -XX:MaxPermSize=64m</argline>-->
-		<skip_maven_deploy>false</skip_maven_deploy>
-		<updateReleaseInfo>true</updateReleaseInfo>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<junit_version>4.4</junit_version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
 			<!-- Common libs -->
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>dubbo</artifactId>
+				<version>2.4.9</version>
+			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring</artifactId>
@@ -105,7 +78,37 @@
 				<artifactId>logback-classic</artifactId>
 				<version>${logback_version}</version>
 			</dependency>
+			<dependency>
+			    <groupId>org.apache.zookeeper</groupId>
+			    <artifactId>zookeeper</artifactId>
+			    <version>${zookeeper_version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>com.github.sgroschupf</groupId>
+			    <artifactId>zkclient</artifactId>
+			    <version>${zkclient_version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>mysql</groupId>
+			    <artifactId>mysql-connector-java</artifactId>
+			    <version>${mysql_version}</version>
+			</dependency>
+				<dependency>
+			    <groupId>commons-dbcp</groupId>
+	    		<artifactId>commons-dbcp</artifactId>
+	    		<version>${dbcp_version}</version>
+			</dependency>
+			<dependency>
+	    		<groupId>com.netease</groupId>
+	   			<artifactId>monitor-jar</artifactId>
+	    		<version>${monitor_version}</version>
+			</dependency>
 			<!-- Test libs -->
+			<dependency>
+				<groupId>junit</groupId>  
+	        	<artifactId>junit</artifactId>  
+	        	<version>${junit_version}</version> 
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<build>

@@ -55,6 +55,7 @@ public class TxResult {
 	}
 	
 	public void failed(int index, short errorCode, Procedure proc, String msg) {
+		workers[index].failed();
 		if (this.exception == null) {
 			this.exception = HeuristicsException.getException(errorCode, proc, msg);
 			interrupt();
@@ -117,6 +118,10 @@ public class TxResult {
 				while (!Thread.interrupted())
 					LockSupport.parkNanos(10000);
 			}
+		}
+		
+		void failed() {
+			status.compareAndSet(Status.WORK, Status.INTERRUPT);
 		}
 	}
 	

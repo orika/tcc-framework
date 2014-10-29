@@ -22,14 +22,8 @@
 			<version>${applicationVersion}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.netease</groupId>
-			<artifactId>tcc_demo_api</artifactId>
-			<version>${demoVersion}</version>
-		</dependency>
-		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>dubbo</artifactId>
-			<version>2.4.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -42,32 +36,26 @@
 		<dependency>
 		    <groupId>org.apache.zookeeper</groupId>
 		    <artifactId>zookeeper</artifactId>
-		    <version>3.3.3</version>
 		</dependency>
 		<dependency>
 		    <groupId>com.github.sgroschupf</groupId>
 		    <artifactId>zkclient</artifactId>
-		    <version>0.1</version>
 		</dependency>
 		<dependency>
 		    <groupId>mysql</groupId>
 		    <artifactId>mysql-connector-java</artifactId>
-		    <version>5.1.31</version>
 		</dependency>
 		<dependency>
 		    <groupId>commons-dbcp</groupId>
     		<artifactId>commons-dbcp</artifactId>
-    		<version>1.4</version>
 		</dependency>
 		<dependency>
     		<groupId>com.netease</groupId>
    			<artifactId>monitor-jar</artifactId>
-    		<version>2.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>  
         	<artifactId>junit</artifactId>  
-        	<version>4.4</version> 
 		</dependency>
 	</dependencies>
 	<build>
