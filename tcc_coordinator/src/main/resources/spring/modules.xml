@@ -17,7 +17,9 @@
 		<constructor-arg index = "3" ref= "uuidGenerator"/>
 	</bean>
 	
-	<bean id="serviceContext" class="com.netease.backend.coordinator.ServiceContext"/>
+	<bean id="serviceContext" class="com.netease.backend.coordinator.ServiceContext">
+		<constructor-arg ref= "config"/>
+	</bean>
 	
 	<bean id = "tccMonitor" class = "com.netease.backend.coordinator.monitor.DBTccMonitor">
 		<constructor-arg index = "0" ref= "config"/>
@@ -38,6 +40,7 @@
 		<constructor-arg index = "1" ref= "logManager"/>
 		<constructor-arg index = "2" ref= "idGenerator"/>
 		<constructor-arg index = "3" ref= "monitorUtil"/>
+		<constructor-arg index = "4" ref= "serviceContext"/>
 	</bean>
 	
 	<bean id = "idGenerator" class = "com.netease.backend.coordinator.id.IdGenerator">

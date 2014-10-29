@@ -6,6 +6,7 @@ import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 
+import com.netease.backend.coordinator.ServiceContext;
 import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.id.IdGenerator;
 import com.netease.backend.coordinator.log.LogException;
@@ -39,10 +40,10 @@ public class TxManager {
 	private String rdsIp = null;
 	
 	public TxManager(CoordinatorConfig config, LogManager logManager, IdGenerator idGenerator, 
-			MonitorUtil monitorUtil) {
+			MonitorUtil monitorUtil, ServiceContext context) {
 		ExecutorService bgExecutor = Executors.newFixedThreadPool(config.getBgThreadNum());
 		ExecutorService foreExecutor = Executors.newCachedThreadPool();
-		this.tccProcessor = new TccProcessor(foreExecutor, bgExecutor);
+		this.tccProcessor = new TccProcessor(foreExecutor, bgExecutor, context);
 		this.retryProcessor = new RetryProcessor(config, this, foreExecutor);
 		this.expireProcessor = new ExpireProcessor(retryProcessor);
 		this.txTable = new TxTable(config, expireProcessor, logManager, idGenerator);

@@ -11,24 +11,18 @@ public class DefaultContainer implements ServiceContainer {
 	}
 
 	@Override
-	public void cancel(long uuid) throws ParticipantException {
+	public void cancel(Long uuid) throws ParticipantException {
 		service.cancel(uuid);
 	}
 
 	@Override
-	public void confirm(long uuid) throws ParticipantException {
+	public void confirm(Long uuid) throws ParticipantException {
 		service.confirm(uuid);
 	}
 
 	@Override
-	public void expired(long uuid) throws ParticipantException {
+	public void expired(Long uuid) throws ParticipantException {
 		service.expired(uuid);
-	}
-
-	@Override
-	public void invoke(String methodName, Object[] args)
-			throws ParticipantException {
-		service.invoke(methodName, args);
 	}
 
 	@Override

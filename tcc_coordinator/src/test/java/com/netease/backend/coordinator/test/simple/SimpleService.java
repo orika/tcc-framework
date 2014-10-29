@@ -8,7 +8,7 @@ public class SimpleService implements Service {
 	private int status = -2;
 	
 	@Override
-	public void cancel(long uuid) throws ParticipantException {
+	public void cancel(Long uuid) throws ParticipantException {
 		if (status == 0)
 			status = 2;
 		else
@@ -16,7 +16,7 @@ public class SimpleService implements Service {
 	}
 
 	@Override
-	public void confirm(long uuid) throws ParticipantException {
+	public void confirm(Long uuid) throws ParticipantException {
 		if (status == 0)
 			status = 1;
 		else
@@ -24,16 +24,11 @@ public class SimpleService implements Service {
 	}
 
 	@Override
-	public void expired(long uuid) throws ParticipantException {
+	public void expired(Long uuid) throws ParticipantException {
 		if (status == 0)
 			status = 3;
 		else
 			status = -1;
-	}
-
-	@Override
-	public void invoke(String methodName, Object[] args)
-			throws ParticipantException {
 	}
 
 	@Override

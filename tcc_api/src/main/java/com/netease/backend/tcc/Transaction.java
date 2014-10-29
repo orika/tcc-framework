@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.netease.backend.tcc.error.CoordinatorException;
+import com.netease.backend.tcc.error.ParticipantException;
+import com.netease.backend.tcc.error.ServiceDownException;
+import com.netease.backend.tcc.error.TimeoutException;
 
 public abstract class Transaction {
 
@@ -49,4 +52,40 @@ public abstract class Transaction {
 	public abstract void cancel() throws CoordinatorException;
 	
 	public abstract void cancel(long timeout) throws CoordinatorException; 
+	
+	protected void checkResult(short code, List<Procedure> procList, long timeout) 
+			throws CoordinatorException {
+		if (code == TccCode.OK) {
+			return;
+		} else if (code == TccUtils.UNDEFINED) {
+			throw new CoordinatorException("undefined error code heuristics exception");
+		} else if (TccCode.isTimeout(code)) {
+			Procedure proc = procList.get(code ^ TccUtils.TIMEOUT_MASK);
+			throw new TimeoutException(timeout, proc, uuid);
+		} else if (TccCode.isServiceNotFound(code)) {
+			Procedure proc = procList.get(code ^ TccUtils.UNVAILABLE_MASK);
+			throw new ServiceDownException(proc, uuid);
+		} else
+			throw new ParticipantException("Participant error with uuid " + uuid, code); 
+	}
+	
+	protected void checkResult(short code, List<Procedure> procList) 
+			throws CoordinatorException {
+		if (code == TccCode.OK) {
+			return;
+		} else if (code == TccUtils.UNDEFINED) {
+			throw new CoordinatorException("undefined error code heuristics exception");
+		} else if (TccCode.isServiceNotFound(code)) {
+			Procedure proc = procList.get(code ^ TccUtils.UNVAILABLE_MASK);
+			throw new ServiceDownException(proc, uuid);
+		} else
+			throw new ParticipantException("Participant error with uuid " + uuid, code);
+	}
+	
+	public static void main(String[] args) {
+		byte a = (byte) 0xFF;
+		byte b = (byte) 0xFF;
+		byte c = (byte) 0xFF;
+		System.out.println(a ^ b & c);
+	}
 }

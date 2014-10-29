@@ -5,11 +5,11 @@ import com.netease.backend.tcc.Participant;
 
 public interface IPayment extends Participant {
 	
-	void reserve(long uuid, String persion, int money);
+	void reserve(Long uuid, String persion, int money);
 	
-	void cancel(long uuid, String person);
+	void cancel(Long uuid, String person);
 
-	void pay(long uuid, String persion);
+	void pay(Long uuid, String persion);
 	
-	boolean isConfirmed(long uuid);
+	boolean isConfirmed(Long uuid);
 }

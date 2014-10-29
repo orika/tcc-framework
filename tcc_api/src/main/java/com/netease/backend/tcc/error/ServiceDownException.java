@@ -11,8 +11,9 @@ public class ServiceDownException extends CoordinatorException {
 	
 	private Procedure proc = null;
 	
-	public ServiceDownException(Procedure proc) {
-		super("service " + proc.getService() + " is not available");
+	public ServiceDownException(Procedure proc, long uuid) {
+		super(new StringBuilder().append("service ")
+				.append(proc.getService()).append(" is not available,uuid ").append(uuid).toString());
 		this.proc = proc;
 	}
 	

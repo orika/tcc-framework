@@ -22,14 +22,14 @@ public class Payment extends DefaultParticipant implements IPayment {
 		}
 	}
 
-	public void pay(long uuid, String person) {
+	public void pay(Long uuid, String person) {
 		Customer customer = bank.getCustomer(person);
 		if (customer == null)
 			throw new RuntimeException(person + " is not in the bank");
 		customer.pay(uuid);
 	}
 	
-	public void reserve(long uuid, String person, int money) {
+	public void reserve(Long uuid, String person, int money) {
 		Customer customer = bank.getCustomer(person);
 		if (customer == null)
 			throw new RuntimeException(person + " is not in the bank");
@@ -37,7 +37,7 @@ public class Payment extends DefaultParticipant implements IPayment {
 		cache.put(uuid, person);
 	}
 
-	public void cancel(long uuid, String person) {
+	public void cancel(Long uuid, String person) {
 		if (person == null)
 			return;
 		Customer customer = bank.getCustomer(person);
@@ -47,7 +47,7 @@ public class Payment extends DefaultParticipant implements IPayment {
 		customer.reserveBack(uuid);
 	}
 	
-	public void expire(long uuid, String person) {
+	public void expire(Long uuid, String person) {
 		if (person == null)
 			return;
 		Customer customer = bank.getCustomer(person);
@@ -58,25 +58,25 @@ public class Payment extends DefaultParticipant implements IPayment {
 	}
 
 	@Override
-	public void cancel(long uuid) throws ParticipantException {
+	public void cancel(Long uuid) throws ParticipantException {
 		cancel(uuid, cache.get(uuid));
 		cache.remove(uuid);
 	}
 
 	@Override
-	public void confirm(long uuid) throws ParticipantException {
+	public void confirm(Long uuid) throws ParticipantException {
 		pay(uuid, cache.get(uuid));
 		cache.remove(uuid);
 	}
 
 	@Override
-	public void expired(long uuid) throws ParticipantException {
+	public void expired(Long uuid) throws ParticipantException {
 		expire(uuid, cache.get(uuid));
 		cache.remove(uuid);
 	}
 
 	@Override
-	public boolean isConfirmed(long uuid) {
+	public boolean isConfirmed(Long uuid) {
 		return !cache.containsKey(uuid);
 	}
 }

@@ -14,6 +14,8 @@
 		<property name = "monitorInterval" value = "300000" />
 		<property name = "alarmRunningTx" value = "1" />
 		<property name = "alarmTxCount" value = "1" />
+		<property name = "appName" value = "Coordinator" />
+		<property name = "zkAddress" value = "zookeeper://10.120.146.133:2181" />
 	</bean>
 
 	<bean id = "localDataSource" class = "org.apache.commons.dbcp.BasicDataSource"

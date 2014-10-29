@@ -3,6 +3,7 @@ package com.netease.backend.coordinator.task;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.LockSupport;
 
 import com.netease.backend.tcc.Procedure;
 import com.netease.backend.tcc.error.HeuristicsException;
@@ -53,17 +54,17 @@ public class TxResult {
 		}
 	}
 	
-	public void failed(int index, short errorCode, Procedure proc) {
+	public void failed(int index, short errorCode, Procedure proc, String msg) {
 		if (this.exception == null) {
-			this.exception = HeuristicsException.getException(errorCode, proc);
+			this.exception = HeuristicsException.getException(errorCode, proc, msg);
 			interrupt();
 		}
 		releaseOne();
 	}
 	
-	public void failed(int index, HeuristicsType type, Procedure proc) {
+	public void failed(int index, HeuristicsType type, Procedure proc, String msg) {
 		if (this.exception == null) {
-			this.exception = HeuristicsException.getException(type, proc);
+			this.exception = HeuristicsException.getException(type, proc, msg);
 			interrupt();
 		}
 		releaseOne();
@@ -108,9 +109,14 @@ public class TxResult {
 			return false;
 		}
 		
+		/*
+		 * when a interrupt happened, must eat this interrupt!
+		 */
 		void done() throws InterruptedException {
-			if (!status.compareAndSet(Status.WORK, Status.DONE))
-				throw new InterruptedException();
+			if (!status.compareAndSet(Status.WORK, Status.DONE)) {
+				while (!Thread.interrupted())
+					LockSupport.parkNanos(10000);
+			}
 		}
 	}
 	
@@ -118,5 +124,22 @@ public class TxResult {
 		WORK,
 		DONE,
 		INTERRUPT;
+	}
+	
+	public static void main(String[] args) throws InterruptedException {
+		Thread t = new Thread() {
+			public void run() {
+				while (!Thread.interrupted()) {
+					System.out.println("thread is parked");
+					while (!Thread.interrupted())
+						LockSupport.parkNanos(1000000000000L);
+					System.out.println("thread is interrupted");
+				}
+			}
+		};
+		t.setDaemon(false);
+		t.start();
+		System.out.println("wait 2s...");
+		t.interrupt();
 	}
 }

@@ -15,9 +15,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import com.netease.backend.tcc.error.CoordinatorException;
-import com.netease.backend.tcc.error.ParticipantException;
-import com.netease.backend.tcc.error.ServiceDownException;
-import com.netease.backend.tcc.error.TimeoutException;
 
 public class TccManager implements ApplicationContextAware {
 	
@@ -49,7 +46,7 @@ public class TccManager implements ApplicationContextAware {
 					p2Service.put((Participant) bean, serviceName);
 					s2Participant.put(serviceName, (Participant) bean);
 					typeToService.put(cls[i], serviceName);
-					System.out.println("register service:" + serviceName);
+//					System.out.println("register service:" + serviceName);
 					break;
 				}
 			}
@@ -114,35 +111,6 @@ public class TccManager implements ApplicationContextAware {
 			return getParticipant(serviceName);
 		} else
 			return pt;
-	}
-	
-	private void checkResult(short code, List<Procedure> procList, long timeout) 
-			throws CoordinatorException {
-		if (code == TccCode.OK) {
-			return;
-		} else if (code == TccUtils.UNDEFINED) {
-			throw new CoordinatorException("undefined error code heuristics exception");
-		} else if (TccCode.isTimeout(code)) {
-			Procedure proc = procList.get(code ^ TccUtils.TIMEOUT_MASK);
-			throw new TimeoutException(timeout, proc);
-		} else if (TccCode.isServiceNotFound(code)) {
-			Procedure proc = procList.get(code ^ TccUtils.UNVAILABLE_MASK);
-			throw new ServiceDownException(proc);
-		} else
-			throw new ParticipantException("Participant error,code:" + code,  code); 
-	}
-	
-	private void checkResult(short code, List<Procedure> procList) 
-			throws CoordinatorException {
-		if (code == TccCode.OK) {
-			return;
-		} else if (code == TccUtils.UNDEFINED) {
-			throw new CoordinatorException("undefined error code heuristics exception");
-		} else if (TccCode.isServiceNotFound(code)) {
-			Procedure proc = procList.get(code ^ TccUtils.UNVAILABLE_MASK);
-			throw new ServiceDownException(proc);
-		} else
-			throw new ParticipantException("Participant error,code:" + code,  code);
 	}
 	
 	public class CertainTx extends Transaction implements Cloneable {

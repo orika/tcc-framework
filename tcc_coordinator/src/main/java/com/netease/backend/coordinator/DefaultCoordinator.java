@@ -41,7 +41,7 @@ public class DefaultCoordinator implements Coordinator {
 		logger.debug("process:" + procedures);
 		for (Procedure proc : procedures) {
 			if (proc.getMethod() == null)
-				proc.setMethod(ServiceTask.CONFIRM);
+				ServiceTask.setConfirmSig(proc);
 		}
 		try {
 			txManager.perform(uuid, Action.CONFIRM, procedures);
@@ -62,7 +62,7 @@ public class DefaultCoordinator implements Coordinator {
 		logger.debug("process:" + procedures);
 		for (Procedure proc : procedures) {
 			if (proc.getMethod() == null)
-				proc.setMethod(ServiceTask.CONFIRM);
+				ServiceTask.setConfirmSig(proc);
 		}
 		try {
 			txManager.perform(uuid, Action.CONFIRM, procedures, timeout);
@@ -84,7 +84,7 @@ public class DefaultCoordinator implements Coordinator {
 		logger.debug("process:" + procedures);
 		for (Procedure proc : procedures) {
 			if (proc.getMethod() == null)
-				proc.setMethod(ServiceTask.CANCEL);
+				ServiceTask.setCancelSig(proc);
 		}
 		try {
 			txManager.perform(uuid, Action.CANCEL, procedures);
@@ -106,7 +106,7 @@ public class DefaultCoordinator implements Coordinator {
 		logger.debug("process:" + procedures);
 		for (Procedure proc : procedures) {
 			if (proc.getMethod() == null)
-				proc.setMethod(ServiceTask.CANCEL);
+				ServiceTask.setCancelSig(proc);
 		}
 		try {
 			txManager.perform(uuid, Action.CANCEL, procedures, timeout);

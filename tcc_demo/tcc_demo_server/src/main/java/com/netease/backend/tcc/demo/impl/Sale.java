@@ -35,22 +35,22 @@ public class Sale extends DefaultParticipant implements ISale {
 		return itemCount.get() - reserve.get();
 	}
 
-	public void sell(long uuid, int count) {
+	public void sell(Long uuid, int count) {
 		for (;;) {
 			int c = itemCount.get();
 			if (itemCount.compareAndSet(c, c- count))
 				break;
 		}
-		long in = price * count;
+		long  in = price * count;
 		for (;;) {
-			long inco = income.get();
+			Long inco = income.get();
 			if (income.compareAndSet(inco, inco + in))
 				break;
 		}
 		LogUtil.log("store confirm " + uuid + " selling " + count + " items");
 	}
 
-	public void refond(long uuid, int count) {
+	public void refond(Long uuid, int count) {
 		synchronized (reserve) {
 			if (reserve.get() + count > SUM)
 				throw new RuntimeException("can not refond " + count + " items, now reverve " + reserve.get());
@@ -58,7 +58,7 @@ public class Sale extends DefaultParticipant implements ISale {
 		}
 	}
 
-	public void reserve(long uuid, int count) {
+	public void reserve(Long uuid, int count) {
 		synchronized (reserve) {
 			int left = itemCount.get() - reserve.get();
 			if (count > left)
@@ -69,7 +69,7 @@ public class Sale extends DefaultParticipant implements ISale {
 		LogUtil.log("store reserves " + count + " items");
 	}
 
-	public void confirm(long uuid) {
+	public void confirm(Long uuid) {
 		Integer count = reserveTable.remove(uuid);
 		if (count == null) {
 			LogUtil.log("store try confirm " + uuid + " selling " + count + " items");
@@ -79,7 +79,7 @@ public class Sale extends DefaultParticipant implements ISale {
 		reserveTable.remove(uuid);
 	}
 
-	public void cancel(long uuid) {
+	public void cancel(Long uuid) {
 		Integer count = reserveTable.remove(uuid);
 		if (count == null) {
 			LogUtil.log("store try cancel " + uuid + " selling " + count + " items");
@@ -92,7 +92,7 @@ public class Sale extends DefaultParticipant implements ISale {
 
 
 	@Override
-	public void expired(long uuid) throws ParticipantException {
+	public void expired(Long uuid) throws ParticipantException {
 		Integer count = reserveTable.remove(uuid);
 		if (count == null) {
 			LogUtil.log("store try expire " + uuid + " selling " + count + " items");
@@ -104,7 +104,7 @@ public class Sale extends DefaultParticipant implements ISale {
 	}
 	
 	@Override
-	public boolean isConfirmed(long uuid) {
+	public boolean isConfirmed(Long uuid) {
 		return !reserveTable.containsKey(uuid);
 	}
 }

@@ -17,6 +17,8 @@ public class CoordinatorConfig {
 	private int maxTxCount = 10000000;
 	private int alarmTxCount = 6000000;
 	private long alarmInterval = 10;
+	private String appName;
+	private String zkAddress;
 	
 	public String getServerIp() {
 		if (serverIp == null)
@@ -122,5 +124,21 @@ public class CoordinatorConfig {
 
 	public void setAlarmInterval(long alarmInterval) {
 		this.alarmInterval = alarmInterval;
+	}
+
+	public String getAppName() {
+		return appName;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+
+	public String getZkAddress() {
+		return zkAddress;
+	}
+
+	public void setZkAddress(String zkAddress) {
+		this.zkAddress = zkAddress;
 	}
 }

@@ -39,19 +39,19 @@ public class Order extends DefaultParticipant implements IOrder {
 	}
 
 	@Override
-	public void cancel(long uuid) throws ParticipantException {
+	public void cancel(Long uuid) throws ParticipantException {
 		LogUtil.log("order cancel:" + uuid);
 	}
 
 	@Override
-	public void confirm(long uuid) throws ParticipantException {
+	public void confirm(Long uuid) throws ParticipantException {
 		if (!payment.isConfirmed(uuid) || !sale.isConfirmed(uuid))
-			throw new ParticipantException("fuck");
+ 			throw new ParticipantException("fuck");
 		LogUtil.log("order confirm:" + uuid);
 	}
 
 	@Override
-	public void expired(long uuid) throws ParticipantException {
+	public void expired(Long uuid) throws ParticipantException {
 		LogUtil.log("order expired:" + uuid);
 	}
 }

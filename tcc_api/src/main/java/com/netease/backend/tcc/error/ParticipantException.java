@@ -16,7 +16,7 @@ public class ParticipantException extends CoordinatorException {
 	}
 	
 	public ParticipantException(String message, short code) {
-		super(message);
+		super(new StringBuilder().append('#').append(code).append(':').append(message).toString());
 		this.code = code;
 	}
 	

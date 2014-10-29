@@ -9,15 +9,11 @@ public interface ISale extends Participant {
 	
 	int getItemCount();
 	
-	void sell(long uuid, int count);
+	void sell(Long uuid, int count);
 	
-	void refond(long uuid, int count);
+	void refond(Long uuid, int count);
 	
-	void reserve(long uuid, int count);
+	void reserve(Long uuid, int count);
 	
-	public void confirm(long uuid);
-
-	public void cancel(long uuid);
-	
-	boolean isConfirmed(long uuid);
+	boolean isConfirmed(Long uuid);
 }

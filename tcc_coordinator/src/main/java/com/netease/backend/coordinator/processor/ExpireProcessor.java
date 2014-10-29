@@ -32,7 +32,7 @@ public class ExpireProcessor {
 			return;
 		for (Procedure proc : procList) {
 			if (proc.getMethod() == null)
-				proc.setMethod(ServiceTask.EXPIRED);
+				ServiceTask.setExpiredSig(proc);
 		}
 		try {
 			tx.expire();
