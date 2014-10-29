@@ -64,6 +64,7 @@ public class TxResult {
 	}
 	
 	public void failed(int index, HeuristicsType type, Procedure proc, String msg) {
+		workers[index].failed();
 		if (this.exception == null) {
 			this.exception = HeuristicsException.getException(type, proc, msg);
 			interrupt();
