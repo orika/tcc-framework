@@ -2,6 +2,8 @@ package com.netease.backend.coordinator.task;
 
 import java.util.List;
 
+import com.alibaba.dubbo.remoting.TimeoutException;
+import com.alibaba.dubbo.rpc.RpcException;
 import com.netease.backend.coordinator.ParticipantProxy;
 import com.netease.backend.coordinator.ServiceContext;
 import com.netease.backend.coordinator.ServiceNotFoundException;
@@ -64,9 +66,13 @@ public class ServiceTask implements Runnable {
 			result.failed(seq, e.getErrorCode(), proc, e.getMessage());
 		} catch (InterruptedException e) {
 			result.failed(seq, HeuristicsType.TIMEOUT, proc, "Interrupted");
+		} catch (RpcException e) {
+			if (e.getCause() instanceof TimeoutException)
+				result.failed(seq, HeuristicsType.TIMEOUT, proc, "Interrupted");
+			result.failed(seq, HeuristicsType.UNDEFINED, proc, e.getMessage());
 		} catch (RuntimeException e) {
 			result.failed(seq, HeuristicsType.UNDEFINED, proc, e.getMessage());
-		} 
+		}
 	}
 }
 
