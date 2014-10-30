@@ -457,11 +457,12 @@ public class DbUtil {
 		try {
 			// Insert a record to system db, and mark trx action
 			systemConn = this.systemDataSource.getConnection();
-			systemPstmt = systemConn.prepareStatement("INSERT IGNORE INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION)" +
-					" VALUES(?,?)");
+			systemPstmt = systemConn.prepareStatement("INSERT IGNORE INTO EXPIRE_TRX_INFO(TRX_ID, TRX_ACTION, TRX_TIMESTAMP)" +
+					" VALUES(?,?,?)");
 			
 			systemPstmt.setLong(1, uuid);
 			systemPstmt.setInt(2, action.getCode());
+			systemPstmt.setLong(3, System.currentTimeMillis());
 			
 			systemPstmt.executeUpdate();
 			res = systemPstmt.getUpdateCount();
