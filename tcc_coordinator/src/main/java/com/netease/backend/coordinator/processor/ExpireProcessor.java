@@ -9,9 +9,9 @@ import org.apache.log4j.Logger;
 
 import com.netease.backend.coordinator.task.ServiceTask;
 import com.netease.backend.coordinator.task.TxRetryWatcher;
-import com.netease.backend.coordinator.transaction.IllegalActionException;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.tcc.Procedure;
+import com.netease.backend.tcc.common.IllegalActionException;
 
 public class ExpireProcessor {
 	

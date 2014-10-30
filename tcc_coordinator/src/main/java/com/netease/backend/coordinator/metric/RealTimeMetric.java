@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.netease.backend.coordinator.transaction.Action;
 import com.netease.backend.coordinator.transaction.TxTable;
+import com.netease.backend.tcc.common.Action;
 
 public class RealTimeMetric implements Metric {
 	

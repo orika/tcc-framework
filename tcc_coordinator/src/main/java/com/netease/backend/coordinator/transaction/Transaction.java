@@ -3,8 +3,9 @@ package com.netease.backend.coordinator.transaction;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-
 import com.netease.backend.tcc.Procedure;
+import com.netease.backend.tcc.common.Action;
+import com.netease.backend.tcc.common.IllegalActionException;
 
 public class Transaction {
 

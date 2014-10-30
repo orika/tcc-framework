@@ -3,8 +3,8 @@ package com.netease.backend.coordinator.metric;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.netease.backend.coordinator.transaction.Action;
 import com.netease.backend.coordinator.transaction.TxTable;
+import com.netease.backend.tcc.common.Action;
 
 public class GlobalMetric implements Metric {
 	

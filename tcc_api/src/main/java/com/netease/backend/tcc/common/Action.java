@@ -1,4 +1,4 @@
-package com.netease.backend.coordinator.transaction;
+package com.netease.backend.tcc.common;
 
 public enum Action {
 	

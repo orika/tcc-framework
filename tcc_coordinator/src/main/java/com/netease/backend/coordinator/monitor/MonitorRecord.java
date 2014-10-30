@@ -1,7 +1,7 @@
 package com.netease.backend.coordinator.monitor;
 
 import com.netease.backend.coordinator.metric.GlobalMetric;
-import com.netease.backend.coordinator.transaction.Action;
+import com.netease.backend.tcc.common.Action;
 
 public class MonitorRecord {
 	private int serverId;

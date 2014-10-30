@@ -23,70 +23,22 @@ public class TccProcessor {
 		this.bgExecutor = bgExecutor;
 		this.context = context;
 	}
-
+	
 	public void perform(long uuid, List<Procedure> procedures, boolean isBg) 
 			throws HeuristicsException {
-		TxResult result = performAsync(uuid, procedures, isBg);
-		try {
-			result.await();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			throw new HeuristicsException();
-		}
-		if (result.isFailed()) {
-			throw result.getException();
-		}
-	}
-	
-	public void perform(long uuid, final List<Procedure> procedures, long timeout, boolean isBg) 
-			throws HeuristicsException {
-		TxResult result = performAsync(uuid, procedures, isBg);
-		boolean isOk = false;
-		try {
-			isOk = result.await(timeout);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			throw new HeuristicsException();
-		}
-		if (!isOk || result.isFailed()) {
-			throw result.getException();
-		}
-	}
-	
-	public TxResult performAsync(long uuid, List<Procedure> procedures, boolean isBackground) 
-			throws HeuristicsException {
-		Collections.sort(procedures);
-		TxResult result = null;
-		while (procedures.size() != 0) {
-			Procedure lastOne = null;
-			int count = 0;
-			int index = 0;
-			for (Iterator<Procedure> it = procedures.iterator(); it.hasNext(); ) {
-				Procedure cur = it.next();
-				if (cur.getSequence() < 0) {
-					it.remove();
-					continue;
-				}
-				if (lastOne != null && lastOne.getSequence() != cur.getSequence()) {
-					break;
-				} else {
-					count++;
-					lastOne = cur;
-				}
+		preCheck(procedures);
+		for (int start = 0, size = procedures.size(), count = 0; start < size; start += count) {
+			count = getNextRangeCount(start, procedures);
+			int lastIndex = count - 1;
+			TxResult result = new TxResult(uuid, count);
+			for (int i = 0; i < lastIndex; i++) {
+				Procedure proc = procedures.get(i + start);
+				if (isBg)
+					bgExecutor.execute(new ServiceTask(uuid, i, proc, result, context));
+				else
+					foreExecutor.execute(new ServiceTask(uuid, i, proc, result, context));
 			}
-			result = new TxResult(uuid, count);
-			for (Iterator<Procedure> it = procedures.iterator(); it.hasNext() && count > 0; count--) {
-				Procedure cur = it.next();
-				if (count == 1) {
-					new ServiceTask(uuid, index++, cur, result, context).run();
-				} else {
-					if (isBackground)
-						bgExecutor.execute(new ServiceTask(uuid, index++, cur, result, context));
-					else
-						foreExecutor.execute(new ServiceTask(uuid, index++, cur, result, context));
-				}
-				it.remove();
-			}
+			new ServiceTask(uuid, lastIndex, procedures.get(lastIndex + start), result, context).run();
 			try {
 				result.await();
 			} catch (InterruptedException e) {
@@ -97,6 +49,60 @@ public class TccProcessor {
 				throw result.getException();
 			}
 		}
-		return result;
+	}
+	
+	public void perform(long uuid, List<Procedure> procedures, long timeout, boolean isBg) 
+			throws HeuristicsException {
+		preCheck(procedures);
+		for (int start = 0, size = procedures.size(), count = 0; start < size; start += count) {
+			count = getNextRangeCount(start, procedures);
+			TxResult result = new TxResult(uuid, count);
+			for (int i = 0; i < count; i++) {
+				Procedure proc = procedures.get(i + start);
+				if (isBg)
+					bgExecutor.execute(new ServiceTask(uuid, i, proc, result, context));
+				else
+					foreExecutor.execute(new ServiceTask(uuid, i, proc, result, context));
+			}
+			long now = System.currentTimeMillis();
+			try {
+				result.interruptAfter(timeout);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				throw new HeuristicsException();
+			}
+			if (result.isFailed()) {
+				throw result.getException();
+			}
+			timeout -= System.currentTimeMillis() - now;
+		}
+	}
+	
+	private void preCheck(List<Procedure> procList) {
+		Collections.sort(procList);
+		Iterator<Procedure> itr = procList.iterator();
+		while (itr.hasNext()) {
+			Procedure cur = itr.next();
+			if (cur.getSequence() < 0) {
+				itr.remove();
+				continue;
+			} else
+				break;
+		}
+	}
+	
+	private int getNextRangeCount(int start, List<Procedure> procList) {
+		Procedure lastOne = null;
+		int count = 0;
+		for (int i = start, s = procList.size(); i < s; i++) {
+			Procedure cur = procList.get(i);
+			if (lastOne == null || lastOne.getSequence() == cur.getSequence()) {
+				count++;
+				lastOne = cur;
+			} else  {
+				break;
+			}
+		}
+		return count;
 	}
 }

@@ -13,16 +13,16 @@ import org.apache.commons.dbcp.BasicDataSource;
 
 import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.log.Checkpoint;
-import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogRecord;
 import com.netease.backend.coordinator.log.LogScanner;
 import com.netease.backend.coordinator.log.LogType;
 import com.netease.backend.coordinator.log.db.LogScannerImp;
 import com.netease.backend.coordinator.monitor.MonitorException;
 import com.netease.backend.coordinator.monitor.MonitorRecord;
-import com.netease.backend.coordinator.transaction.Action;
-import com.netease.backend.coordinator.transaction.IllegalActionException;
 import com.netease.backend.coordinator.transaction.Transaction;
+import com.netease.backend.tcc.common.Action;
+import com.netease.backend.tcc.common.IllegalActionException;
+import com.netease.backend.tcc.common.LogException;
 import com.netease.backend.tcc.error.CoordinatorException;
 import com.netease.backend.tcc.error.HeuristicsException;
 

@@ -7,10 +7,12 @@
  * @author					huwei				
  */
 
-package com.netease.backend.coordinator.log;
+package com.netease.backend.tcc.common;
+
+import com.netease.backend.tcc.error.CoordinatorException;
 
 
-public class LogException extends Exception {
+public class LogException extends CoordinatorException {
 
 	/**
 	 * 

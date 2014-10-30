@@ -12,10 +12,11 @@ import com.netease.backend.tcc.error.HeuristicsType;
 public class TxResult {
 	
 	private CountDownLatch countDown;
-	private HeuristicsException exception;
+	private AtomicReference<HeuristicsException> exception = new AtomicReference<HeuristicsException>();
 	private Worker[] workers;
-	private volatile boolean isInterrupted = false;
 	private long uuid;
+	
+	private static final HeuristicsException INTERRUPTED = new HeuristicsException();
 	
 	public TxResult(long uuid, int count) {
 		this.uuid = uuid;
@@ -27,10 +28,15 @@ public class TxResult {
 		countDown.countDown();
 	}
 	
-	private void interrupt() {
-		if (isInterrupted)
-			return;
-		isInterrupted = true;
+	private void interruptBy(Worker interrupter) {
+		for (Worker worker : workers) {
+			if (worker == null || worker == interrupter)
+				continue;
+			worker.interrupt();
+		}
+	}
+	
+	private void interruptAll() {
 		for (Worker worker : workers) {
 			if (worker == null)
 				continue;
@@ -49,46 +55,46 @@ public class TxResult {
 	
 	public void setThread(int index, Thread thread) {
 		workers[index] = new Worker(thread);
-		if (isInterrupted) {
+		if (exception.get() != null) {
 			workers[index].interrupt();
 		}
 	}
 	
 	public void failed(int index, short errorCode, Procedure proc, String msg) {
-		workers[index].failed();
-		if (this.exception == null) {
-			this.exception = HeuristicsException.getException(errorCode, proc, msg);
-			interrupt();
-		}
+		Worker interrupter = workers[index];
+		if (exception.compareAndSet(null, HeuristicsException.getException(errorCode, proc, msg))) {
+			interruptBy(interrupter);
+		} else
+			interrupter.done();
 		releaseOne();
 	}
 	
 	public void failed(int index, HeuristicsType type, Procedure proc, String msg) {
-		workers[index].failed();
-		if (this.exception == null) {
-			this.exception = HeuristicsException.getException(type, proc, msg);
-			interrupt();
-		}
+		Worker interrupter = workers[index];
+		if (exception.compareAndSet(null, HeuristicsException.getException(type, proc, msg))) {
+			interruptBy(interrupter);
+		} else
+			interrupter.done();
 		releaseOne();
 	}
 	
 	public boolean isFailed() {
-		return exception != null;
+		return exception.get() != null;
 	}
 	
 	public HeuristicsException getException() {
-		if (exception != null)
-			return exception;
-		return new HeuristicsException();
+		return exception.get();
 	}
 	
 	public void await() throws InterruptedException {
 		countDown.await();
 	}
 	
-	public boolean await(long timeout) throws InterruptedException {
+	public boolean interruptAfter(long timeout) throws InterruptedException {
 		if(!countDown.await(timeout, TimeUnit.MILLISECONDS)) {
-			interrupt();
+			if (countDown.getCount() != 0 &&
+					exception.compareAndSet(null, INTERRUPTED))
+				interruptAll();
 			return false;
 		}
 		return true;
@@ -114,15 +120,11 @@ public class TxResult {
 		/*
 		 * when a interrupt happened, must eat this interrupt!
 		 */
-		void done() throws InterruptedException {
+		void done() {
 			if (!status.compareAndSet(Status.WORK, Status.DONE)) {
 				while (!Thread.interrupted())
 					LockSupport.parkNanos(10000);
 			}
-		}
-		
-		void failed() {
-			status.compareAndSet(Status.WORK, Status.INTERRUPT);
 		}
 	}
 	

@@ -12,14 +12,14 @@ package com.netease.backend.coordinator.log.db;
 import org.apache.log4j.Logger;
 
 import com.netease.backend.coordinator.log.Checkpoint;
-import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogManager;
 import com.netease.backend.coordinator.log.LogScanner;
 import com.netease.backend.coordinator.log.LogType;
-import com.netease.backend.coordinator.transaction.Action;
-import com.netease.backend.coordinator.transaction.IllegalActionException;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.coordinator.util.DbUtil;
+import com.netease.backend.tcc.common.Action;
+import com.netease.backend.tcc.common.IllegalActionException;
+import com.netease.backend.tcc.common.LogException;
 import com.netease.backend.tcc.error.HeuristicsException;
 
 public class LogManagerImp implements LogManager {

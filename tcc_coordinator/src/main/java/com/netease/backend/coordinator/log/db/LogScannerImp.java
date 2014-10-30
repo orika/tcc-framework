@@ -13,11 +13,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-
-import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogRecord;
 import com.netease.backend.coordinator.log.LogScanner;
 import com.netease.backend.coordinator.util.DbUtil;
+import com.netease.backend.tcc.common.LogException;
 
 public class LogScannerImp implements LogScanner{
 	private Connection conn;

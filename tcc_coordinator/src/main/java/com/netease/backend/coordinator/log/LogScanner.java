@@ -9,6 +9,8 @@
 
 package com.netease.backend.coordinator.log;
 
+import com.netease.backend.tcc.common.LogException;
+
 
 public interface LogScanner {
 	/**

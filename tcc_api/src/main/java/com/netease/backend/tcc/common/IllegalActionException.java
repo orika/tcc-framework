@@ -1,7 +1,9 @@
-package com.netease.backend.coordinator.transaction;
+package com.netease.backend.tcc.common;
+
+import com.netease.backend.tcc.error.CoordinatorException;
 
 
-public class IllegalActionException extends Exception {
+public class IllegalActionException extends CoordinatorException {
 
 	/**
 	 * 

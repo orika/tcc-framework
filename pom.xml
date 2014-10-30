@@ -35,7 +35,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- Common libs -->
 		<spring_version>2.5.6.SEC03</spring_version>
-		<zookeeper_version>3.3.3</zookeeper_version>
+		<zookeeper_version>3.4.6</zookeeper_version>
 		<zkclient_version>0.1</zkclient_version>
 		<mysql_version>5.1.31</mysql_version>
 		<dbcp_version>1.4</dbcp_version>
@@ -57,16 +57,6 @@
 				<groupId>org.springframework</groupId>
 				<artifactId>spring</artifactId>
 				<version>${spring_version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>${slf4j_version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
-				<version>${slf4j_version}</version>
 			</dependency>
 			<dependency>
 				<groupId>log4j</groupId>

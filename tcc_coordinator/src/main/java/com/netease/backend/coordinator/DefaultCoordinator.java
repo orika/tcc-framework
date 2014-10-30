@@ -4,15 +4,15 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.task.ServiceTask;
-import com.netease.backend.coordinator.transaction.Action;
-import com.netease.backend.coordinator.transaction.IllegalActionException;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.coordinator.transaction.TxManager;
 import com.netease.backend.tcc.Coordinator;
 import com.netease.backend.tcc.Procedure;
 import com.netease.backend.tcc.TccCode;
+import com.netease.backend.tcc.common.Action;
+import com.netease.backend.tcc.common.IllegalActionException;
+import com.netease.backend.tcc.common.LogException;
 import com.netease.backend.tcc.error.CoordinatorException;
 import com.netease.backend.tcc.error.HeuristicsException;
 
@@ -26,14 +26,14 @@ public class DefaultCoordinator implements Coordinator {
 	}
 
 	public long begin(int sequenceId, List<Procedure> expireGroups) throws CoordinatorException {
-		try {
+//		try {
 			Transaction tx = null;
 			tx = txManager.createTx(expireGroups);
 			return tx.getUUID();
-		} catch (Exception e) {
-			logger.error("transaction register error", e);
-			throw new CoordinatorException(e.getMessage(), e);
-		}
+//		} catch (Exception e) {
+//			logger.error("transaction register error", e);
+//			throw new CoordinatorException(e.getMessage(), e);
+//		}
 	}
 	
 	public short confirm(int sequenceId, long uuid, List<Procedure> procedures) 

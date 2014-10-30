@@ -12,10 +12,10 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.log4j.Logger;
 
 import com.netease.backend.coordinator.config.CoordinatorConfig;
-import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.task.TxRetryWatcher;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.coordinator.transaction.TxManager;
+import com.netease.backend.tcc.common.LogException;
 import com.netease.backend.tcc.error.CoordinatorException;
 
 public class RetryProcessor implements Runnable {

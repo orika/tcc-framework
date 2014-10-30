@@ -1,5 +1,6 @@
 package com.netease.backend.coordinator.transaction;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -9,7 +10,6 @@ import org.apache.log4j.Logger;
 import com.netease.backend.coordinator.ServiceContext;
 import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.id.IdGenerator;
-import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogManager;
 import com.netease.backend.coordinator.metric.GlobalMetric;
 import com.netease.backend.coordinator.monitor.AlarmMsg;
@@ -18,6 +18,9 @@ import com.netease.backend.coordinator.processor.RetryProcessor;
 import com.netease.backend.coordinator.processor.TccProcessor;
 import com.netease.backend.coordinator.util.MonitorUtil;
 import com.netease.backend.tcc.Procedure;
+import com.netease.backend.tcc.common.Action;
+import com.netease.backend.tcc.common.IllegalActionException;
+import com.netease.backend.tcc.common.LogException;
 import com.netease.backend.tcc.error.CoordinatorException;
 import com.netease.backend.tcc.error.HeuristicsException;
 
@@ -96,7 +99,8 @@ public class TxManager {
 		if (logger.isDebugEnabled()) 
 			logger.debug("register: " + tx);
 		metric.incCompleted(Action.REGISTERED, System.currentTimeMillis() - tx.getCreateTime());
-		return tx;
+//		return tx;
+		throw new LogException("fuck", new SQLException("this is a SQLException"));
 	}
 	
 	public void perform(long uuid, Action action, List<Procedure> procList) 

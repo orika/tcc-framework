@@ -11,9 +11,9 @@ import org.jboss.netty.util.internal.ConcurrentHashMap;
 import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.id.IdGenerator;
 import com.netease.backend.coordinator.log.Checkpoint;
-import com.netease.backend.coordinator.log.LogException;
 import com.netease.backend.coordinator.log.LogManager;
 import com.netease.backend.coordinator.processor.ExpireProcessor;
+import com.netease.backend.tcc.common.LogException;
 
 public class TxTable extends TimerTask {
 	

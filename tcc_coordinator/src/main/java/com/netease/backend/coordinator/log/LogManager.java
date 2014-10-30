@@ -9,9 +9,10 @@
 
 package com.netease.backend.coordinator.log;
 
-import com.netease.backend.coordinator.transaction.Action;
-import com.netease.backend.coordinator.transaction.IllegalActionException;
 import com.netease.backend.coordinator.transaction.Transaction;
+import com.netease.backend.tcc.common.Action;
+import com.netease.backend.tcc.common.IllegalActionException;
+import com.netease.backend.tcc.common.LogException;
 import com.netease.backend.tcc.error.HeuristicsException;
 
 public interface LogManager {
