@@ -1,6 +1,5 @@
 package com.netease.backend.coordinator.transaction;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -99,8 +98,7 @@ public class TxManager {
 		if (logger.isDebugEnabled()) 
 			logger.debug("register: " + tx);
 		metric.incCompleted(Action.REGISTERED, System.currentTimeMillis() - tx.getCreateTime());
-//		return tx;
-		throw new LogException("fuck", new SQLException("this is a SQLException"));
+		return tx;
 	}
 	
 	public void perform(long uuid, Action action, List<Procedure> procList) 
@@ -134,8 +132,8 @@ public class TxManager {
 	private Transaction begin(long uuid, Action action, List<Procedure> procList) 
 			throws LogException, IllegalActionException, CoordinatorException {
 		Transaction tx = txTable.get(uuid);
-		boolean isLocalTx = tx != null;
-		if (!isLocalTx) {
+		boolean notLocalTx = tx == null;
+		if (notLocalTx) {
 			if (checkOverFlow())
 				throw new CoordinatorException("reject,running tx count is overflow at " + maxRunningTx);
 			if (checkTxCount())
@@ -157,7 +155,7 @@ public class TxManager {
 			logger.debug("begin " + tx);
 		tx.setBeginTime(System.currentTimeMillis());
 		logManager.logBegin(tx, action);
-		if (isLocalTx) {
+		if (notLocalTx) {
 			txTable.put(tx);
 		}
 		metric.incRunningCount(action);
