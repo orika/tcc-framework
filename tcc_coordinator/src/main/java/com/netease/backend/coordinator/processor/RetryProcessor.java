@@ -73,7 +73,6 @@ public class RetryProcessor implements Runnable {
 				}
 				isBlocked = true;
 				isSpotFree.awaitUninterruptibly();
-				lock.unlock();
 			} finally {
 				lock.unlock();
 			}
