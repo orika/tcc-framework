@@ -467,7 +467,7 @@ public class DbUtil {
 			systemPstmt.executeUpdate();
 			res = systemPstmt.getUpdateCount();
 		} catch (SQLException e) {
-			throw new LogException("Check action in recover error", e);
+			throw new LogException("Check retry action error", e);
 		} finally {
 			try {
 				if (systemPstmt != null)
@@ -498,7 +498,7 @@ public class DbUtil {
 					throw new RuntimeException("action record disappear from sysdb, why?");
 				}
 			} catch (SQLException e) {
-				throw new LogException("Check action in recover error", e);
+				throw new LogException("Check retry action error", e);
 			} finally {
 				try {
 					if (systemRset != null)
