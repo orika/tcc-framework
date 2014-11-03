@@ -65,6 +65,7 @@ public class RetryProcessor implements Runnable {
 					executor.execute(task);
 				}
 			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
 				continue;
 			}
 			lock.lock();
@@ -82,26 +83,50 @@ public class RetryProcessor implements Runnable {
 	}
 	
 	public void recover(Collection<Transaction> txSet) throws CoordinatorException {
+		initRecovery(txSet);
+		Iterator<Transaction> it = txSet.iterator();
+		while (it.hasNext()) {
+			Transaction tx = it.next();
+			switch (tx.getAction()) {
+				case CANCEL:
+					process(tx, 1, recoverWatcher);
+					break;
+				case CONFIRM:
+					process(tx, 1, recoverWatcher);
+					break;
+				case EXPIRE:
+					process(tx, 1, recoverWatcher);
+					break;
+				default:
+					break;
+			}
+		}
+		CountDownLatch recoverLatch = recoverWatcher.recoverLatch;
+		try {
+			while (!Thread.interrupted() && !recoverLatch.await(2000, TimeUnit.MILLISECONDS)) {
+				logger.info("left recover Task count:" + recoverLatch.getCount());
+			}
+		} catch (InterruptedException e) {
+			throw new CoordinatorException(e);
+		}
+	}
+	
+	private void initRecovery(Collection<Transaction> txSet) {
 		int confirmCount = 0;
 		int cancelCount = 0;
 		int expireCount = 0;
 		Iterator<Transaction> it = txSet.iterator();
-		CountDownLatch recoverLatch = new CountDownLatch(txSet.size());
-		recoverWatcher = new RecoverWatcher(recoverLatch);
 		while (it.hasNext()) {
 			Transaction tx = it.next();
 			switch (tx.getAction()) {
 				case CANCEL:
 					cancelCount++;
-					process(tx, 1, recoverWatcher);
 					break;
 				case CONFIRM:
 					confirmCount++;
-					process(tx, 1, recoverWatcher);
 					break;
 				case EXPIRE:
 					expireCount++;
-					process(tx, 1, recoverWatcher);
 					break;
 				default:
 					break;
@@ -112,13 +137,9 @@ public class RetryProcessor implements Runnable {
 		builder.append(",cancel:" + cancelCount);
 		builder.append(",expire:" + expireCount);
 		logger.info(builder);
-		try {
-			while (!Thread.interrupted() && !recoverLatch.await(2000, TimeUnit.MILLISECONDS)) {
-				logger.info("left recover Task count:" + recoverLatch.getCount());
-			}
-		} catch (InterruptedException e) {
-			throw new CoordinatorException(e);
-		}
+		int count = confirmCount + cancelCount + expireCount;
+		CountDownLatch recoverLatch = new CountDownLatch(count);
+		recoverWatcher = new RecoverWatcher(recoverLatch);
 	}
 	
 	/*
