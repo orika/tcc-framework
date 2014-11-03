@@ -71,7 +71,7 @@ public class TxManager {
 	public void recover() throws CoordinatorException {
 		// print txTable
 		txTable.print();
-		retryProcessor.recover(txTable.getTxIterator());
+		retryProcessor.recover(txTable.getTxCollection());
 	}
 	
 	public void enableRetry() {
@@ -183,6 +183,16 @@ public class TxManager {
 		txTable.remove(tx.getUUID());
 		logger.info("tx " + tx.getUUID() + " heuristics code:" + e.getCode());
 		metric.incHeuristics();
+		monitorUtil.alertAll(MonitorUtil.RUNNING_COUNT_OF, new AlarmMsg() {
+			@Override
+			public String getContent() {
+				StringBuilder builder = new StringBuilder();
+				builder.append("id:").append(idGenerator.getCoordinatorId()).append(" \n");
+				builder.append("rds ip:").append(rdsIp).append(" \n");
+				builder.append("current heuristic count:").append(metric.getHeuristicsCount());
+				return builder.toString();
+			}
+		});
 	}
 	
 	

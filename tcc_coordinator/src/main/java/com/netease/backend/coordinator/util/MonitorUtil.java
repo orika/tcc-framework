@@ -12,6 +12,7 @@ public class MonitorUtil {
 	
 	public static final String RUNNING_COUNT_OF = "Active tx count gonna overflow";
 	public static final String TX_COUNT_OF = "Tx Table size gonna bloom";
+	public static final String HEURISTIC = "heuristic encountered";
 	
 	private Map<String, Long> alarmMap = new HashMap<String, Long>();
 	private long alarmInterval = 0;
@@ -21,6 +22,7 @@ public class MonitorUtil {
 		monitor.init();
 		alarmMap.put(RUNNING_COUNT_OF, 0L);
 		alarmMap.put(TX_COUNT_OF, 0L);
+		alarmMap.put(HEURISTIC, 0L);
 		this.alarmInterval = config.getAlarmInterval() * 1000;
 	}
 	

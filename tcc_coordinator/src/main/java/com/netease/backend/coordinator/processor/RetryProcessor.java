@@ -1,6 +1,8 @@
 package com.netease.backend.coordinator.processor;
 
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.ExecutorService;
@@ -29,7 +31,7 @@ public class RetryProcessor implements Runnable {
 	private Condition isSpotFree = lock.newCondition();
 	private Thread thread = null;
 	private ExecutorService executor = null;
-	private RetryWatcher watcher = new RetryWatcher();
+	private RecoverWatcher recoverWatcher = null;
 	private volatile boolean stop = false;
 	//optimize notify count
 	private volatile boolean isBlocked = false;
@@ -79,24 +81,27 @@ public class RetryProcessor implements Runnable {
 		}
 	}
 	
-	public void recover(Iterator<Transaction> it) throws CoordinatorException {
+	public void recover(Collection<Transaction> txSet) throws CoordinatorException {
 		int confirmCount = 0;
 		int cancelCount = 0;
 		int expireCount = 0;
+		Iterator<Transaction> it = txSet.iterator();
+		CountDownLatch recoverLatch = new CountDownLatch(txSet.size());
+		recoverWatcher = new RecoverWatcher(recoverLatch);
 		while (it.hasNext()) {
 			Transaction tx = it.next();
 			switch (tx.getAction()) {
 				case CANCEL:
 					cancelCount++;
-					process(tx, 1, watcher);
+					process(tx, 1, recoverWatcher);
 					break;
 				case CONFIRM:
 					confirmCount++;
-					process(tx, 1, watcher);
+					process(tx, 1, recoverWatcher);
 					break;
 				case EXPIRE:
 					expireCount++;
-					process(tx, 1, watcher);
+					process(tx, 1, recoverWatcher);
 					break;
 				default:
 					break;
@@ -107,16 +112,12 @@ public class RetryProcessor implements Runnable {
 		builder.append(",cancel:" + cancelCount);
 		builder.append(",expire:" + expireCount);
 		logger.info(builder);
-		int count = 0;
-		while (retryQueue.size() != 0) {
-			try {
-				Thread.sleep(1000);
-				count++;
-			} catch (InterruptedException e) {
-				throw new CoordinatorException(e);
+		try {
+			while (!Thread.interrupted() && !recoverLatch.await(2000, TimeUnit.MILLISECONDS)) {
+				logger.info("left recover Task count:" + recoverLatch.getCount());
 			}
-			if (count % 5 == 0)
-				logger.info("retry queue left Task count:" + retryQueue.size());
+		} catch (InterruptedException e) {
+			throw new CoordinatorException(e);
 		}
 	}
 	
@@ -140,8 +141,17 @@ public class RetryProcessor implements Runnable {
 		retryQueue.offer(new Task(tx, times, watcher));
 	}
 	
-	private class RetryWatcher implements TxRetryWatcher {
+	private class RecoverWatcher implements TxRetryWatcher {
+		
+		private CountDownLatch recoverLatch = null;
+		
+		private RecoverWatcher(CountDownLatch recoverLatch) {
+			this.recoverLatch = recoverLatch;
+		}
 
+		/*
+		 * retry after 10 seconds
+		 */
 		@Override
 		public void processError(Transaction tx) {
 			Task task = new Task(tx, 2, this);
@@ -151,6 +161,7 @@ public class RetryProcessor implements Runnable {
 
 		@Override
 		public void processSuccess(Transaction tx) {
+			recoverLatch.countDown();
 		}
 	}
 	

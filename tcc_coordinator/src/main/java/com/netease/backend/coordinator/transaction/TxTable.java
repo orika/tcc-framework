@@ -1,5 +1,6 @@
 package com.netease.backend.coordinator.transaction;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Timer;
@@ -86,8 +87,8 @@ public class TxTable extends TimerTask {
 		return table.remove(uuid);
 	}
 	
-	public Iterator<Transaction> getTxIterator() {
-		return table.values().iterator();
+	public Collection<Transaction> getTxCollection() {
+		return table.values();
 	}
 	
 	public int getSize() {
@@ -101,7 +102,7 @@ public class TxTable extends TimerTask {
 	
 	public void print() {
 		if (logger.isDebugEnabled()) {
-			Iterator<Transaction> it = getTxIterator();
+			Iterator<Transaction> it = getTxCollection().iterator();
 			while (it.hasNext()) {
 				Transaction tx = it.next();
 				logger.debug("Tx uuid:" + tx.getUUID() + "  action: " + tx.getAction() + 
