@@ -2,7 +2,7 @@ package com.netease.backend.tcc.error;
 
 import com.netease.backend.tcc.Procedure;
 
-public class ServiceDownException extends CoordinatorException {
+public class ServiceUnavailableException extends CoordinatorException {
 
 	/**
 	 * 
@@ -11,7 +11,7 @@ public class ServiceDownException extends CoordinatorException {
 	
 	private Procedure proc = null;
 	
-	public ServiceDownException(Procedure proc, long uuid) {
+	public ServiceUnavailableException(Procedure proc, long uuid) {
 		super(new StringBuilder().append("service ")
 				.append(proc.getService()).append(" is not available,uuid ").append(uuid).toString());
 		this.proc = proc;

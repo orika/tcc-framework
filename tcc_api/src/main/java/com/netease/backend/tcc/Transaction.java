@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.netease.backend.tcc.error.CoordinatorException;
 import com.netease.backend.tcc.error.ParticipantException;
-import com.netease.backend.tcc.error.ServiceDownException;
+import com.netease.backend.tcc.error.ServiceUnavailableException;
 import com.netease.backend.tcc.error.TimeoutException;
 
 public abstract class Transaction {
@@ -64,7 +64,7 @@ public abstract class Transaction {
 			throw new TimeoutException(timeout, proc, uuid);
 		} else if (TccCode.isServiceNotFound(code)) {
 			Procedure proc = procList.get(code ^ TccUtils.UNVAILABLE_MASK);
-			throw new ServiceDownException(proc, uuid);
+			throw new ServiceUnavailableException(proc, uuid);
 		} else
 			throw new ParticipantException("Participant error with uuid " + uuid, code); 
 	}
@@ -80,7 +80,7 @@ public abstract class Transaction {
 			throw new TimeoutException(proc, uuid);
 		} else if (TccCode.isServiceNotFound(code)) {
 			Procedure proc = procList.get(code ^ TccUtils.UNVAILABLE_MASK);
-			throw new ServiceDownException(proc, uuid);
+			throw new ServiceUnavailableException(proc, uuid);
 		} else
 			throw new ParticipantException("Participant error with uuid " + uuid, code);
 	}
