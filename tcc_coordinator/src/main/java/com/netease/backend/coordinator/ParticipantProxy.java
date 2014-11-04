@@ -103,6 +103,7 @@ public class ParticipantProxy implements Participant {
 
 		String appName = config.getAppName();
 		String zookeeperUrl = config.getZkAddress();
+		int timeout = config.getRpcTimeout();
 
 		application.setName(appName);
 		registry.setAddress(zookeeperUrl);
@@ -112,6 +113,7 @@ public class ParticipantProxy implements Participant {
 		reference.setInterface(service); 
 		reference.setVersion(version);
 		reference.setGeneric(true); 
+		reference.setTimeout(timeout);
 
 		try {
 			participant = reference.get();

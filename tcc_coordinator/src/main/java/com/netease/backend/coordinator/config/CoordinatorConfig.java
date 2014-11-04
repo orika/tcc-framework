@@ -17,6 +17,7 @@ public class CoordinatorConfig {
 	private int maxTxCount = 10000000;
 	private int alarmTxCount = 6000000;
 	private long alarmInterval = 10;
+	private int rpcTimeout = 10000;
 	private String appName;
 	private String zkAddress;
 	
@@ -140,5 +141,13 @@ public class CoordinatorConfig {
 
 	public void setZkAddress(String zkAddress) {
 		this.zkAddress = zkAddress;
+	}
+
+	public int getRpcTimeout() {
+		return rpcTimeout;
+	}
+
+	public void setRpcTimeout(int rpcTimeout) {
+		this.rpcTimeout = rpcTimeout;
 	}
 }
