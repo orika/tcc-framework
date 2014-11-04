@@ -3,11 +3,11 @@ package com.netease.backend.coordinator.task;
 import java.util.List;
 
 import com.alibaba.dubbo.remoting.TimeoutException;
-import com.alibaba.dubbo.rpc.RpcException;
 import com.netease.backend.coordinator.ParticipantProxy;
 import com.netease.backend.coordinator.ServiceContext;
-import com.netease.backend.coordinator.ServiceNotFoundException;
+import com.netease.backend.coordinator.ServiceUnavailableException;
 import com.netease.backend.tcc.Procedure;
+import com.netease.backend.tcc.common.Action;
 import com.netease.backend.tcc.error.HeuristicsType;
 import com.netease.backend.tcc.error.ParticipantException;
 
@@ -17,16 +17,18 @@ public class ServiceTask implements Runnable {
 	private static final String CANCEL = "2";
 	private static final String EXPIRED = "3";
 	
-	public static void setConfirmSig(Procedure proc) {
-		proc.setMethod(CONFIRM);
-	}
-	
-	public static void setCancelSig(Procedure proc) {
-		proc.setMethod(CANCEL);
-	}
-	
-	public static void setExpiredSig(Procedure proc) {
-		proc.setMethod(EXPIRED);
+	public static void setSignature(Procedure proc, Action action) {
+		switch (action) {
+			case CONFIRM:
+				proc.setMethod(CONFIRM);
+			case CANCEL:
+				proc.setMethod(CANCEL);
+			case EXPIRE:
+				proc.setMethod(EXPIRED);
+			default:
+				throw new RuntimeException("register has no signature");
+		}
+		
 	}
 	
 	private Procedure proc;
@@ -60,18 +62,29 @@ public class ServiceTask implements Runnable {
 			else
 				participant.invoke(method, params.toArray());
 			result.success(seq);
-		} catch (ServiceNotFoundException e) {
+		} catch (ServiceUnavailableException e) {
 			result.failed(seq, HeuristicsType.SERVICE_NOT_FOUND, proc, null);
 		} catch (ParticipantException e) {
 			result.failed(seq, e.getErrorCode(), proc, e.getMessage());
 		} catch (InterruptedException e) {
-			result.failed(seq, HeuristicsType.TIMEOUT, proc, "Interrupted");
-		} catch (RpcException e) {
-			if (e.getCause() instanceof TimeoutException)
-				result.failed(seq, HeuristicsType.TIMEOUT, proc, "Interrupted");
-			result.failed(seq, HeuristicsType.UNDEFINED, proc, e.getMessage());
+			result.interrupted(seq, proc, "interrupted");
 		} catch (RuntimeException e) {
-			result.failed(seq, HeuristicsType.UNDEFINED, proc, e.getMessage());
+			if (getCause(e) instanceof TimeoutException)
+				result.failed(seq, HeuristicsType.TIMEOUT, proc, "timeout");
+			if (getCause(e) instanceof InterruptedException)
+				result.interrupted(seq, proc, "interrupted");
+			else
+				result.failed(seq, HeuristicsType.UNDEFINED, proc, e.getMessage());
+		}
+	}
+	
+	private Throwable getCause(Exception e) {
+		Throwable t = e;
+		while (true) {
+			Throwable tt = t.getCause();
+			if (tt == null)
+				return t;
+			t = tt;
 		}
 	}
 }

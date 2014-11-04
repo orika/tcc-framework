@@ -24,25 +24,27 @@ public class DefaultCoordinator implements Coordinator {
 	public DefaultCoordinator(TccContainer container) {
 		this.txManager = container.getTxManager();
 	}
+	
+	private void preCheck(List<Procedure> procedures, Action action) {
+		for (int i = 0, j = procedures.size(); i < j; i++) {
+			Procedure proc = procedures.get(i);
+			if (proc.getMethod() == null) {
+				ServiceTask.setSignature(proc, action);
+			}
+			proc.setIndex(i);
+		}
+	}
 
 	public long begin(int sequenceId, List<Procedure> expireGroups) throws CoordinatorException {
-//		try {
-			Transaction tx = null;
-			tx = txManager.createTx(expireGroups);
-			return tx.getUUID();
-//		} catch (Exception e) {
-//			logger.error("transaction register error", e);
-//			throw new CoordinatorException(e.getMessage(), e);
-//		}
+		Transaction tx = null;
+		tx = txManager.createTx(expireGroups);
+		return tx.getUUID();
 	}
 	
 	public short confirm(int sequenceId, long uuid, List<Procedure> procedures) 
 			throws CoordinatorException {
 		logger.debug("process:" + procedures);
-		for (Procedure proc : procedures) {
-			if (proc.getMethod() == null)
-				ServiceTask.setConfirmSig(proc);
-		}
+		preCheck(procedures, Action.CONFIRM);
 		try {
 			txManager.perform(uuid, Action.CONFIRM, procedures);
 			return 0;
@@ -60,10 +62,7 @@ public class DefaultCoordinator implements Coordinator {
 	public short confirm(int sequenceId, final long uuid, long timeout, final List<Procedure> procedures) 
 			throws CoordinatorException {
 		logger.debug("process:" + procedures);
-		for (Procedure proc : procedures) {
-			if (proc.getMethod() == null)
-				ServiceTask.setConfirmSig(proc);
-		}
+		preCheck(procedures, Action.CONFIRM);
 		try {
 			txManager.perform(uuid, Action.CONFIRM, procedures, timeout);
 			return TccCode.OK;
@@ -82,10 +81,7 @@ public class DefaultCoordinator implements Coordinator {
 	public short cancel(int sequenceId, long uuid, List<Procedure> procedures) 
 			throws CoordinatorException {
 		logger.debug("process:" + procedures);
-		for (Procedure proc : procedures) {
-			if (proc.getMethod() == null)
-				ServiceTask.setCancelSig(proc);
-		}
+		preCheck(procedures, Action.CANCEL);
 		try {
 			txManager.perform(uuid, Action.CANCEL, procedures);
 			return TccCode.OK;
@@ -104,10 +100,7 @@ public class DefaultCoordinator implements Coordinator {
 	public short cancel(int sequenceId, long uuid, long timeout, List<Procedure> procedures) 
 			throws CoordinatorException {
 		logger.debug("process:" + procedures);
-		for (Procedure proc : procedures) {
-			if (proc.getMethod() == null)
-				ServiceTask.setCancelSig(proc);
-		}
+		preCheck(procedures, Action.CANCEL);
 		try {
 			txManager.perform(uuid, Action.CANCEL, procedures, timeout);
 			return TccCode.OK;

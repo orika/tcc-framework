@@ -15,6 +15,7 @@ public class TxResult {
 	private AtomicReference<HeuristicsException> exception = new AtomicReference<HeuristicsException>();
 	private Worker[] workers;
 	private long uuid;
+	private volatile boolean isInterrupted = false;
 	
 	private static final HeuristicsException INTERRUPTED = new HeuristicsException();
 	
@@ -29,19 +30,25 @@ public class TxResult {
 	}
 	
 	private void interruptBy(Worker interrupter) {
+		if (isInterrupted)
+			return;
 		for (Worker worker : workers) {
 			if (worker == null || worker == interrupter)
 				continue;
 			worker.interrupt();
 		}
+		isInterrupted = true;
 	}
 	
 	private void interruptAll() {
+		if (isInterrupted)
+			return;
 		for (Worker worker : workers) {
 			if (worker == null)
 				continue;
 			worker.interrupt();
 		}
+		isInterrupted = true;
 	}
 	
 	public long getUUID() {
@@ -62,19 +69,29 @@ public class TxResult {
 	
 	public void failed(int index, short errorCode, Procedure proc, String msg) {
 		Worker interrupter = workers[index];
-		if (exception.compareAndSet(null, HeuristicsException.getException(errorCode, proc, msg))) {
+		if (exception.get() == null &&
+				exception.compareAndSet(null, HeuristicsException.getException(errorCode, proc, msg))) {
 			interruptBy(interrupter);
 		} else
-			interrupter.done();
+			interrupter.fence();
 		releaseOne();
 	}
 	
 	public void failed(int index, HeuristicsType type, Procedure proc, String msg) {
 		Worker interrupter = workers[index];
-		if (exception.compareAndSet(null, HeuristicsException.getException(type, proc, msg))) {
+		if (exception.get() == null &&
+				exception.compareAndSet(null, HeuristicsException.getException(type, proc, msg))) {
 			interruptBy(interrupter);
 		} else
-			interrupter.done();
+			interrupter.fence();
+		releaseOne();
+	}
+	
+	public void interrupted(int index, Procedure proc, String msg) {
+		Worker interrupter = workers[index];
+		if (exception.compareAndSet(null, HeuristicsException.getException(HeuristicsType.TIMEOUT, proc, msg))) {
+			interruptBy(interrupter);
+		}
 		releaseOne();
 	}
 	
@@ -117,13 +134,19 @@ public class TxResult {
 			return false;
 		}
 		
+		void fence() {
+			while (!isInterrupted)
+				LockSupport.parkNanos(1000);
+			Thread.interrupted();
+		}
+		
 		/*
 		 * when a interrupt happened, must eat this interrupt!
 		 */
 		void done() {
 			if (!status.compareAndSet(Status.WORK, Status.DONE)) {
 				while (!Thread.interrupted())
-					LockSupport.parkNanos(10000);
+					LockSupport.parkNanos(1000);
 			}
 		}
 	}

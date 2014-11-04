@@ -31,14 +31,14 @@ public class ServiceContext implements ApplicationContextAware {
         return applicationContext;  
     }  
 
-	public ParticipantProxy getService(String name, String version) throws ServiceNotFoundException  {
+	public ParticipantProxy getService(String name, String version) throws ServiceUnavailableException  {
 		String sig = getSignature(name, version);
 		ParticipantProxy service = serviceMap.get(sig);
 		if (service == null)
 			serviceMap.putIfAbsent(sig, new ParticipantProxy(1000));
 		service = serviceMap.get(sig);
 		if (!service.isInitialized() && !service.init(name, version, config)) {
-			throw new ServiceNotFoundException(name, version);
+			throw new ServiceUnavailableException(name, version);
 		}
 		return service;
 	}

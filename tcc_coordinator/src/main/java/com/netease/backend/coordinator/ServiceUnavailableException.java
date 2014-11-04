@@ -1,6 +1,6 @@
 package com.netease.backend.coordinator;
 
-public class ServiceNotFoundException extends Exception {
+public class ServiceUnavailableException extends Exception {
 	
 	/**
 	 * 
@@ -9,7 +9,7 @@ public class ServiceNotFoundException extends Exception {
 	private String service;
 	private String version;
 	
-	public ServiceNotFoundException(String service, String version) {
+	public ServiceUnavailableException(String service, String version) {
 		this.service = service;
 		this.version = version;
 	}

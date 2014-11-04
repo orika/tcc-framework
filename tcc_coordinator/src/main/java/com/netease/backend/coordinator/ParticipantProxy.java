@@ -90,7 +90,7 @@ public class ParticipantProxy implements Participant {
 		}
 	}
 	
-	public synchronized boolean init(String service, String version, CoordinatorConfig config) throws ServiceNotFoundException {
+	public synchronized boolean init(String service, String version, CoordinatorConfig config) {
 		if (participant != null) {
 			return true;
 		}
