@@ -33,6 +33,13 @@
 		<property name = "maxIdle" value = "20" />
 		<property name = "minIdle" value = "20" />
 		<property name = "maxWait" value = "2000" />
+		<property name = "testWhileIdle" value="true" />
+		<property name = "testOnBorrow" value="false" />
+		<property name = "testOnReturn" value="false" />
+		<property name = "validationQuery" value="select 1" />
+		<property name = "timeBetweenEvictionRunsMillis" value="60000" />
+		<property name = "numTestsPerEvictionRun" value="10" />
+		<property name = "minEvictableIdleTimeMillis" value="1800000" />
 	</bean>
 	
 	<bean id = "systemDataSource" class = "org.apache.commons.dbcp.BasicDataSource"
@@ -46,6 +53,13 @@
 		<property name = "maxIdle" value = "10" />
 		<property name = "minIdle" value = "10" />
 		<property name = "maxWait" value = "2000" />
+		<property name = "testWhileIdle" value="true" />
+		<property name = "testOnBorrow" value="false" />
+		<property name = "testOnReturn" value="false" />
+		<property name = "validationQuery" value="select 1" />
+		<property name = "timeBetweenEvictionRunsMillis" value="60000" />
+		<property name = "numTestsPerEvictionRun" value="5" />
+		<property name = "minEvictableIdleTimeMillis" value="600000" />
 	</bean>
 	
 	<!-- 设置由Sprng载入的Log4j配置文件位置
