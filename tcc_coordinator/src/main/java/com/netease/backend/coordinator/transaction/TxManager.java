@@ -183,7 +183,7 @@ public class TxManager {
 		txTable.remove(tx.getUUID());
 		logger.info("tx " + tx.getUUID() + " heuristics code:" + e.getCode());
 		metric.incHeuristics();
-		monitorUtil.alertAll(MonitorUtil.RUNNING_COUNT_OF, new AlarmMsg() {
+		monitorUtil.alertAll(MonitorUtil.HEURISTIC, new AlarmMsg() {
 			@Override
 			public String getContent() {
 				StringBuilder builder = new StringBuilder();

@@ -21,10 +21,13 @@ public class ServiceTask implements Runnable {
 		switch (action) {
 			case CONFIRM:
 				proc.setMethod(CONFIRM);
+				return;
 			case CANCEL:
 				proc.setMethod(CANCEL);
+				return;
 			case EXPIRE:
 				proc.setMethod(EXPIRED);
+				return;
 			default:
 				throw new RuntimeException("register has no signature");
 		}
