@@ -47,8 +47,9 @@ public abstract class TestBase extends TestCase {
 	
 	public void expireProc(long timeout) throws CoordinatorException {
 		try {
+			tryDo();
 			Thread.sleep(timeout);
-		} catch (InterruptedException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

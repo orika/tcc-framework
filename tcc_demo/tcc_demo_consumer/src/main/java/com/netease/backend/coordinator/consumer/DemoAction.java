@@ -41,13 +41,13 @@ public class DemoAction {
 			try {
 				payment.reserve(uuid, PERSON, money);
 				sale.reserve(uuid, buyCount);
-//				if (random.nextInt(10) < 2) 
-//					throw new RuntimeException("unknown Exception");
-//				if (random.nextInt(10) < 5) {
-//					System.out.println("canceling " + uuid);
-//					tx.cancel();
-//					continue;
-//				}
+				if (random.nextInt(10) < 2) 
+					throw new RuntimeException("unknown Exception");
+				if (random.nextInt(10) < 5) {
+					System.out.println("canceling " + uuid);
+					tx.cancel();
+					continue;
+				}
 			} catch (Throwable t) {
 				System.out.println("waiting expiring " + uuid);
 				continue;
