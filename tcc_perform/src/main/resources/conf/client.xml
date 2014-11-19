@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - Copyright 1999-2011 Alibaba Group.
+ -  
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -  
+ -      http://www.apache.org/licenses/LICENSE-2.0
+ -  
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<bean id="shopping" class="com.netease.backend.tcc.perftest.MyActivity">
+       	<constructor-arg index="0" ref="tccManager"></constructor-arg>  
+        <constructor-arg index="1">
+        	<list>
+        		<ref bean="payment"/>
+        		<ref bean="sale"/>
+        		<ref bean="order"/>
+        	</list>
+        </constructor-arg>
+	</bean>
+
+	<bean id="tccManager" class="com.netease.backend.tcc.TccManager">
+		<property name="coordinator" ref="coordinator" />
+	</bean>
+	
+	<bean id="testContainer" class="com.netease.backend.tcc.perftest.TestContainer" />
+
+	<bean id="tccClient" class="com.netease.backend.tcc.perftest.TccClient" init-method = 'start'>
+		<constructor-arg ref="testContainer"/>
+	</bean>	
+	
+	<dubbo:reference id="coordinator" interface="com.netease.backend.tcc.Coordinator" group="vstore" version="1.0.0" timeout = "10000"/>
+	<dubbo:reference id="payment" interface="com.netease.backend.tcc.perftest.face.IPayment"/>
+	<dubbo:reference id="sale" interface="com.netease.backend.tcc.perftest.face.ISale"/>
+	<dubbo:reference id="order" interface="com.netease.backend.tcc.perftest.face.IOrder"/>
+</beans>

@@ -17,21 +17,29 @@ public class TccContainer {
 	private RecoverManager recoverManager = null;
 	private TxManager txManager = null;
 	private UUIDGenerator uuidGenerator = null;
+	private DefaultCoordinator coordinator = null;
 	
 	public TccContainer(TccMonitor monitor, RecoverManager recoverManager, 
-			TxManager txManager, UUIDGenerator uuidGenerator) {
+			TxManager txManager, UUIDGenerator uuidGenerator, 
+			DefaultCoordinator coordinator) {
 		this.monitor = monitor;
 		this.recoverManager = recoverManager;
 		this.txManager = txManager;
 		this.uuidGenerator = uuidGenerator;
+		this.coordinator = coordinator;
 	}
 	
 	public void start() {
 		txManager.enableRetry();
 		recoverManager.init();
 		uuidGenerator.init(recoverManager.getLastMaxUUID());
+		coordinator.start();
 		monitor.start();
 		txManager.beginExpire();
+	}
+	
+	public void stop() {
+		coordinator.stop();
 	}
 	
 	public static void main(String[] args) throws IOException {
@@ -39,7 +47,7 @@ public class TccContainer {
 			System.setProperty("dubbo.spring.config", args[0]);
 		else
 			System.setProperty("dubbo.spring.config", "classpath*:/spring/*.xml");
-		com.alibaba.dubbo.container.Main.main(new String[0]);
+		com.alibaba.dubbo.container.Main.main(new String[] {"spring", "log4j"});
 		logger.info("Tcc Service initializing...");
 	}
 	

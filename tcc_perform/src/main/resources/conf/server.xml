@@ -19,9 +19,13 @@
 	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
-
-	<dubbo:reference id="coordinator" interface="com.netease.backend.tcc.Coordinator" group="vstore" timeout = "10000" version="1.0.0" retries="0"/>
-	<dubbo:reference id="payment" interface="com.netease.backend.tcc.demo.IPayment" retries="0"/>
-	<dubbo:reference id="sale" interface="com.netease.backend.tcc.demo.ISale" retries="0"/>
-	<dubbo:reference id="order" interface="com.netease.backend.tcc.demo.IOrder" retries="0"/>
+	
+	<bean id="payment" class="com.netease.backend.tcc.perftest.server.Payment" />
+	<dubbo:service interface="com.netease.backend.tcc.perftest.face.IPayment" ref="payment" loadbalance="roundrobin"/>
+	
+	<bean id="sale" class="com.netease.backend.tcc.perftest.server.Sale" />
+	<dubbo:service interface="com.netease.backend.tcc.perftest.face.ISale" ref="sale" loadbalance="roundrobin"/>
+	
+	<bean id="order" class="com.netease.backend.tcc.perftest.server.Order"/>
+	<dubbo:service interface="com.netease.backend.tcc.perftest.face.IOrder" ref="order" loadbalance="roundrobin"/>
 </beans>

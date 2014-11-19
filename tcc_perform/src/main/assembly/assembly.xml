@@ -28,23 +28,16 @@
             </includes>
         </fileSet>
 		<fileSet>
-			<directory>src/main/resources/spring</directory>
-			<outputDirectory>conf/spring</outputDirectory>
+			<directory>src/main/resources/conf</directory>
+			<outputDirectory>conf</outputDirectory>
 			<fileMode>0755</fileMode>
 		</fileSet>
-		<fileSet>
+			<fileSet>
 			<directory>src/main/resources/scripts</directory>
 			<outputDirectory>scripts</outputDirectory>
 			<fileMode>0755</fileMode>
 		</fileSet>
 	</fileSets>
-	<files>
-		<file>
-			<source>src/main/resources/log4j.xml</source>
-			<outputDirectory>conf</outputDirectory>
-			<fileMode>0755</fileMode>
-		</file>
-	</files>
 	<dependencySets>
 		<dependencySet>
 			<outputDirectory>lib</outputDirectory>

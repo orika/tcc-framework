@@ -11,8 +11,8 @@ import com.netease.backend.tcc.Coordinator;
 public class ServiceContext implements ApplicationContextAware {
 	
 	private static ApplicationContext applicationContext = null;
-	private static ConcurrentHashMap<String, ParticipantProxy> serviceMap = 
-			new ConcurrentHashMap<String, ParticipantProxy>();
+	private static ConcurrentHashMap<Integer, ParticipantProxy> serviceMap = 
+			new ConcurrentHashMap<Integer, ParticipantProxy>();
 	
 	private CoordinatorConfig config = null;
 	
@@ -32,7 +32,9 @@ public class ServiceContext implements ApplicationContextAware {
     }  
 
 	public ParticipantProxy getService(String name, String version) throws ServiceUnavailableException  {
-		String sig = getSignature(name, version);
+		if (name == null)
+			throw new IllegalArgumentException("service name can not be null!");
+		Integer sig = getSignature(name, version);
 		ParticipantProxy service = serviceMap.get(sig);
 		if (service == null)
 			serviceMap.putIfAbsent(sig, new ParticipantProxy(1000));
@@ -43,8 +45,10 @@ public class ServiceContext implements ApplicationContextAware {
 		return service;
 	}
 	
-	private String getSignature(String service, String version) {
-		return service + version;
+	private int getSignature(String service, String version) {
+		if (version == null)
+			return service.hashCode();
+		return service.hashCode() + version.hashCode();
 	}
 	
 	public static Coordinator getCoordinator() {

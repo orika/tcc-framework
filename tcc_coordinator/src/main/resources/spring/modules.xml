@@ -5,16 +5,17 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 	
-	<bean id="coordinator" class="com.netease.backend.coordinator.DefaultCoordinator" >
-		<constructor-arg ref= "tccContainer"/>
-	</bean>
-	<dubbo:service interface="com.netease.backend.tcc.Coordinator" ref="coordinator"/>
-	
-	<bean id = "tccContainer" class = "com.netease.backend.coordinator.TccContainer" init-method="start">
+	<bean id = "tccContainer" class = "com.netease.backend.coordinator.TccContainer" init-method="start" destroy-method="stop">
 		<constructor-arg index = "0" ref= "tccMonitor"/>
 		<constructor-arg index = "1" ref= "recoverManager"/>
 		<constructor-arg index = "2" ref= "txManager"/>
 		<constructor-arg index = "3" ref= "uuidGenerator"/>
+		<constructor-arg index = "4" ref= "coordinator"/>
+	</bean>
+	
+	<bean id="coordinator" class="com.netease.backend.coordinator.DefaultCoordinator">
+		<constructor-arg index = "0" ref= "txManager"/>
+		<constructor-arg index = "1" ref= "config"/>
 	</bean>
 	
 	<bean id="serviceContext" class="com.netease.backend.coordinator.ServiceContext">

@@ -15,12 +15,6 @@
 -->
 <assembly>
     <id>bin</id>
-
-    <dependencySets>
-        <dependencySet>
-            <outputDirectory>lib</outputDirectory>
-        </dependencySet>
-    </dependencySets>
     <fileSets>
         <fileSet>
             <directory>${project.build.directory}</directory>
@@ -28,10 +22,6 @@
             <includes>
                 <include>*.jar</include>
             </includes>
-        </fileSet>
-        <fileSet>
-            <directory>src/main/resources/</directory>
-            <outputDirectory>conf</outputDirectory>
         </fileSet>
     </fileSets>
 </assembly>

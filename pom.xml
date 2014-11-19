@@ -27,6 +27,7 @@
 		<module>tcc_api</module>
 		<module>tcc_coordinator</module>
 		<module>tcc_demo</module>
+		<module>tcc_perform</module>
 	</modules>
 	<properties>
 		<applicationVersion>1.0-SNAPSHOT</applicationVersion>
@@ -48,6 +49,11 @@
 	<dependencyManagement>
 		<dependencies>
 			<!-- Common libs -->
+			<dependency>
+          	 	<groupId>com.netease.backend.trace</groupId>
+           		<artifactId>trace-client</artifactId>
+           		<version>0.1.3</version>
+			</dependency>
 			<dependency>
 				<groupId>com.alibaba</groupId>
 				<artifactId>dubbo</artifactId>

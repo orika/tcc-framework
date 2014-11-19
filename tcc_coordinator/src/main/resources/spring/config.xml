@@ -6,17 +6,23 @@
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 	
 	<bean id  =  "config" class  =  "com.netease.backend.coordinator.config.CoordinatorConfig">
+		<property name = "appName" value = "Coordinator" />
+		<!--coordinator config-->	
 		<property name = "bgThreadNum" value = "20" />
 		<property name = "retryParallelism" value = "20" />
-		<property name = "expireTime" value = "5000" />
+		<property name = "expireTime" value = "10000" />
 		<property name = "ckptInterval" value = "5000" />
-		<property name = "rdsIp" value = "10.120.146.129:3306" />
 		<property name = "monitorInterval" value = "300000" />
-		<property name = "rpcTimeout" value = "3000" />
-		<property name = "alarmRunningTx" value = "1" />
-		<property name = "alarmTxCount" value = "1" />
-		<property name = "appName" value = "Coordinator" />
+		<!--alarm and boundary config-->	
+		<property name = "alarmRunningTx" value = "5" />
+		<property name = "alarmTxCount" value = "5" />
+		<property name = "maxRunningTx" value = "1000" />
+		<property name = "maxTxCount" value = "100000" />
+		<!--interface config-->		
 		<property name = "zkAddress" value = "zookeeper://10.120.146.133:2181" />
+		<property name = "version" value = "1.0.0" />
+		<property name = "group" value = "vstore" /> 
+		<!-- 	<property name = "appGroup" value = "vstore" />  -->
 	</bean>
 
 	<bean id = "localDataSource" class = "org.apache.commons.dbcp.BasicDataSource"
@@ -64,21 +70,5 @@
 		<property name = "numTestsPerEvictionRun" value="5" />
 		<property name = "minEvictableIdleTimeMillis" value="600000" />
 	</bean>
-	
-	<!-- 设置由Sprng载入的Log4j配置文件位置
-	<context-param>
-    	<param-name>log4jConfigLocation</param-name>
-    	<param-value>/WEB-INF/props/log4j.properties</param-value>
-	</context-param>
-   	<context-param>
-    	<param-name>log4jRefreshInterval</param-name>
-    	<param-value>6000</param-value>
-   	</context-param>
-    <listener>
-    	<listener-class>
-        	org.springframework.web.util.Log4jConfigListener
-     	</listener-class>
-   	</listener>
-   	 -->
 </beans>
 

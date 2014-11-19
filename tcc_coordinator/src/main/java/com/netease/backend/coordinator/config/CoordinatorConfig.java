@@ -17,9 +17,13 @@ public class CoordinatorConfig {
 	private int maxTxCount = 10000000;
 	private int alarmTxCount = 6000000;
 	private long alarmInterval = 10;
-	private int rpcTimeout = 10000;
-	private String appName;
+	private int rpcTimeout = -1;
+	private String appName = "Coordinator";
+	private String version = "1.0.0";
+	private int port = 20080;
 	private String zkAddress;
+	private String group;
+	private String appGroup;
 	
 	public String getServerIp() {
 		if (serverIp == null)
@@ -149,5 +153,37 @@ public class CoordinatorConfig {
 
 	public void setRpcTimeout(int rpcTimeout) {
 		this.rpcTimeout = rpcTimeout;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
+
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
+	}
+
+	public String getAppGroup() {
+		return appGroup;
+	}
+
+	public void setAppGroup(String appGroup) {
+		this.appGroup = appGroup;
 	}
 }
