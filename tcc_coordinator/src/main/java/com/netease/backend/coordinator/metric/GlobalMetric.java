@@ -11,6 +11,7 @@ public class GlobalMetric implements Metric {
 	private List<ActionMetric> actions = new ArrayList<ActionMetric>();
 	private HeuristicsMetric heuristicsMetric = new HeuristicsMetric();
 	private RealTimeMetric realTimeMetric = null;
+	private LogMetric logMetric = new LogMetric();
 	
 	public GlobalMetric(TxTable txTable) {
 		this.realTimeMetric = new RealTimeMetric(txTable);
@@ -23,6 +24,13 @@ public class GlobalMetric implements Metric {
 		ActionMetric am = actions.get(action.getCode());
 		am.addCompleted(time);
 		realTimeMetric.decAction(action);
+	}
+	
+	public void incCompleted(Action action, long time, long logTime) {
+		ActionMetric am = actions.get(action.getCode());
+		am.addCompleted(time);
+		realTimeMetric.decAction(action);
+		logMetric.addLogTime(logTime);
 	}
 	
 	public long getCompletedCount(Action action) {
@@ -42,6 +50,11 @@ public class GlobalMetric implements Metric {
 	
 	public long getMaxTime(Action action) {
 		return actions.get(action.getCode()).getMaxTime();
+	}
+	
+	public void incRunningCount(Action action, long logTime) {
+		realTimeMetric.incAction(action);
+		logMetric.addLogTime(logTime);
 	}
 	
 	public void incRunningCount(Action action) {
@@ -76,5 +89,11 @@ public class GlobalMetric implements Metric {
 		heuristicsMetric.reset();
 		realTimeMetric.reset();
 		heuristicsMetric.reset();
+		logMetric.reset();
+	}
+	
+	@Override
+	public String toString() {
+		return "log avg time " + logMetric.getAvgTime();
 	}
 }

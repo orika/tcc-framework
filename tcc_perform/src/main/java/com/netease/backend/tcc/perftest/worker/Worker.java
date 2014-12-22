@@ -37,7 +37,11 @@ public abstract class Worker implements Runnable {
 	
 	public void stop() {
 		this.stop = true;
-		this.thread.interrupt();
+		try {
+			this.thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void start() {

@@ -91,9 +91,10 @@ public class TxManager {
 		if (checkTxCount())
 			throw new CoordinatorException("reject,txTable size blooms at " + maxTxCount);
 		Transaction tx = new Transaction(idGenerator.getNextUUID(), procList);
-		tx.setCreateTime(System.currentTimeMillis());
-		metric.incRunningCount(Action.REGISTERED);
+		long now = System.currentTimeMillis();
+		tx.setCreateTime(now);
 		logManager.logRegister(tx);
+		metric.incRunningCount(Action.REGISTERED, System.currentTimeMillis() - now);
 		txTable.put(tx);
 		if (logger.isDebugEnabled()) 
 			logger.debug("register: " + tx);
@@ -153,12 +154,13 @@ public class TxManager {
 		}
 		if (logger.isDebugEnabled())
 			logger.debug("begin " + tx);
-		tx.setBeginTime(System.currentTimeMillis());
+		long now = System.currentTimeMillis();
+		tx.setBeginTime(now);
 		logManager.logBegin(tx, action);
+		metric.incRunningCount(action, System.currentTimeMillis() - now);
 		if (notLocalTx) {
 			txTable.put(tx);
 		}
-		metric.incRunningCount(action);
 		return tx;
 	}
 	
@@ -166,14 +168,17 @@ public class TxManager {
 		Transaction tx = txTable.remove(uuid);
 		if (tx == null)
 			throw new RuntimeException("finish a null transaction!!");
-		tx.setEndTime(System.currentTimeMillis());
+		long now = System.currentTimeMillis();
+		tx.setEndTime(now);
 		metric.incCompleted(action, tx.getElapsed());
 		try {
 			logManager.logFinish(tx, action);
 			if (logger.isDebugEnabled())
 				logger.debug("finish " + tx);
+			metric.incCompleted(action, tx.getElapsed(), System.currentTimeMillis() - now);
 		} catch (LogException e) {
 			logger.warn("log finish failed:" + tx.getUUID());
+			metric.incCompleted(action, tx.getElapsed());
 		}
 	}
 	
