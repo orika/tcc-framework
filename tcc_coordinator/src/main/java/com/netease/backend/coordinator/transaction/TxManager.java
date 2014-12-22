@@ -156,7 +156,12 @@ public class TxManager {
 			logger.debug("begin " + tx);
 		long now = System.currentTimeMillis();
 		tx.setBeginTime(now);
-		logManager.logBegin(tx, action);
+		try {
+			logManager.logBegin(tx, action);
+		} catch (LogException e) {
+			tx.rollback();
+			throw e;
+		}
 		metric.incRunningCount(action, System.currentTimeMillis() - now);
 		if (notLocalTx) {
 			txTable.put(tx);

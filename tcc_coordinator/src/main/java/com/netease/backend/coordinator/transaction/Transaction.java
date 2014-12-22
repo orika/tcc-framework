@@ -101,6 +101,13 @@ public class Transaction {
 			throw new IllegalActionException(uuid, status.get(), Action.EXPIRE);
 	}
 	
+	public void rollback(){
+		Action action = status.get();
+		if (action == Action.CONFIRM || action == Action.CANCEL){
+			status.set(Action.REGISTERED);
+		}
+	}
+	
 	public long getLastTimeStamp() {
 		return endTime == -1 ? createTime : endTime;
 	}
