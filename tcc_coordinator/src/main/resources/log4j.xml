@@ -26,9 +26,18 @@
         <param name="File" value="logs/trace.log"/>  <!--日志路径-->
         <param name="Append" value="true"/> <!--是否追加-->
         <param name="MaxBackupIndex" value="3"/>        <!--最大roll的文件数-->
-        <param name="MaxFileSize" value="52428800"/> <!--文件size上限-->
+        <param name="MaxFileSize" value="524288000"/> <!--文件size上限-->
         <layout class="org.apache.log4j.PatternLayout">          <!--日志输出格式-->
             <param name="ConversionPattern" value="%m%n"/>
+        </layout>
+    </appender>
+    
+    <appender name="dailyFile" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="logs/coordinator/coordinator.log"/>  <!--日志路径-->
+        <param name="Append" value="true"/> <!--是否追加-->
+        <param name="DatePattern" value="'.'yyyy-MM-dd'.log'"/> 
+        <layout class="org.apache.log4j.PatternLayout">          <!--日志输出格式-->
+            <param name="ConversionPattern" value="[%d{hh:mm:ss:sss}][%p] %c{1}: %m%n"/>
         </layout>
     </appender>
  
@@ -40,6 +49,6 @@
     
 	<root>
 		<level value="INFO" />
-		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="dailyFile" />
 	</root>
 </log4j:configuration>
