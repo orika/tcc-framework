@@ -37,6 +37,11 @@
 			<outputDirectory>scripts</outputDirectory>
 			<fileMode>0755</fileMode>
 		</fileSet>
+		<fileSet>
+			<directory>src/main/resources/META-INF</directory>
+			<outputDirectory>META-INF</outputDirectory>
+			<fileMode>0755</fileMode>
+		</fileSet>
 	</fileSets>
 	<files>
 		<file>
