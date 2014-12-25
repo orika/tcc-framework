@@ -30,7 +30,7 @@
 		<module>tcc_perform</module>
 	</modules>
 	<properties>
-		<applicationVersion>1.0-SNAPSHOT</applicationVersion>
+		<applicationVersion>1.2.0-SNAPSHOT</applicationVersion>
 		<demoVersion>1.0</demoVersion>
 		<skip_maven_deploy>true</skip_maven_deploy>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
