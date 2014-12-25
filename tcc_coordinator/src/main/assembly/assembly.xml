@@ -39,7 +39,7 @@
 		</fileSet>
 		<fileSet>
 			<directory>src/main/resources/META-INF</directory>
-			<outputDirectory>META-INF</outputDirectory>
+			<outputDirectory>conf/META-INF</outputDirectory>
 			<fileMode>0755</fileMode>
 		</fileSet>
 	</fileSets>
