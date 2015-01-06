@@ -7,10 +7,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import org.apache.commons.dbcp.BasicDataSource;
 
+import com.mysql.fabric.xmlrpc.base.Array;
 import com.netease.backend.coordinator.config.CoordinatorConfig;
 import com.netease.backend.coordinator.log.Checkpoint;
 import com.netease.backend.coordinator.log.LogRecord;
@@ -21,6 +24,7 @@ import com.netease.backend.coordinator.monitor.MonitorException;
 import com.netease.backend.coordinator.monitor.MonitorRecord;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.tcc.common.Action;
+import com.netease.backend.tcc.common.HeuristicsInfo;
 import com.netease.backend.tcc.common.IllegalActionException;
 import com.netease.backend.tcc.common.LogException;
 import com.netease.backend.tcc.error.CoordinatorException;
@@ -763,6 +767,79 @@ public class DbUtil {
 			}
 		}
 		
+	}
+	
+	/**
+	 * Description: get HeuristicsException info within given time bucket
+	 * @param startTime
+	 * @param endTime
+	 * @return HeuristicsInfo list
+	 * @throws LogException 
+	 */
+	public List<HeuristicsInfo> getHeuristicsExceptionList(long startTime, long endTime) 
+			throws LogException {
+		List<HeuristicsInfo> heuristicsInfos = new ArrayList<HeuristicsInfo>();
+		Connection systemConn = null;
+		PreparedStatement systemPstmt = null;
+		ResultSet systemRset = null;
+		try {
+			systemConn = systemDataSource.getConnection();
+			systemPstmt = systemConn.prepareStatement("SELECT TRX_ID, TRX_ACTION FROM HEURISTIC_TRX_INFO WHERE TRX_TIMESTAMP >= ? and TRX_TIMESTAMP < ?");
+			systemPstmt.setLong(1, startTime);
+			systemPstmt.setLong(2, endTime);
+			systemRset = systemPstmt.executeQuery();
+			while (systemRset.next()) {
+				heuristicsInfos.add(new HeuristicsInfo(systemRset.getLong(1), 
+						Action.getAction(systemRset.getInt(2))));
+			}
+			return heuristicsInfos;
+		} catch (SQLException e) {
+			throw new LogException("Cannot fetch system HeuristicsInfo", e);
+		} finally {
+			try {
+				if (systemRset != null)
+					systemRset.close();
+				if (systemPstmt != null)
+					systemPstmt.close();
+				if (systemConn != null)
+					systemConn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}	
+		}
+	}
+	
+	/**
+	 * Description: remove HeuristicsExceptions from systemDB
+	 * @param txId list
+	 * @throws LogException 
+	 */
+	public void removeHeuristicsExceptions(List<Long> txIdList) 
+			throws LogException{
+		Connection systemConn = null;
+		PreparedStatement systemPstmt = null;
+		try {
+			systemConn = systemDataSource.getConnection();
+			systemConn.setAutoCommit(false);
+			systemPstmt = systemConn.prepareStatement("DELETE FROM HEURISTIC_TRX_INFO WHERE TRX_ID = ?");
+			for (Long txId : txIdList) {
+				systemPstmt.setLong(1, txId);
+				systemPstmt.addBatch();
+			}
+			systemPstmt.executeBatch();
+			systemConn.commit();
+		} catch (SQLException e) {
+			throw new LogException("Cannot remove HeuristicsInfos form systemDB", e);
+		} finally {
+			try {
+				if (systemPstmt != null)
+					systemPstmt.close();
+				if (systemConn != null)
+					systemConn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}	
+		}
 	}
 	
 }

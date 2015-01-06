@@ -14,6 +14,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import com.netease.backend.tcc.common.HeuristicsInfo;
 import com.netease.backend.tcc.error.CoordinatorException;
 
 public class TccManager implements ApplicationContextAware {
@@ -111,6 +112,21 @@ public class TccManager implements ApplicationContextAware {
 			return getParticipant(serviceName);
 		} else
 			return pt;
+	}
+	
+	public List<HeuristicsInfo> getHeuristicsExceptionList(long startTime, long endTime)
+		throws CoordinatorException {
+		if (startTime > endTime) 
+			throw new IllegalArgumentException("EndTime must be greater than startTime");
+		return coordinator.getHeuristicExceptionList(startTime, endTime);
+	}
+	
+	public void removeHeuristicsExceptions(List<HeuristicsInfo> heuristicsInfos)
+		throws CoordinatorException {
+		List<Long> uuidList = new ArrayList<Long>();
+		for (HeuristicsInfo heuristicsInfo : heuristicsInfos)
+			uuidList.add(heuristicsInfo.getUuid());
+		coordinator.removeHeuristicExceptions(uuidList);
 	}
 	
 	public class CertainTx extends Transaction implements Cloneable {

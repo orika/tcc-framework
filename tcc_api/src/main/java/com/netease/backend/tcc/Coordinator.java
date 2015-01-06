@@ -17,6 +17,7 @@ package com.netease.backend.tcc;
 
 import java.util.List;
 
+import com.netease.backend.tcc.common.HeuristicsInfo;
 import com.netease.backend.tcc.error.CoordinatorException;
 
 public interface Coordinator {	
@@ -29,6 +30,10 @@ public interface Coordinator {
 	short cancel(int sequenceId, long uuid, List<Procedure> procedures) throws CoordinatorException;
 	
 	short cancel(int sequenceId, long uuid, long timeout, List<Procedure> procedures) throws CoordinatorException;
+	
+	List<HeuristicsInfo> getHeuristicExceptionList(long startTime, long endTime) throws CoordinatorException;
+	
+	void removeHeuristicExceptions(List<Long> txIdList) throws CoordinatorException;
 	
 	/*
 	 * for test

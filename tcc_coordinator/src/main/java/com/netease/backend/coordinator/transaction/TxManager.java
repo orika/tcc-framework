@@ -18,6 +18,7 @@ import com.netease.backend.coordinator.processor.TccProcessor;
 import com.netease.backend.coordinator.util.MonitorUtil;
 import com.netease.backend.tcc.Procedure;
 import com.netease.backend.tcc.common.Action;
+import com.netease.backend.tcc.common.HeuristicsInfo;
 import com.netease.backend.tcc.common.IllegalActionException;
 import com.netease.backend.tcc.common.LogException;
 import com.netease.backend.tcc.error.CoordinatorException;
@@ -219,6 +220,7 @@ public class TxManager {
 		perform(tx, action);
 	}
 	
+	
 	private void perform(Transaction tx, Action action) throws LogException {
 		long uuid = tx.getUUID();
 		tx.setBeginTime(System.currentTimeMillis());
@@ -273,5 +275,15 @@ public class TxManager {
 			});
 		}
 		return size > maxTxCount;
+	}
+	
+	public List<HeuristicsInfo> getHeuristcisExceptionList(long startTime, long endTime)
+		throws LogException {
+		return logManager.getHeuristicsExceptionList(startTime, endTime);
+	}
+	
+	public void removeHeuristicsExceptions(List<Long> txIdList)
+		throws LogException {
+		logManager.removeHeuristicsInfos(txIdList);
 	}
 }

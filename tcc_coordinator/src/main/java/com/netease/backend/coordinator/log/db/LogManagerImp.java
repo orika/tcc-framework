@@ -9,6 +9,8 @@
 
 package com.netease.backend.coordinator.log.db;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import com.netease.backend.coordinator.log.Checkpoint;
@@ -18,6 +20,7 @@ import com.netease.backend.coordinator.log.LogType;
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.coordinator.util.DbUtil;
 import com.netease.backend.tcc.common.Action;
+import com.netease.backend.tcc.common.HeuristicsInfo;
 import com.netease.backend.tcc.common.IllegalActionException;
 import com.netease.backend.tcc.common.LogException;
 import com.netease.backend.tcc.error.HeuristicsException;
@@ -130,6 +133,18 @@ public class LogManagerImp implements LogManager {
 	@Override
 	public LogScanner beginScan(long startpoint) throws LogException {
 		return dbUtil.beginScan(startpoint);
+	}
+
+	@Override
+	public List<HeuristicsInfo> getHeuristicsExceptionList(long startTime, long endTime)
+			throws LogException {
+		return dbUtil.getHeuristicsExceptionList(startTime, endTime);
+	}
+
+	@Override
+	public void removeHeuristicsInfos(List<Long> txIdList)
+			throws LogException {
+		dbUtil.removeHeuristicsExceptions(txIdList);
 	}
 }
 

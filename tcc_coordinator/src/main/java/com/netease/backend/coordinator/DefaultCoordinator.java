@@ -16,6 +16,7 @@ import com.netease.backend.tcc.Coordinator;
 import com.netease.backend.tcc.Procedure;
 import com.netease.backend.tcc.TccCode;
 import com.netease.backend.tcc.common.Action;
+import com.netease.backend.tcc.common.HeuristicsInfo;
 import com.netease.backend.tcc.common.IllegalActionException;
 import com.netease.backend.tcc.common.LogException;
 import com.netease.backend.tcc.error.CoordinatorException;
@@ -167,5 +168,17 @@ public class DefaultCoordinator implements Coordinator {
 	@Override
 	public int getTxTableSize() {
 		return txManager.getTxTable().getSize();
+	}
+
+	@Override
+	public List<HeuristicsInfo> getHeuristicExceptionList(long startTime,
+			long endTime) throws CoordinatorException {
+		return txManager.getHeuristcisExceptionList(startTime, endTime);
+	}
+
+	@Override
+	public void removeHeuristicExceptions(List<Long> txIdList)
+			throws CoordinatorException {
+		txManager.removeHeuristicsExceptions(txIdList);
 	}
 }

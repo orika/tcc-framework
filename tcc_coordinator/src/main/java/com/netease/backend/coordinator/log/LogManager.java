@@ -9,8 +9,11 @@
 
 package com.netease.backend.coordinator.log;
 
+import java.util.List;
+
 import com.netease.backend.coordinator.transaction.Transaction;
 import com.netease.backend.tcc.common.Action;
+import com.netease.backend.tcc.common.HeuristicsInfo;
 import com.netease.backend.tcc.common.IllegalActionException;
 import com.netease.backend.tcc.common.LogException;
 import com.netease.backend.tcc.error.HeuristicsException;
@@ -94,4 +97,20 @@ public interface LogManager {
 	 * @throws LogException
 	 */
 	LogScanner beginScan(long startpoint) throws LogException;
+	
+	/**
+	 * Description: get HeuristicsException info within given time bucket
+	 * @param startTime
+	 * @param endTime
+	 * @return HeuristicsInfo list
+	 * @throws LogException 
+	 */
+	public List<HeuristicsInfo> getHeuristicsExceptionList(long startTime, long endTime) throws LogException;
+
+	/**
+	 * Description: remove HeuristicsExceptions from systemDB
+	 * @param txId list
+	 * @throws LogException 
+	 */
+	public void removeHeuristicsInfos(List<Long> txIdList) throws LogException;
 }
