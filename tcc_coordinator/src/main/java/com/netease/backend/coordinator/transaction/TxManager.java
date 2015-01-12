@@ -176,7 +176,6 @@ public class TxManager {
 			throw new RuntimeException("finish a null transaction!!");
 		long now = System.currentTimeMillis();
 		tx.setEndTime(now);
-		metric.incCompleted(action, tx.getElapsed());
 		try {
 			logManager.logFinish(tx, action);
 			if (logger.isDebugEnabled())
@@ -189,8 +188,15 @@ public class TxManager {
 	}
 	
 	public void heuristic(Transaction tx, Action action, HeuristicsException e) throws LogException {
-		tx.setEndTime(System.currentTimeMillis());
-		logManager.logHeuristics(tx, action, e);
+		long now = System.currentTimeMillis();
+		tx.setEndTime(now);
+		try {
+			logManager.logHeuristics(tx, action, e);
+			metric.incCompleted(action, tx.getElapsed(), System.currentTimeMillis() - now);
+		} catch (LogException e1) {
+			metric.incCompleted(action, tx.getElapsed());
+			throw e1;
+		}
 		txTable.remove(tx.getUUID());
 		logger.info("tx " + tx.getUUID() + " heuristics code:" + e.getCode());
 		metric.incHeuristics();
@@ -234,12 +240,14 @@ public class TxManager {
 		if (logger.isDebugEnabled())
 			logger.debug("perform background :" + tx);
 		txTable.remove(uuid);
-		tx.setEndTime(System.currentTimeMillis());
-		metric.incCompleted(action, tx.getElapsed());
+		long now = System.currentTimeMillis();
+		tx.setEndTime(now);
 		try {
 			logManager.logFinish(tx, action);
+			metric.incCompleted(action, tx.getElapsed(), System.currentTimeMillis() - now);
 		} catch (LogException e) {
 			logger.warn("log finish failed:" + tx.getUUID());
+			metric.incCompleted(action, tx.getElapsed());
 		}
 	}
 	
