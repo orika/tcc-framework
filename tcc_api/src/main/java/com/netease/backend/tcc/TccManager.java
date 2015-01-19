@@ -226,9 +226,17 @@ public class TccManager implements ApplicationContextAware {
 
 		protected CustomedTx(ParticipantGroup activity, Coordinator coordinator) {
 			super(coordinator);
-			activity.expired(this);
-			this.expireList = procList;
-			this.procList = new ArrayList<Procedure>();
+			this.expireList = new ArrayList<Procedure>();
+			Participant[] participants = activity.getParticipants();
+			if (participants != null) {
+				for (int i = 0; i < participants.length; i++) {
+					Procedure proc = new Procedure();
+					proc.setService(getServiceName(participants[i]));
+					proc.setSequence(i);
+					expireList.add(proc);
+				}
+			}
+			
 		}
 
 		@Override
