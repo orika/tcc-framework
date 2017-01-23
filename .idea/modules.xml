@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/tcc.iml" filepath="$PROJECT_DIR$/tcc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tcc_api/tcc_api.iml" filepath="$PROJECT_DIR$/tcc_api/tcc_api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tcc_coordinator/tcc_coordinator.iml" filepath="$PROJECT_DIR$/tcc_coordinator/tcc_coordinator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tcc_demo/tcc_demo.iml" filepath="$PROJECT_DIR$/tcc_demo/tcc_demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tcc_demo/tcc_demo_api/tcc_demo_api.iml" filepath="$PROJECT_DIR$/tcc_demo/tcc_demo_api/tcc_demo_api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tcc_demo/tcc_demo_consumer/tcc_demo_consumer.iml" filepath="$PROJECT_DIR$/tcc_demo/tcc_demo_consumer/tcc_demo_consumer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tcc_demo/tcc_demo_server/tcc_demo_server.iml" filepath="$PROJECT_DIR$/tcc_demo/tcc_demo_server/tcc_demo_server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tcc_perform/tcc_perform.iml" filepath="$PROJECT_DIR$/tcc_perform/tcc_perform.iml" />
+    </modules>
+  </component>
+</project>
