@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6c0c69e1-e4c2-4082-8998-fe0845f7ba49" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="6c0c69e1-e4c2-4082-8998-fe0845f7ba49" name="Default" comment="" />
     <ignored path="tcc.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/tcc_demo/tcc_demo_server/target/" />
@@ -969,12 +967,12 @@
       <workItem from="1484118884359" duration="886000" />
       <workItem from="1484188399952" duration="774000" />
       <workItem from="1484191747203" duration="64000" />
-      <workItem from="1485142482084" duration="1261000" />
+      <workItem from="1485142482084" duration="1463000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="11229000" />
+    <option name="totallyTimeSpent" value="11431000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
