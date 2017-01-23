@@ -63,7 +63,7 @@ public class DefaultCoordinator implements Coordinator {
 		service.setInterface(Coordinator.class);
 		service.setRef(this);
 		service.setVersion(version);
-		service.setFilter("traceFilter");
+//		service.setFilter("traceFilter");
 		if (group != null)
 			service.setGroup(group);
 		 

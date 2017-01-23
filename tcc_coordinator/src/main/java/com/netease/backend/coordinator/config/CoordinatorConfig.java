@@ -5,6 +5,7 @@ import com.netease.backend.coordinator.util.SystemUtil;
 
 public class CoordinatorConfig {
 	private String serverIp;
+	@Deprecated
 	private String rdsIp;
 	private int bgThreadNum = 100;
 	private int retryParallelism = 20;

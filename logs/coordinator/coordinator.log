@@ -1,0 +1,1059 @@
+[04:11:29:029][INFO] LoggerFactory: using logger: com.alibaba.dubbo.common.logger.log4j.Log4jLoggerAdapter
+[04:11:29:029][INFO] Main:  [DUBBO] Use container type([spring, log4j]) to run dubbo serivce., dubbo version: 2.4.9, current host: 127.0.0.1
+[04:11:29:029][INFO] ClassPathXmlApplicationContext: Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@7a30d1e6: display name [org.springframework.context.support.ClassPathXmlApplicationContext@7a30d1e6]; startup date [Mon Jan 23 16:11:29 CST 2017]; root of context hierarchy
+[04:11:30:030][INFO] XmlBeanDefinitionReader: Loading XML bean definitions from file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/config.xml]
+[04:11:30:030][INFO] XmlBeanDefinitionReader: Loading XML bean definitions from file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]
+[04:11:30:030][INFO] ClassPathXmlApplicationContext: Bean factory for application context [org.springframework.context.support.ClassPathXmlApplicationContext@7a30d1e6]: org.springframework.beans.factory.support.DefaultListableBeanFactory@29176cc1
+[04:11:30:030][INFO] DefaultListableBeanFactory: Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@29176cc1: defining beans [config,localDataSource,systemDataSource,tccContainer,coordinator,serviceContext,tccMonitor,recoverManager,txManager,idGenerator,idForCoordinator,uuidGenerator,logManager,dbUtil,monitorUtil]; root of factory hierarchy
+[04:11:32:032][INFO] DefaultListableBeanFactory: Destroying singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@29176cc1: defining beans [config,localDataSource,systemDataSource,tccContainer,coordinator,serviceContext,tccMonitor,recoverManager,txManager,idGenerator,idForCoordinator,uuidGenerator,logManager,dbUtil,monitorUtil]; root of factory hierarchy
+[04:11:32:032][ERROR] Main:  [DUBBO] Error creating bean with name 'tccContainer' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'tccMonitor' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'tccMonitor' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'txManager' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'txManager' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idGenerator' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idGenerator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idForCoordinator' while setting bean property 'idForCoordinator'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot get a new ServerId, dubbo version: 2.4.9, current host: 127.0.0.1
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'tccContainer' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'tccMonitor' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'tccMonitor' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'txManager' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'txManager' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idGenerator' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idGenerator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idForCoordinator' while setting bean property 'idForCoordinator'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot get a new ServerId
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:275)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:104)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:479)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:925)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:835)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:440)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory$1.run(AbstractAutowireCapableBeanFactory.java:409)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:380)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:264)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:261)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:185)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:164)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:429)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:728)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:380)
+	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:139)
+	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:93)
+	at com.alibaba.dubbo.container.spring.SpringContainer.start(SpringContainer.java:50)
+	at com.alibaba.dubbo.container.Main.main(Main.java:80)
+	at com.netease.backend.coordinator.TccContainer.main(TccContainer.java:50)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'tccMonitor' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'txManager' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'txManager' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idGenerator' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idGenerator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idForCoordinator' while setting bean property 'idForCoordinator'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot get a new ServerId
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:275)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:104)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:479)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:925)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:835)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:440)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory$1.run(AbstractAutowireCapableBeanFactory.java:409)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:380)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:264)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:261)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:185)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:164)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:269)
+	... 22 more
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'txManager' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idGenerator' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idGenerator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idForCoordinator' while setting bean property 'idForCoordinator'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot get a new ServerId
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:275)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:104)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:479)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:925)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:835)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:440)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory$1.run(AbstractAutowireCapableBeanFactory.java:409)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:380)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:264)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:261)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:185)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:164)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:269)
+	... 37 more
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idGenerator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idForCoordinator' while setting bean property 'idForCoordinator'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot get a new ServerId
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:275)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:104)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1245)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1010)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:472)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory$1.run(AbstractAutowireCapableBeanFactory.java:409)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:380)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:264)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:261)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:185)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:164)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:269)
+	... 52 more
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot get a new ServerId
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:254)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:925)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:835)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:440)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory$1.run(AbstractAutowireCapableBeanFactory.java:409)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:380)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:264)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:261)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:185)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:164)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:269)
+	... 65 more
+Caused by: org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot get a new ServerId
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:115)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:87)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:248)
+	... 77 more
+Caused by: com.netease.backend.tcc.error.CoordinatorException: Cannot get a new ServerId
+	at com.netease.backend.coordinator.util.DbUtil.getServerId(DbUtil.java:130)
+	at com.netease.backend.coordinator.id.db.ServerIdDistributor.<init>(ServerIdDistributor.java:14)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:422)
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:100)
+	... 79 more
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Column 'RDS_IP' cannot be null
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:422)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:408)
+	at com.mysql.jdbc.Util.getInstance(Util.java:383)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1049)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4226)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4158)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2615)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2776)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2840)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:2082)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2334)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2262)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2246)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at com.netease.backend.coordinator.util.DbUtil.getServerId(DbUtil.java:122)
+	... 85 more
+[04:17:15:015][INFO] LoggerFactory: using logger: com.alibaba.dubbo.common.logger.log4j.Log4jLoggerAdapter
+[04:17:15:015][INFO] Main:  [DUBBO] Use container type([spring, log4j]) to run dubbo serivce., dubbo version: 2.4.9, current host: 127.0.0.1
+[04:17:15:015][INFO] ClassPathXmlApplicationContext: Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@7a30d1e6: display name [org.springframework.context.support.ClassPathXmlApplicationContext@7a30d1e6]; startup date [Mon Jan 23 16:17:15 CST 2017]; root of context hierarchy
+[04:17:15:015][INFO] XmlBeanDefinitionReader: Loading XML bean definitions from file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/config.xml]
+[04:17:15:015][INFO] XmlBeanDefinitionReader: Loading XML bean definitions from file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]
+[04:17:15:015][INFO] ClassPathXmlApplicationContext: Bean factory for application context [org.springframework.context.support.ClassPathXmlApplicationContext@7a30d1e6]: org.springframework.beans.factory.support.DefaultListableBeanFactory@29176cc1
+[04:17:15:015][INFO] DefaultListableBeanFactory: Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@29176cc1: defining beans [config,localDataSource,systemDataSource,tccContainer,coordinator,serviceContext,tccMonitor,recoverManager,txManager,idGenerator,idForCoordinator,uuidGenerator,logManager,dbUtil,monitorUtil]; root of factory hierarchy
+[04:18:32:032][INFO] DefaultListableBeanFactory: Destroying singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@29176cc1: defining beans [config,localDataSource,systemDataSource,tccContainer,coordinator,serviceContext,tccMonitor,recoverManager,txManager,idGenerator,idForCoordinator,uuidGenerator,logManager,dbUtil,monitorUtil]; root of factory hierarchy
+[04:18:32:032][ERROR] Main:  [DUBBO] Error creating bean with name 'tccContainer' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'tccMonitor' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'tccMonitor' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'txManager' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'txManager' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idGenerator' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idGenerator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idForCoordinator' while setting bean property 'idForCoordinator'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot get a new ServerId, dubbo version: 2.4.9, current host: 127.0.0.1
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'tccContainer' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'tccMonitor' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'tccMonitor' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'txManager' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'txManager' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idGenerator' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idGenerator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idForCoordinator' while setting bean property 'idForCoordinator'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot get a new ServerId
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:275)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:104)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:479)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:925)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:835)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:440)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory$1.run(AbstractAutowireCapableBeanFactory.java:409)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:380)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:264)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:261)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:185)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:164)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:429)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:728)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:380)
+	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:139)
+	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:93)
+	at com.alibaba.dubbo.container.spring.SpringContainer.start(SpringContainer.java:50)
+	at com.alibaba.dubbo.container.Main.main(Main.java:80)
+	at com.netease.backend.coordinator.TccContainer.main(TccContainer.java:50)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'tccMonitor' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'txManager' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'txManager' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idGenerator' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idGenerator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idForCoordinator' while setting bean property 'idForCoordinator'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot get a new ServerId
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:275)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:104)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:479)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:925)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:835)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:440)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory$1.run(AbstractAutowireCapableBeanFactory.java:409)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:380)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:264)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:261)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:185)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:164)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:269)
+	... 22 more
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'txManager' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idGenerator' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idGenerator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idForCoordinator' while setting bean property 'idForCoordinator'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot get a new ServerId
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:275)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:104)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:479)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:925)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:835)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:440)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory$1.run(AbstractAutowireCapableBeanFactory.java:409)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:380)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:264)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:261)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:185)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:164)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:269)
+	... 37 more
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idGenerator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idForCoordinator' while setting bean property 'idForCoordinator'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot get a new ServerId
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:275)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:104)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1245)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1010)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:472)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory$1.run(AbstractAutowireCapableBeanFactory.java:409)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:380)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:264)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:261)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:185)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:164)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:269)
+	... 52 more
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot get a new ServerId
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:254)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:925)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:835)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:440)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory$1.run(AbstractAutowireCapableBeanFactory.java:409)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:380)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:264)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:261)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:185)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:164)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:269)
+	... 65 more
+Caused by: org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot get a new ServerId
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:115)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:87)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:248)
+	... 77 more
+Caused by: com.netease.backend.tcc.error.CoordinatorException: Cannot get a new ServerId
+	at com.netease.backend.coordinator.util.DbUtil.getServerId(DbUtil.java:130)
+	at com.netease.backend.coordinator.id.db.ServerIdDistributor.<init>(ServerIdDistributor.java:14)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:422)
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:100)
+	... 79 more
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Column 'RDS_IP' cannot be null
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:422)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:408)
+	at com.mysql.jdbc.Util.getInstance(Util.java:383)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1049)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4226)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4158)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2615)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2776)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2840)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:2082)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2334)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2262)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2246)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at com.netease.backend.coordinator.util.DbUtil.getServerId(DbUtil.java:122)
+	... 85 more
+[04:24:06:006][INFO] LoggerFactory: using logger: com.alibaba.dubbo.common.logger.log4j.Log4jLoggerAdapter
+[04:24:06:006][INFO] Main:  [DUBBO] Use container type([spring, log4j]) to run dubbo serivce., dubbo version: 2.4.9, current host: 127.0.0.1
+[04:24:06:006][INFO] ClassPathXmlApplicationContext: Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@7a30d1e6: display name [org.springframework.context.support.ClassPathXmlApplicationContext@7a30d1e6]; startup date [Mon Jan 23 16:24:06 CST 2017]; root of context hierarchy
+[04:24:06:006][INFO] XmlBeanDefinitionReader: Loading XML bean definitions from file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/config.xml]
+[04:24:07:007][INFO] XmlBeanDefinitionReader: Loading XML bean definitions from file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]
+[04:24:07:007][INFO] ClassPathXmlApplicationContext: Bean factory for application context [org.springframework.context.support.ClassPathXmlApplicationContext@7a30d1e6]: org.springframework.beans.factory.support.DefaultListableBeanFactory@29176cc1
+[04:24:07:007][INFO] DefaultListableBeanFactory: Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@29176cc1: defining beans [config,localDataSource,systemDataSource,tccContainer,coordinator,serviceContext,tccMonitor,recoverManager,txManager,idGenerator,idForCoordinator,uuidGenerator,logManager,dbUtil,monitorUtil]; root of factory hierarchy
+[04:24:52:052][INFO] DefaultListableBeanFactory: Destroying singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@29176cc1: defining beans [config,localDataSource,systemDataSource,tccContainer,coordinator,serviceContext,tccMonitor,recoverManager,txManager,idGenerator,idForCoordinator,uuidGenerator,logManager,dbUtil,monitorUtil]; root of factory hierarchy
+[04:24:52:052][ERROR] Main:  [DUBBO] Error creating bean with name 'tccContainer' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'tccMonitor' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'tccMonitor' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'txManager' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'txManager' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idGenerator' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idGenerator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idForCoordinator' while setting bean property 'idForCoordinator'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot update local ServerId, dubbo version: 2.4.9, current host: 127.0.0.1
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'tccContainer' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'tccMonitor' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'tccMonitor' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'txManager' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'txManager' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idGenerator' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idGenerator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idForCoordinator' while setting bean property 'idForCoordinator'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot update local ServerId
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:275)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:104)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:479)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:925)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:835)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:440)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory$1.run(AbstractAutowireCapableBeanFactory.java:409)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:380)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:264)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:261)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:185)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:164)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:429)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:728)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:380)
+	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:139)
+	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:93)
+	at com.alibaba.dubbo.container.spring.SpringContainer.start(SpringContainer.java:50)
+	at com.alibaba.dubbo.container.Main.main(Main.java:80)
+	at com.netease.backend.coordinator.TccContainer.main(TccContainer.java:50)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'tccMonitor' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'txManager' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'txManager' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idGenerator' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idGenerator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idForCoordinator' while setting bean property 'idForCoordinator'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot update local ServerId
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:275)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:104)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:479)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:925)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:835)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:440)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory$1.run(AbstractAutowireCapableBeanFactory.java:409)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:380)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:264)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:261)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:185)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:164)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:269)
+	... 22 more
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'txManager' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idGenerator' while setting constructor argument; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idGenerator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idForCoordinator' while setting bean property 'idForCoordinator'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot update local ServerId
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:275)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:104)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveConstructorArguments(ConstructorResolver.java:479)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:162)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:925)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:835)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:440)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory$1.run(AbstractAutowireCapableBeanFactory.java:409)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:380)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:264)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:261)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:185)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:164)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:269)
+	... 37 more
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idGenerator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Cannot resolve reference to bean 'idForCoordinator' while setting bean property 'idForCoordinator'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot update local ServerId
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:275)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveValueIfNecessary(BeanDefinitionValueResolver.java:104)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1245)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1010)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:472)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory$1.run(AbstractAutowireCapableBeanFactory.java:409)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:380)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:264)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:261)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:185)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:164)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:269)
+	... 52 more
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'idForCoordinator' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot update local ServerId
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:254)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:925)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:835)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:440)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory$1.run(AbstractAutowireCapableBeanFactory.java:409)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:380)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:264)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:261)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:185)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:164)
+	at org.springframework.beans.factory.support.BeanDefinitionValueResolver.resolveReference(BeanDefinitionValueResolver.java:269)
+	... 65 more
+Caused by: org.springframework.beans.BeanInstantiationException: Could not instantiate bean class [com.netease.backend.coordinator.id.db.ServerIdDistributor]: Constructor threw exception; nested exception is com.netease.backend.tcc.error.CoordinatorException: Cannot update local ServerId
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:115)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:87)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:248)
+	... 77 more
+Caused by: com.netease.backend.tcc.error.CoordinatorException: Cannot update local ServerId
+	at com.netease.backend.coordinator.util.DbUtil.getServerId(DbUtil.java:154)
+	at com.netease.backend.coordinator.id.db.ServerIdDistributor.<init>(ServerIdDistributor.java:14)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:422)
+	at org.springframework.beans.BeanUtils.instantiateClass(BeanUtils.java:100)
+	... 79 more
+Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column 'MAX_UUID' in 'field list'
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:422)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:408)
+	at com.mysql.jdbc.Util.getInstance(Util.java:383)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1062)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4226)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4158)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2615)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2776)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2840)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:2082)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2334)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2262)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2246)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at com.netease.backend.coordinator.util.DbUtil.getServerId(DbUtil.java:152)
+	... 85 more
+[04:28:24:024][INFO] LoggerFactory: using logger: com.alibaba.dubbo.common.logger.log4j.Log4jLoggerAdapter
+[04:28:24:024][INFO] Main:  [DUBBO] Use container type([spring, log4j]) to run dubbo serivce., dubbo version: 2.4.9, current host: 127.0.0.1
+[04:28:24:024][INFO] ClassPathXmlApplicationContext: Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@7a30d1e6: display name [org.springframework.context.support.ClassPathXmlApplicationContext@7a30d1e6]; startup date [Mon Jan 23 16:28:24 CST 2017]; root of context hierarchy
+[04:28:24:024][INFO] XmlBeanDefinitionReader: Loading XML bean definitions from file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/config.xml]
+[04:28:24:024][INFO] XmlBeanDefinitionReader: Loading XML bean definitions from file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]
+[04:28:24:024][INFO] ClassPathXmlApplicationContext: Bean factory for application context [org.springframework.context.support.ClassPathXmlApplicationContext@7a30d1e6]: org.springframework.beans.factory.support.DefaultListableBeanFactory@29176cc1
+[04:28:24:024][INFO] DefaultListableBeanFactory: Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@29176cc1: defining beans [config,localDataSource,systemDataSource,tccContainer,coordinator,serviceContext,tccMonitor,recoverManager,txManager,idGenerator,idForCoordinator,uuidGenerator,logManager,dbUtil,monitorUtil]; root of factory hierarchy
+[04:28:27:027][INFO] DBRecoverManager: begin recovering transaction table
+[04:28:27:027][INFO] DBRecoverManager: begin recovering checkpoint is Timestamp:0/MaxUUID:0
+[04:28:27:027][INFO] DBRecoverManager: Transaction table has been recovered
+[04:28:27:027][INFO] DBRecoverManager: Last Max UUID 0
+[04:28:27:027][INFO] RetryProcessor: Initialize retrying tasks,confirm:0,cancel:0,expire:0
+[04:28:27:027][INFO] DefaultListableBeanFactory: Destroying singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@29176cc1: defining beans [config,localDataSource,systemDataSource,tccContainer,coordinator,serviceContext,tccMonitor,recoverManager,txManager,idGenerator,idForCoordinator,uuidGenerator,logManager,dbUtil,monitorUtil]; root of factory hierarchy
+[04:28:27:027][ERROR] Main:  [DUBBO] Error creating bean with name 'tccContainer' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Invocation of init method failed; nested exception is java.lang.IllegalStateException: No such extension traceFilter for filter/com.alibaba.dubbo.rpc.Filter, dubbo version: 2.4.9, current host: 127.0.0.1
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'tccContainer' defined in file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]: Invocation of init method failed; nested exception is java.lang.IllegalStateException: No such extension traceFilter for filter/com.alibaba.dubbo.rpc.Filter
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1338)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:473)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory$1.run(AbstractAutowireCapableBeanFactory.java:409)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:380)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:264)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:261)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:185)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:164)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:429)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:728)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:380)
+	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:139)
+	at org.springframework.context.support.ClassPathXmlApplicationContext.<init>(ClassPathXmlApplicationContext.java:93)
+	at com.alibaba.dubbo.container.spring.SpringContainer.start(SpringContainer.java:50)
+	at com.alibaba.dubbo.container.Main.main(Main.java:80)
+	at com.netease.backend.coordinator.TccContainer.main(TccContainer.java:50)
+Caused by: java.lang.IllegalStateException: No such extension traceFilter for filter/com.alibaba.dubbo.rpc.Filter
+	at com.alibaba.dubbo.config.AbstractConfig.checkMultiExtension(AbstractConfig.java:383)
+	at com.alibaba.dubbo.config.AbstractInterfaceConfig.setFilter(AbstractInterfaceConfig.java:401)
+	at com.netease.backend.coordinator.DefaultCoordinator.start(DefaultCoordinator.java:66)
+	at com.netease.backend.coordinator.TccContainer.start(TccContainer.java:36)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeCustomInitMethod(AbstractAutowireCapableBeanFactory.java:1414)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1375)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1335)
+	... 17 more
+[04:28:27:027][INFO] AbstractConfig:  [DUBBO] Run shutdown hook now., dubbo version: 2.4.9, current host: 127.0.0.1
+[04:28:27:027][INFO] AbstractRegistryFactory:  [DUBBO] Close all registries [], dubbo version: 2.4.9, current host: 127.0.0.1
+[04:30:11:011][INFO] LoggerFactory: using logger: com.alibaba.dubbo.common.logger.log4j.Log4jLoggerAdapter
+[04:30:11:011][INFO] Main:  [DUBBO] Use container type([spring, log4j]) to run dubbo serivce., dubbo version: 2.4.9, current host: 127.0.0.1
+[04:30:11:011][INFO] ClassPathXmlApplicationContext: Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@7a30d1e6: display name [org.springframework.context.support.ClassPathXmlApplicationContext@7a30d1e6]; startup date [Mon Jan 23 16:30:11 CST 2017]; root of context hierarchy
+[04:30:12:012][INFO] XmlBeanDefinitionReader: Loading XML bean definitions from file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/config.xml]
+[04:30:12:012][INFO] XmlBeanDefinitionReader: Loading XML bean definitions from file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]
+[04:30:12:012][INFO] ClassPathXmlApplicationContext: Bean factory for application context [org.springframework.context.support.ClassPathXmlApplicationContext@7a30d1e6]: org.springframework.beans.factory.support.DefaultListableBeanFactory@29176cc1
+[04:30:12:012][INFO] DefaultListableBeanFactory: Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@29176cc1: defining beans [config,localDataSource,systemDataSource,tccContainer,coordinator,serviceContext,tccMonitor,recoverManager,txManager,idGenerator,idForCoordinator,uuidGenerator,logManager,dbUtil,monitorUtil]; root of factory hierarchy
+[04:30:14:014][INFO] DBRecoverManager: begin recovering transaction table
+[04:30:14:014][INFO] DBRecoverManager: begin recovering checkpoint is Timestamp:0/MaxUUID:0
+[04:30:14:014][INFO] DBRecoverManager: Transaction table has been recovered
+[04:30:14:014][INFO] DBRecoverManager: Last Max UUID 0
+[04:30:14:014][INFO] RetryProcessor: Initialize retrying tasks,confirm:0,cancel:0,expire:0
+[04:30:15:015][INFO] AbstractConfig:  [DUBBO] Export dubbo service com.netease.backend.tcc.Coordinator to local registry, dubbo version: 2.4.9, current host: 127.0.0.1
+[04:30:15:015][INFO] AbstractConfig:  [DUBBO] Export dubbo service com.netease.backend.tcc.Coordinator to url dubbo://172.17.37.128:20080/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&dubbo=2.4.9&group=vstore&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=3069&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485160214938&version=1.0.0, dubbo version: 2.4.9, current host: 127.0.0.1
+[04:30:15:015][INFO] AbstractConfig:  [DUBBO] Register dubbo service com.netease.backend.tcc.Coordinator url dubbo://172.17.37.128:20080/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&dubbo=2.4.9&group=vstore&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=3069&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485160214938&version=1.0.0 to registry registry://127.0.0.1:2181/com.alibaba.dubbo.registry.RegistryService?application=Coordinator&dubbo=2.4.9&pid=3069&registry=zookeeper&timestamp=1485160214912, dubbo version: 2.4.9, current host: 127.0.0.1
+[04:30:15:015][INFO] AbstractServer:  [DUBBO] Start NettyServer bind /0.0.0.0:20080, export /172.17.37.128:20080, dubbo version: 2.4.9, current host: 127.0.0.1
+[04:30:15:015][INFO] ZookeeperRegistry:  [DUBBO] Load registry store file /Users/jw/.dubbo/dubbo-registry-127.0.0.1.cache, data: {com.netease.backend.tcc.demo.ISale=empty://172.17.37.128:20874/com.netease.backend.tcc.demo.ISale?anyhost=true&application=demo-provider&category=configurators&check=false&dubbo=2.4.9&interface=com.netease.backend.tcc.demo.ISale&loadbalance=roundrobin&methods=confirm,cancel,expired,refond,sell,getItemCount,reserve,isConfirmed,getPrice&owner=tanhua&pid=3001&side=provider&timestamp=1485158887770, com.netease.backend.tcc.demo.IPayment=empty://172.17.37.128:20874/com.netease.backend.tcc.demo.IPayment?anyhost=true&application=demo-provider&category=configurators&check=false&dubbo=2.4.9&interface=com.netease.backend.tcc.demo.IPayment&loadbalance=roundrobin&methods=cancel,confirm,expired,reserve,pay,isConfirmed&owner=tanhua&pid=3001&side=provider&timestamp=1485158886368, com.alibaba.dubbo.examples.callback.api.FooService=empty://10.0.45.227/com.alibaba.dubbo.examples.callback.api.FooService?application=foobar-consumer&category=configurators&dubbo=2.0.0&interface=com.alibaba.dubbo.examples.callback.api.FooService&methods=asyncCallInFoo&pid=653&side=consumer&timestamp=1460711582179 empty://10.0.45.227/com.alibaba.dubbo.examples.callback.api.FooService?application=foobar-consumer&category=routers&dubbo=2.0.0&interface=com.alibaba.dubbo.examples.callback.api.FooService&methods=asyncCallInFoo&pid=653&side=consumer&timestamp=1460711582179 dubbo://10.0.45.227:20881/com.alibaba.dubbo.examples.callback.api.FooService?anyhost=true&application=foo-provider&asyncCallInFoo.1.callback=true&callbacks=1000&connections=1&dubbo=2.0.0&generic=false&interface=com.alibaba.dubbo.examples.callback.api.FooService&methods=asyncCallInFoo&pid=650&side=provider&timestamp=1460711382394, com.alibaba.dubbo.examples.nospring.api.NoSpringService:1.0.0=empty://10.0.39.107/com.alibaba.dubbo.examples.nospring.api.NoSpringService?application=nospring-consumer&category=configurators&dubbo=2.0.0&interface=com.alibaba.dubbo.examples.nospring.api.NoSpringService&methods=sayHello&pid=4740&revision=1.0.0&side=consumer&timestamp=1460360015829&version=1.0.0 empty://10.0.39.107/com.alibaba.dubbo.examples.nospring.api.NoSpringService?application=nospring-consumer&category=routers&dubbo=2.0.0&interface=com.alibaba.dubbo.examples.nospring.api.NoSpringService&methods=sayHello&pid=4740&revision=1.0.0&side=consumer&timestamp=1460360015829&version=1.0.0 dubbo://10.0.39.107:12345/com.alibaba.dubbo.examples.nospring.api.NoSpringService?anyhost=true&application=nospring-provider&dubbo=2.0.0&generic=false&interface=com.alibaba.dubbo.examples.nospring.api.NoSpringService&methods=sayHello&pid=4737&revision=1.0.0&side=provider&threads=100&timestamp=1460360006954&version=1.0.0, com.netease.backend.tcc.demo.IOrder=empty://172.17.37.128:20874/com.netease.backend.tcc.demo.IOrder?anyhost=true&application=demo-provider&category=configurators&check=false&dubbo=2.4.9&interface=com.netease.backend.tcc.demo.IOrder&loadbalance=roundrobin&methods=confirm,cancel,expired,available&owner=tanhua&pid=3001&side=provider&timestamp=1485158887832, com.alibaba.dubbo.examples.callback.api.BarService=empty://10.0.45.227/com.alibaba.dubbo.examples.callback.api.BarService?application=foo-provider&category=configurators&dubbo=2.0.0&interface=com.alibaba.dubbo.examples.callback.api.BarService&methods=asyncCallInBar&pid=650&side=consumer&timestamp=1460711381670 empty://10.0.45.227/com.alibaba.dubbo.examples.callback.api.BarService?application=foo-provider&category=routers&dubbo=2.0.0&interface=com.alibaba.dubbo.examples.callback.api.BarService&methods=asyncCallInBar&pid=650&side=consumer&timestamp=1460711381670 dubbo://10.0.45.227:20880/com.alibaba.dubbo.examples.callback.api.BarService?anyhost=true&application=bar-provider&asyncCallInBar.1.callback=true&callbacks=1000&connections=1&dubbo=2.0.0&generic=false&interface=com.alibaba.dubbo.examples.callback.api.BarService&methods=asyncCallInBar&pid=649&side=provider&timestamp=1460711358372, group1/com.alibaba.dubbo.examples.nospring.api.NoSpringService:1.0.0=empty://10.0.39.107/com.alibaba.dubbo.examples.nospring.api.NoSpringService?application=nospring-consumer&category=configurators&dubbo=2.0.0&group=group1&interface=com.alibaba.dubbo.examples.nospring.api.NoSpringService&methods=sayHello&pid=4794&revision=1.0.0&side=consumer&timestamp=1460360681864&version=1.0.0 empty://10.0.39.107/com.alibaba.dubbo.examples.nospring.api.NoSpringService?application=nospring-consumer&category=routers&dubbo=2.0.0&group=group1&interface=com.alibaba.dubbo.examples.nospring.api.NoSpringService&methods=sayHello&pid=4794&revision=1.0.0&side=consumer&timestamp=1460360681864&version=1.0.0 empty://10.0.39.107/com.alibaba.dubbo.examples.nospring.api.NoSpringService?application=nospring-consumer&category=providers&dubbo=2.0.0&group=group1&interface=com.alibaba.dubbo.examples.nospring.api.NoSpringService&methods=sayHello&pid=4794&revision=1.0.0&side=consumer&timestamp=1460360681864&version=1.0.0}, dubbo version: 2.4.9, current host: 127.0.0.1
+[04:30:15:015][INFO] ZkEventThread: Starting ZkClient event thread.
+[04:30:15:015][INFO] ZooKeeper: Client environment:zookeeper.version=3.4.6-1569965, built on 02/20/2014 09:09 GMT
+[04:30:15:015][INFO] ZooKeeper: Client environment:host.name=172.17.37.128
+[04:30:15:015][INFO] ZooKeeper: Client environment:java.version=1.8.0_65
+[04:30:15:015][INFO] ZooKeeper: Client environment:java.vendor=Azul Systems, Inc.
+[04:30:15:015][INFO] ZooKeeper: Client environment:java.home=/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre
+[04:30:15:015][INFO] ZooKeeper: Client environment:java.class.path=/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/cldrdata.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/dnsns.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/jaccess.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/localedata.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/nashorn.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/sunec.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/sunjce_provider.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/sunpkcs11.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/zipfs.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/management-agent.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/lib/dt.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/lib/jconsole.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/lib/sa-jdi.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/lib/tools.jar:/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes:/Users/jw/Documents/code/tcc/tcc_api/target/classes:/Users/jw/Documents/maven_resp/com/alibaba/dubbo/2.4.9/dubbo-2.4.9.jar:/Users/jw/Documents/maven_resp/org/springframework/spring/2.5.6.SEC03/spring-2.5.6.SEC03.jar:/Users/jw/Documents/maven_resp/org/javassist/javassist/3.15.0-GA/javassist-3.15.0-GA.jar:/Users/jw/Documents/maven_resp/org/jboss/netty/netty/3.2.5.Final/netty-3.2.5.Final.jar:/Users/jw/Documents/maven_resp/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar:/Users/jw/Documents/maven_resp/log4j/log4j/1.2.16/log4j-1.2.16.jar:/Users/jw/Documents/maven_resp/org/apache/zookeeper/zookeeper/3.4.6/zookeeper-3.4.6.jar:/Users/jw/Documents/maven_resp/org/slf4j/slf4j-api/1.6.1/slf4j-api-1.6.1.jar:/Users/jw/Documents/maven_resp/org/slf4j/slf4j-log4j12/1.6.1/slf4j-log4j12-1.6.1.jar:/Users/jw/Documents/maven_resp/jline/jline/0.9.94/jline-0.9.94.jar:/Users/jw/Documents/maven_resp/junit/junit/4.4/junit-4.4.jar:/Users/jw/Documents/maven_resp/io/netty/netty/3.7.0.Final/netty-3.7.0.Final.jar:/Users/jw/Documents/maven_resp/com/github/sgroschupf/zkclient/0.1/zkclient-0.1.jar:/Users/jw/Documents/maven_resp/mysql/mysql-connector-java/5.1.31/mysql-connector-java-5.1.31.jar:/Users/jw/Documents/maven_resp/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4.jar:/Users/jw/Documents/maven_resp/commons-pool/commons-pool/1.5.4/commons-pool-1.5.4.jar:/Applications/IntelliJ IDEA.app/Contents/lib/idea_rt.jar
+[04:30:15:015][INFO] ZooKeeper: Client environment:java.library.path=/Users/jw/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.
+[04:30:15:015][INFO] ZooKeeper: Client environment:java.io.tmpdir=/var/folders/0p/bcf9dycn6d1050fbv7dswgb80000gn/T/
+[04:30:15:015][INFO] ZooKeeper: Client environment:java.compiler=<NA>
+[04:30:15:015][INFO] ZooKeeper: Client environment:os.name=Mac OS X
+[04:30:15:015][INFO] ZooKeeper: Client environment:os.arch=x86_64
+[04:30:15:015][INFO] ZooKeeper: Client environment:os.version=10.10.5
+[04:30:15:015][INFO] ZooKeeper: Client environment:user.name=jw
+[04:30:15:015][INFO] ZooKeeper: Client environment:user.home=/Users/jw
+[04:30:15:015][INFO] ZooKeeper: Client environment:user.dir=/Users/jw/Documents/code/tcc
+[04:30:15:015][INFO] ZooKeeper: Initiating client connection, connectString=127.0.0.1:2181 sessionTimeout=30000 watcher=org.I0Itec.zkclient.ZkClient@485e36bc
+[04:30:15:015][INFO] ClientCnxn: Opening socket connection to server 127.0.0.1/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+[04:30:15:015][INFO] ClientCnxn: Socket connection established to 127.0.0.1/127.0.0.1:2181, initiating session
+[04:30:15:015][INFO] ClientCnxn: Session establishment complete on server 127.0.0.1/127.0.0.1:2181, sessionid = 0x159ca5308a30001, negotiated timeout = 30000
+[04:30:15:015][INFO] ZkClient: zookeeper state changed (SyncConnected)
+[04:30:15:015][INFO] ZookeeperRegistry:  [DUBBO] Register: dubbo://172.17.37.128:20080/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&dubbo=2.4.9&group=vstore&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=3069&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485160214938&version=1.0.0, dubbo version: 2.4.9, current host: 127.0.0.1
+[04:30:15:015][INFO] ZookeeperRegistry:  [DUBBO] Subscribe: provider://172.17.37.128:20080/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&category=configurators&check=false&dubbo=2.4.9&group=vstore&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=3069&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485160214938&version=1.0.0, dubbo version: 2.4.9, current host: 127.0.0.1
+[04:30:15:015][INFO] ZookeeperRegistry:  [DUBBO] Notify urls for subscribe url provider://172.17.37.128:20080/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&category=configurators&check=false&dubbo=2.4.9&group=vstore&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=3069&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485160214938&version=1.0.0, urls: [empty://172.17.37.128:20080/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&category=configurators&check=false&dubbo=2.4.9&group=vstore&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=3069&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485160214938&version=1.0.0], dubbo version: 2.4.9, current host: 127.0.0.1
+[04:30:15:015][INFO] TccMonitor: TccMonitor started, metrics reset at interval:300000ms
+[04:30:15:015][INFO] TxTable: expire transaction count:0
+[04:30:15:015][INFO] TxTable: total transaction count:0
+[04:30:15:015][INFO] Main:  [DUBBO] Dubbo SpringContainer started!, dubbo version: 2.4.9, current host: 127.0.0.1
+[04:30:15:015][INFO] Main:  [DUBBO] Dubbo Log4jContainer started!, dubbo version: 2.4.9, current host: 127.0.0.1
+[04:30:17:017][INFO] TccMonitor: monitor log:log avg time 0
+[04:30:18:018][ERROR] TccMonitor: write log exception.
+com.netease.backend.coordinator.monitor.MonitorException: Write monitor record error
+	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:646)
+	at com.netease.backend.coordinator.monitor.DBTccMonitor.write(DBTccMonitor.java:40)
+	at com.netease.backend.coordinator.monitor.TccMonitor.run(TccMonitor.java:37)
+	at java.util.TimerThread.mainLoop(Timer.java:555)
+	at java.util.TimerThread.run(Timer.java:505)
+Caused by: java.sql.SQLException: Table has no partition for value 1485160217679
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1094)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4226)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4158)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2615)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2776)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2840)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:2082)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2334)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2262)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2246)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:644)
+	... 4 more
+[04:30:20:020][INFO] TxTable: expire transaction count:0
+[04:30:20:020][INFO] TxTable: total transaction count:0
+[04:30:25:025][INFO] TxTable: expire transaction count:0
+[04:30:25:025][INFO] TxTable: total transaction count:0
+[04:30:30:030][INFO] TxTable: expire transaction count:0
+[04:30:30:030][INFO] TxTable: total transaction count:0
+[04:30:35:035][INFO] TxTable: expire transaction count:0
+[04:30:35:035][INFO] TxTable: total transaction count:0
+[04:30:40:040][INFO] TxTable: expire transaction count:0
+[04:30:40:040][INFO] TxTable: total transaction count:0
+[04:30:45:045][INFO] TxTable: expire transaction count:0
+[04:30:45:045][INFO] TxTable: total transaction count:0
+[04:30:50:050][INFO] TxTable: expire transaction count:0
+[04:30:50:050][INFO] TxTable: total transaction count:0
+[04:30:55:055][INFO] TxTable: expire transaction count:0
+[04:30:55:055][INFO] TxTable: total transaction count:0
+[04:31:00:000][INFO] TxTable: expire transaction count:0
+[04:31:00:000][INFO] TxTable: total transaction count:0
+[04:31:05:005][INFO] TxTable: expire transaction count:0
+[04:31:05:005][INFO] TxTable: total transaction count:0
+[04:31:10:010][INFO] TxTable: expire transaction count:0
+[04:31:10:010][INFO] TxTable: total transaction count:0
+[04:31:15:015][INFO] TxTable: expire transaction count:0
+[04:31:15:015][INFO] TxTable: total transaction count:0
+[04:31:15:015][WARN] AbstractServer:  [DUBBO] All clients has discontected from /172.17.37.128:20080. You can graceful shutdown now., dubbo version: 2.4.9, current host: 127.0.0.1
+[04:31:15:015][INFO] DubboProtocol:  [DUBBO] disconected from /172.17.37.128:55130,url:dubbo://172.17.37.128:20080/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&channel.readonly.sent=true&codec=dubbo&dubbo=2.4.9&group=vstore&heartbeat=60000&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=3069&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485160214938&version=1.0.0, dubbo version: 2.4.9, current host: 127.0.0.1
+[04:31:20:020][INFO] TxTable: expire transaction count:0
+[04:31:20:020][INFO] TxTable: total transaction count:0
+[04:31:25:025][INFO] TxTable: expire transaction count:0
+[04:31:25:025][INFO] TxTable: total transaction count:0
+[04:31:30:030][INFO] TxTable: expire transaction count:0
+[04:31:30:030][INFO] TxTable: total transaction count:0
+[04:31:35:035][INFO] TxTable: expire transaction count:0
+[04:31:35:035][INFO] TxTable: total transaction count:0
+[04:31:40:040][INFO] TxTable: expire transaction count:0
+[04:31:40:040][INFO] TxTable: total transaction count:0
+[04:31:45:045][INFO] TxTable: expire transaction count:0
+[04:31:45:045][INFO] TxTable: total transaction count:0
+[04:31:50:050][INFO] TxTable: expire transaction count:0
+[04:31:50:050][INFO] TxTable: total transaction count:0
+[04:31:55:055][INFO] TxTable: expire transaction count:0
+[04:31:55:055][INFO] TxTable: total transaction count:0
+[04:32:00:000][INFO] TxTable: expire transaction count:0
+[04:32:00:000][INFO] TxTable: total transaction count:0
+[04:32:05:005][INFO] TxTable: expire transaction count:0
+[04:32:05:005][INFO] TxTable: total transaction count:0
+[04:32:10:010][INFO] TxTable: expire transaction count:0
+[04:32:10:010][INFO] TxTable: total transaction count:0
+[04:32:15:015][INFO] TxTable: expire transaction count:0
+[04:32:15:015][INFO] TxTable: total transaction count:0
+[04:32:20:020][INFO] TxTable: expire transaction count:0
+[04:32:20:020][INFO] TxTable: total transaction count:0
+[04:32:25:025][INFO] TxTable: expire transaction count:0
+[04:32:25:025][INFO] TxTable: total transaction count:0
+[04:32:30:030][INFO] TxTable: expire transaction count:0
+[04:32:30:030][INFO] TxTable: total transaction count:0
+[04:32:35:035][INFO] TxTable: expire transaction count:0
+[04:32:35:035][INFO] TxTable: total transaction count:0
+[04:32:40:040][INFO] TxTable: expire transaction count:0
+[04:32:40:040][INFO] TxTable: total transaction count:0
+[04:32:45:045][INFO] TxTable: expire transaction count:0
+[04:32:45:045][INFO] TxTable: total transaction count:0
+[04:32:50:050][INFO] TxTable: expire transaction count:0
+[04:32:50:050][INFO] TxTable: total transaction count:0
+[04:32:55:055][INFO] TxTable: expire transaction count:0
+[04:32:55:055][INFO] TxTable: total transaction count:0
+[04:33:00:000][INFO] TxTable: expire transaction count:0
+[04:33:00:000][INFO] TxTable: total transaction count:0
+[04:33:05:005][INFO] TxTable: expire transaction count:0
+[04:33:05:005][INFO] TxTable: total transaction count:0
+[04:33:10:010][INFO] TxTable: expire transaction count:0
+[04:33:10:010][INFO] TxTable: total transaction count:0
+[04:33:15:015][INFO] TxTable: expire transaction count:0
+[04:33:15:015][INFO] TxTable: total transaction count:0
+[04:33:20:020][INFO] TxTable: expire transaction count:0
+[04:33:20:020][INFO] TxTable: total transaction count:0
+[04:33:25:025][INFO] TxTable: expire transaction count:0
+[04:33:25:025][INFO] TxTable: total transaction count:0
+[04:33:30:030][INFO] TxTable: expire transaction count:0
+[04:33:30:030][INFO] TxTable: total transaction count:0
+[04:33:35:035][INFO] TxTable: expire transaction count:0
+[04:33:35:035][INFO] TxTable: total transaction count:0
+[04:33:40:040][INFO] TxTable: expire transaction count:0
+[04:33:40:040][INFO] TxTable: total transaction count:0
+[04:33:45:045][INFO] TxTable: expire transaction count:0
+[04:33:45:045][INFO] TxTable: total transaction count:0
+[04:33:50:050][INFO] TxTable: expire transaction count:0
+[04:33:50:050][INFO] TxTable: total transaction count:0
+[04:33:55:055][INFO] TxTable: expire transaction count:0
+[04:33:55:055][INFO] TxTable: total transaction count:0
+[04:34:00:000][INFO] TxTable: expire transaction count:0
+[04:34:00:000][INFO] TxTable: total transaction count:0
+[04:34:05:005][INFO] TxTable: expire transaction count:0
+[04:34:05:005][INFO] TxTable: total transaction count:0
+[04:34:10:010][INFO] TxTable: expire transaction count:0
+[04:34:10:010][INFO] TxTable: total transaction count:0
+[04:34:15:015][INFO] TxTable: expire transaction count:0
+[04:34:15:015][INFO] TxTable: total transaction count:0
+[04:34:20:020][INFO] TxTable: expire transaction count:0
+[04:34:20:020][INFO] TxTable: total transaction count:0
+[04:34:25:025][INFO] TxTable: expire transaction count:0
+[04:34:25:025][INFO] TxTable: total transaction count:0
+[04:34:30:030][INFO] TxTable: expire transaction count:0
+[04:34:30:030][INFO] TxTable: total transaction count:0
+[04:34:35:035][INFO] TxTable: expire transaction count:0
+[04:34:35:035][INFO] TxTable: total transaction count:0
+[04:34:40:040][INFO] TxTable: expire transaction count:0
+[04:34:40:040][INFO] TxTable: total transaction count:0
+[04:34:45:045][INFO] TxTable: expire transaction count:0
+[04:34:45:045][INFO] TxTable: total transaction count:0
+[04:34:50:050][INFO] TxTable: expire transaction count:0
+[04:34:50:050][INFO] TxTable: total transaction count:0
+[04:34:55:055][INFO] TxTable: expire transaction count:0
+[04:34:55:055][INFO] TxTable: total transaction count:0
+[04:35:00:000][INFO] TxTable: expire transaction count:0
+[04:35:00:000][INFO] TxTable: total transaction count:0
+[04:35:05:005][INFO] TxTable: expire transaction count:0
+[04:35:05:005][INFO] TxTable: total transaction count:0
+[04:35:10:010][INFO] TxTable: expire transaction count:0
+[04:35:10:010][INFO] TxTable: total transaction count:0
+[04:35:15:015][INFO] TxTable: expire transaction count:0
+[04:35:15:015][INFO] TxTable: total transaction count:0
+[04:35:17:017][INFO] TccMonitor: monitor log:log avg time 0
+[04:35:17:017][ERROR] TccMonitor: write log exception.
+com.netease.backend.coordinator.monitor.MonitorException: Write monitor record error
+	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:646)
+	at com.netease.backend.coordinator.monitor.DBTccMonitor.write(DBTccMonitor.java:40)
+	at com.netease.backend.coordinator.monitor.TccMonitor.run(TccMonitor.java:37)
+	at java.util.TimerThread.mainLoop(Timer.java:555)
+	at java.util.TimerThread.run(Timer.java:505)
+Caused by: java.sql.SQLException: Table has no partition for value 1485160517689
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1094)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4226)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4158)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2615)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2776)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2840)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:2082)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2334)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2262)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2246)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:644)
+	... 4 more
+[04:35:20:020][INFO] TxTable: expire transaction count:0
+[04:35:20:020][INFO] TxTable: total transaction count:0
+[04:35:25:025][INFO] TxTable: expire transaction count:0
+[04:35:25:025][INFO] TxTable: total transaction count:0
+[04:35:30:030][INFO] TxTable: expire transaction count:0
+[04:35:30:030][INFO] TxTable: total transaction count:0
+[04:35:35:035][INFO] TxTable: expire transaction count:0
+[04:35:35:035][INFO] TxTable: total transaction count:0
+[04:35:40:040][INFO] TxTable: expire transaction count:0
+[04:35:40:040][INFO] TxTable: total transaction count:0
+[04:35:45:045][INFO] TxTable: expire transaction count:0
+[04:35:45:045][INFO] TxTable: total transaction count:0
+[04:35:50:050][INFO] TxTable: expire transaction count:0
+[04:35:50:050][INFO] TxTable: total transaction count:0
+[04:35:55:055][INFO] TxTable: expire transaction count:0
+[04:35:55:055][INFO] TxTable: total transaction count:0
+[04:36:00:000][INFO] TxTable: expire transaction count:0
+[04:36:00:000][INFO] TxTable: total transaction count:0
+[04:36:05:005][INFO] TxTable: expire transaction count:0
+[04:36:05:005][INFO] TxTable: total transaction count:0
+[04:36:10:010][INFO] TxTable: expire transaction count:0
+[04:36:10:010][INFO] TxTable: total transaction count:0
+[04:36:15:015][INFO] TxTable: expire transaction count:0
+[04:36:15:015][INFO] TxTable: total transaction count:0
+[04:36:20:020][INFO] TxTable: expire transaction count:0
+[04:36:20:020][INFO] TxTable: total transaction count:0
+[04:36:25:025][INFO] TxTable: expire transaction count:0
+[04:36:25:025][INFO] TxTable: total transaction count:0
+[04:36:30:030][INFO] TxTable: expire transaction count:0
+[04:36:30:030][INFO] TxTable: total transaction count:1
+[04:36:30:030][INFO] TxTable: set checkpoint:Timestamp:1485160588887/MaxUUID:281474976710660
+[04:36:31:031][INFO] ZookeeperRegistry:  [DUBBO] Register: consumer://172.17.37.128/com.alibaba.dubbo.rpc.service.GenericService?application=Coordinator&category=consumers&check=false&connected=true&dubbo=2.4.9&generic=true&interface=com.netease.backend.tcc.demo.IPayment&pid=3069&side=consumer&timestamp=1485160591016, dubbo version: 2.4.9, current host: 172.17.37.128
+[04:36:31:031][INFO] ZookeeperRegistry:  [DUBBO] Register: consumer://172.17.37.128/com.alibaba.dubbo.rpc.service.GenericService?application=Coordinator&category=consumers&check=false&connected=true&dubbo=2.4.9&generic=true&interface=com.netease.backend.tcc.demo.ISale&pid=3069&side=consumer&timestamp=1485160591016, dubbo version: 2.4.9, current host: 172.17.37.128
+[04:36:31:031][INFO] ZookeeperRegistry:  [DUBBO] Subscribe: consumer://172.17.37.128/com.alibaba.dubbo.rpc.service.GenericService?application=Coordinator&category=providers,configurators,routers&connected=true&dubbo=2.4.9&generic=true&interface=com.netease.backend.tcc.demo.IPayment&pid=3069&side=consumer&timestamp=1485160591016, dubbo version: 2.4.9, current host: 172.17.37.128
+[04:36:31:031][INFO] ZookeeperRegistry:  [DUBBO] Subscribe: consumer://172.17.37.128/com.alibaba.dubbo.rpc.service.GenericService?application=Coordinator&category=providers,configurators,routers&connected=true&dubbo=2.4.9&generic=true&interface=com.netease.backend.tcc.demo.ISale&pid=3069&side=consumer&timestamp=1485160591016, dubbo version: 2.4.9, current host: 172.17.37.128
+[04:36:31:031][INFO] ZookeeperRegistry:  [DUBBO] Notify urls for subscribe url consumer://172.17.37.128/com.alibaba.dubbo.rpc.service.GenericService?application=Coordinator&category=providers,configurators,routers&connected=true&dubbo=2.4.9&generic=true&interface=com.netease.backend.tcc.demo.ISale&pid=3069&side=consumer&timestamp=1485160591016, urls: [dubbo://172.17.37.128:20874/com.netease.backend.tcc.demo.ISale?anyhost=true&application=demo-provider&dubbo=2.4.9&interface=com.netease.backend.tcc.demo.ISale&loadbalance=roundrobin&methods=confirm,cancel,expired,refond,sell,getItemCount,reserve,isConfirmed,getPrice&owner=tanhua&pid=3001&side=provider&timestamp=1485158887770, empty://172.17.37.128/com.alibaba.dubbo.rpc.service.GenericService?application=Coordinator&category=configurators&connected=true&dubbo=2.4.9&generic=true&interface=com.netease.backend.tcc.demo.ISale&pid=3069&side=consumer&timestamp=1485160591016, empty://172.17.37.128/com.alibaba.dubbo.rpc.service.GenericService?application=Coordinator&category=routers&connected=true&dubbo=2.4.9&generic=true&interface=com.netease.backend.tcc.demo.ISale&pid=3069&side=consumer&timestamp=1485160591016], dubbo version: 2.4.9, current host: 172.17.37.128
+[04:36:31:031][INFO] ZookeeperRegistry:  [DUBBO] Notify urls for subscribe url consumer://172.17.37.128/com.alibaba.dubbo.rpc.service.GenericService?application=Coordinator&category=providers,configurators,routers&connected=true&dubbo=2.4.9&generic=true&interface=com.netease.backend.tcc.demo.IPayment&pid=3069&side=consumer&timestamp=1485160591016, urls: [dubbo://172.17.37.128:20874/com.netease.backend.tcc.demo.IPayment?anyhost=true&application=demo-provider&dubbo=2.4.9&interface=com.netease.backend.tcc.demo.IPayment&loadbalance=roundrobin&methods=cancel,confirm,expired,reserve,pay,isConfirmed&owner=tanhua&pid=3001&side=provider&timestamp=1485158886368, empty://172.17.37.128/com.alibaba.dubbo.rpc.service.GenericService?application=Coordinator&category=configurators&connected=true&dubbo=2.4.9&generic=true&interface=com.netease.backend.tcc.demo.IPayment&pid=3069&side=consumer&timestamp=1485160591016, empty://172.17.37.128/com.alibaba.dubbo.rpc.service.GenericService?application=Coordinator&category=routers&connected=true&dubbo=2.4.9&generic=true&interface=com.netease.backend.tcc.demo.IPayment&pid=3069&side=consumer&timestamp=1485160591016], dubbo version: 2.4.9, current host: 172.17.37.128
+[04:36:31:031][INFO] AbstractClient:  [DUBBO] Successed connect to server /172.17.37.128:20874 from NettyClient 172.17.37.128 using dubbo version 2.4.9, channel is NettyChannel [channel=[id: 0x150cb593, /172.17.37.128:55207 => /172.17.37.128:20874]], dubbo version: 2.4.9, current host: 172.17.37.128
+[04:36:31:031][INFO] AbstractClient:  [DUBBO] Start NettyClient tanhua.local/172.17.37.128 connect to the server /172.17.37.128:20874, dubbo version: 2.4.9, current host: 172.17.37.128
+[04:36:31:031][INFO] AbstractClient:  [DUBBO] Successed connect to server /172.17.37.128:20874 from NettyClient 172.17.37.128 using dubbo version 2.4.9, channel is NettyChannel [channel=[id: 0x43af6cb7, /172.17.37.128:55208 => /172.17.37.128:20874]], dubbo version: 2.4.9, current host: 172.17.37.128
+[04:36:31:031][INFO] AbstractClient:  [DUBBO] Start NettyClient tanhua.local/172.17.37.128 connect to the server /172.17.37.128:20874, dubbo version: 2.4.9, current host: 172.17.37.128
+[04:36:31:031][INFO] AbstractConfig:  [DUBBO] Refer dubbo service com.alibaba.dubbo.rpc.service.GenericService from url zookeeper://127.0.0.1:2181/com.alibaba.dubbo.registry.RegistryService?anyhost=true&application=Coordinator&check=false&connected=true&dubbo=2.4.9&generic=true&inside.invoker.count=1&inside.invokers=dubbo%3A%2F%2F172.17.37.128%3A20874%2Fcom.netease.backend.tcc.demo.IPayment%3Fanyhost%3Dtrue%26application%3Ddemo-provider%26dubbo%3D2.4.9%26interface%3Dcom.netease.backend.tcc.demo.IPayment%26loadbalance%3Droundrobin%26methods%3Dcancel%2Cconfirm%2Cexpired%2Creserve%2Cpay%2CisConfirmed%26owner%3Dtanhua%26pid%3D3001%26side%3Dprovider%26timestamp%3D1485158886368&interface=com.netease.backend.tcc.demo.IPayment&loadbalance=roundrobin&methods=cancel,confirm,expired,reserve,pay,isConfirmed&owner=tanhua&pid=3069&side=consumer&timestamp=1485160591016, dubbo version: 2.4.9, current host: 172.17.37.128
+[04:36:31:031][INFO] AbstractConfig:  [DUBBO] Refer dubbo service com.alibaba.dubbo.rpc.service.GenericService from url zookeeper://127.0.0.1:2181/com.alibaba.dubbo.registry.RegistryService?anyhost=true&application=Coordinator&check=false&connected=true&dubbo=2.4.9&generic=true&inside.invoker.count=1&inside.invokers=dubbo%3A%2F%2F172.17.37.128%3A20874%2Fcom.netease.backend.tcc.demo.ISale%3Fanyhost%3Dtrue%26application%3Ddemo-provider%26dubbo%3D2.4.9%26interface%3Dcom.netease.backend.tcc.demo.ISale%26loadbalance%3Droundrobin%26methods%3Dconfirm%2Ccancel%2Cexpired%2Crefond%2Csell%2CgetItemCount%2Creserve%2CisConfirmed%2CgetPrice%26owner%3Dtanhua%26pid%3D3001%26side%3Dprovider%26timestamp%3D1485158887770&interface=com.netease.backend.tcc.demo.ISale&loadbalance=roundrobin&methods=confirm,cancel,expired,refond,sell,getItemCount,reserve,isConfirmed,getPrice&owner=tanhua&pid=3069&side=consumer&timestamp=1485160591016, dubbo version: 2.4.9, current host: 172.17.37.128
+[04:36:35:035][INFO] TxTable: expire transaction count:0
+[04:36:35:035][INFO] TxTable: total transaction count:1
+[04:36:36:036][INFO] TxTable: set checkpoint:Timestamp:1485160588887/MaxUUID:281474976710663
+[04:36:36:036][INFO] ZookeeperRegistry:  [DUBBO] Register: consumer://172.17.37.128/com.alibaba.dubbo.rpc.service.GenericService?application=Coordinator&category=consumers&check=false&connected=true&dubbo=2.4.9&generic=true&interface=com.netease.backend.tcc.demo.IOrder&pid=3069&side=consumer&timestamp=1485160596073, dubbo version: 2.4.9, current host: 172.17.37.128
+[04:36:36:036][INFO] ZookeeperRegistry:  [DUBBO] Subscribe: consumer://172.17.37.128/com.alibaba.dubbo.rpc.service.GenericService?application=Coordinator&category=providers,configurators,routers&connected=true&dubbo=2.4.9&generic=true&interface=com.netease.backend.tcc.demo.IOrder&pid=3069&side=consumer&timestamp=1485160596073, dubbo version: 2.4.9, current host: 172.17.37.128
+[04:36:36:036][INFO] ZookeeperRegistry:  [DUBBO] Notify urls for subscribe url consumer://172.17.37.128/com.alibaba.dubbo.rpc.service.GenericService?application=Coordinator&category=providers,configurators,routers&connected=true&dubbo=2.4.9&generic=true&interface=com.netease.backend.tcc.demo.IOrder&pid=3069&side=consumer&timestamp=1485160596073, urls: [dubbo://172.17.37.128:20874/com.netease.backend.tcc.demo.IOrder?anyhost=true&application=demo-provider&dubbo=2.4.9&interface=com.netease.backend.tcc.demo.IOrder&loadbalance=roundrobin&methods=confirm,cancel,expired,available&owner=tanhua&pid=3001&side=provider&timestamp=1485158887832, empty://172.17.37.128/com.alibaba.dubbo.rpc.service.GenericService?application=Coordinator&category=configurators&connected=true&dubbo=2.4.9&generic=true&interface=com.netease.backend.tcc.demo.IOrder&pid=3069&side=consumer&timestamp=1485160596073, empty://172.17.37.128/com.alibaba.dubbo.rpc.service.GenericService?application=Coordinator&category=routers&connected=true&dubbo=2.4.9&generic=true&interface=com.netease.backend.tcc.demo.IOrder&pid=3069&side=consumer&timestamp=1485160596073], dubbo version: 2.4.9, current host: 172.17.37.128
+[04:36:36:036][INFO] AbstractConfig:  [DUBBO] Refer dubbo service com.alibaba.dubbo.rpc.service.GenericService from url zookeeper://127.0.0.1:2181/com.alibaba.dubbo.registry.RegistryService?anyhost=true&application=Coordinator&check=false&connected=true&dubbo=2.4.9&generic=true&inside.invoker.count=1&inside.invokers=dubbo%3A%2F%2F172.17.37.128%3A20874%2Fcom.netease.backend.tcc.demo.IOrder%3Fanyhost%3Dtrue%26application%3Ddemo-provider%26dubbo%3D2.4.9%26interface%3Dcom.netease.backend.tcc.demo.IOrder%26loadbalance%3Droundrobin%26methods%3Dconfirm%2Ccancel%2Cexpired%2Cavailable%26owner%3Dtanhua%26pid%3D3001%26side%3Dprovider%26timestamp%3D1485158887832&interface=com.netease.backend.tcc.demo.IOrder&loadbalance=roundrobin&methods=confirm,cancel,expired,available&owner=tanhua&pid=3069&side=consumer&timestamp=1485160596073, dubbo version: 2.4.9, current host: 172.17.37.128
+[04:36:40:040][INFO] ExpireProcessor: expire Transaction 281474976710658 service[com.netease.backend.tcc.demo.IPayment, com.netease.backend.tcc.demo.ISale, com.netease.backend.tcc.demo.IOrder]
+[04:36:40:040][INFO] TxTable: expire transaction count:1
+[04:36:40:040][INFO] TxTable: total transaction count:1
+[04:36:40:040][INFO] TxTable: set checkpoint:Timestamp:1485160588887/MaxUUID:281474976710666
+[04:36:45:045][INFO] TxTable: expire transaction count:0
+[04:36:45:045][INFO] TxTable: total transaction count:0
+[04:36:50:050][INFO] TxTable: expire transaction count:0
+[04:36:50:050][INFO] TxTable: total transaction count:2
+[04:36:51:051][INFO] TxTable: set checkpoint:Timestamp:1485160608880/MaxUUID:281474976710672
+[04:36:55:055][INFO] TxTable: expire transaction count:0
+[04:36:55:055][INFO] TxTable: total transaction count:1
+[04:36:56:056][INFO] TxTable: set checkpoint:Timestamp:1485160608880/MaxUUID:281474976710675
+[04:37:00:000][INFO] ExpireProcessor: expire Transaction 281474976710670 service[com.netease.backend.tcc.demo.IPayment, com.netease.backend.tcc.demo.ISale, com.netease.backend.tcc.demo.IOrder]
+[04:37:00:000][INFO] TxTable: expire transaction count:1
+[04:37:00:000][INFO] TxTable: total transaction count:1
+[04:37:01:001][INFO] TxTable: set checkpoint:Timestamp:1485160608880/MaxUUID:281474976710678
+[04:37:05:005][INFO] TxTable: expire transaction count:0
+[04:37:05:005][INFO] TxTable: total transaction count:1
+[04:37:06:006][INFO] TxTable: set checkpoint:Timestamp:1485160625820/MaxUUID:281474976710682
+[04:37:10:010][INFO] TxTable: expire transaction count:0
+[04:37:10:010][INFO] TxTable: total transaction count:1
+[04:37:11:011][INFO] TxTable: set checkpoint:Timestamp:1485160625820/MaxUUID:281474976710685
+[04:37:15:015][INFO] ExpireProcessor: expire Transaction 281474976710681 service[com.netease.backend.tcc.demo.IPayment, com.netease.backend.tcc.demo.ISale, com.netease.backend.tcc.demo.IOrder]
+[04:37:15:015][INFO] TxTable: expire transaction count:1
+[04:37:15:015][INFO] TxTable: total transaction count:1
+[04:37:16:016][INFO] TxTable: set checkpoint:Timestamp:1485160625820/MaxUUID:281474976710688
+[04:37:20:020][INFO] TxTable: expire transaction count:0
+[04:37:20:020][INFO] TxTable: total transaction count:0
+[04:37:25:025][INFO] TxTable: expire transaction count:0
+[04:37:25:025][INFO] TxTable: total transaction count:0
+[04:37:30:030][INFO] TxTable: expire transaction count:0
+[04:37:30:030][INFO] TxTable: total transaction count:0
+[04:37:36:036][INFO] TxTable: expire transaction count:0
+[04:37:36:036][INFO] TxTable: total transaction count:0
+[04:37:41:041][INFO] TxTable: expire transaction count:0
+[04:37:41:041][INFO] TxTable: total transaction count:0
+[04:37:46:046][INFO] TxTable: expire transaction count:0
+[04:37:46:046][INFO] TxTable: total transaction count:1
+[04:37:46:046][INFO] TxTable: set checkpoint:Timestamp:1485160664051/MaxUUID:281474976710703
+[04:37:51:051][INFO] TxTable: expire transaction count:0
+[04:37:51:051][INFO] TxTable: total transaction count:2
+[04:37:51:051][INFO] TxTable: set checkpoint:Timestamp:1485160664051/MaxUUID:281474976710707
+[04:37:56:056][INFO] ExpireProcessor: expire Transaction 281474976710702 service[com.netease.backend.tcc.demo.IPayment, com.netease.backend.tcc.demo.ISale, com.netease.backend.tcc.demo.IOrder]
+[04:37:56:056][INFO] TxTable: expire transaction count:1
+[04:37:56:056][INFO] TxTable: total transaction count:2
+[04:37:56:056][INFO] TxTable: set checkpoint:Timestamp:1485160664051/MaxUUID:281474976710710
+[04:38:01:001][INFO] ExpireProcessor: expire Transaction 281474976710705 service[com.netease.backend.tcc.demo.IPayment, com.netease.backend.tcc.demo.ISale, com.netease.backend.tcc.demo.IOrder]
+[04:38:01:001][INFO] TxTable: expire transaction count:1
+[04:38:01:001][INFO] TxTable: total transaction count:1
+[04:38:01:001][INFO] TxTable: set checkpoint:Timestamp:1485160668426/MaxUUID:281474976710713
+[04:38:06:006][INFO] TxTable: expire transaction count:0
+[04:38:06:006][INFO] TxTable: total transaction count:0
+[04:38:11:011][INFO] TxTable: expire transaction count:0
+[04:38:11:011][INFO] TxTable: total transaction count:0
+[04:38:16:016][INFO] TxTable: expire transaction count:0
+[04:38:16:016][INFO] TxTable: total transaction count:0
+[04:38:21:021][INFO] TxTable: expire transaction count:0
+[04:38:21:021][INFO] TxTable: total transaction count:1
+[04:38:21:021][INFO] TxTable: set checkpoint:Timestamp:1485160696124/MaxUUID:281474976710724
+[04:38:26:026][INFO] TxTable: expire transaction count:0
+[04:38:26:026][INFO] TxTable: total transaction count:1
+[04:38:27:027][INFO] TxTable: set checkpoint:Timestamp:1485160696124/MaxUUID:281474976710727
+[04:38:31:031][INFO] ExpireProcessor: expire Transaction 281474976710721 service[com.netease.backend.tcc.demo.IPayment, com.netease.backend.tcc.demo.ISale, com.netease.backend.tcc.demo.IOrder]
+[04:38:31:031][INFO] TxTable: expire transaction count:1
+[04:38:31:031][INFO] TxTable: total transaction count:2
+[04:38:31:031][INFO] TxTable: set checkpoint:Timestamp:1485160696124/MaxUUID:281474976710730
+[04:38:36:036][INFO] TxTable: expire transaction count:0
+[04:38:36:036][INFO] TxTable: total transaction count:0
+[04:38:41:041][INFO] TxTable: expire transaction count:0
+[04:38:41:041][INFO] TxTable: total transaction count:1
+[04:38:41:041][INFO] TxTable: set checkpoint:Timestamp:1485160716331/MaxUUID:281474976710735
+[04:38:46:046][INFO] TxTable: expire transaction count:0
+[04:38:46:046][INFO] TxTable: total transaction count:1
+[04:38:46:046][INFO] TxTable: set checkpoint:Timestamp:1485160716331/MaxUUID:281474976710738
+[04:38:51:051][INFO] ExpireProcessor: expire Transaction 281474976710732 service[com.netease.backend.tcc.demo.IPayment, com.netease.backend.tcc.demo.ISale, com.netease.backend.tcc.demo.IOrder]
+[04:38:51:051][INFO] TxTable: expire transaction count:1
+[04:38:51:051][INFO] TxTable: total transaction count:2
+[04:38:51:051][INFO] TxTable: set checkpoint:Timestamp:1485160716331/MaxUUID:281474976710742
+[04:38:56:056][INFO] TxTable: expire transaction count:0
+[04:38:56:056][INFO] TxTable: total transaction count:0
+[04:39:01:001][INFO] TxTable: expire transaction count:0
+[04:39:01:001][INFO] TxTable: total transaction count:1
+[04:39:01:001][INFO] TxTable: set checkpoint:Timestamp:1485160739725/MaxUUID:281474976710747
+[04:39:06:006][INFO] TxTable: expire transaction count:0
+[04:39:06:006][INFO] TxTable: total transaction count:1
+[04:39:06:006][INFO] TxTable: set checkpoint:Timestamp:1485160739725/MaxUUID:281474976710751
+[04:39:11:011][INFO] ExpireProcessor: expire Transaction 281474976710746 service[com.netease.backend.tcc.demo.IPayment, com.netease.backend.tcc.demo.ISale, com.netease.backend.tcc.demo.IOrder]
+[04:39:11:011][INFO] TxTable: expire transaction count:1
+[04:39:11:011][INFO] TxTable: total transaction count:2
+[04:39:11:011][INFO] TxTable: set checkpoint:Timestamp:1485160739725/MaxUUID:281474976710754
+[04:39:14:014][WARN] AbstractServer:  [DUBBO] All clients has discontected from /172.17.37.128:20080. You can graceful shutdown now., dubbo version: 2.4.9, current host: 172.17.37.128
+[04:39:14:014][INFO] DubboProtocol:  [DUBBO] disconected from /172.17.37.128:55205,url:dubbo://172.17.37.128:20080/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&channel.readonly.sent=true&codec=dubbo&dubbo=2.4.9&group=vstore&heartbeat=60000&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=3069&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485160214938&version=1.0.0, dubbo version: 2.4.9, current host: 172.17.37.128
+[04:39:14:014][WARN] ChannelEventRunnable:  [DUBBO] ChannelEventRunnable handle RECEIVED operation error, channel is NettyChannel [channel=[id: 0x1efefa31, /172.17.37.128:55205 :> /172.17.37.128:20080]], message is Request [id=376, version=2.0.0, twoway=true, event=false, broken=false, data=RpcInvocation [methodName=cancel, parameterTypes=[int, long, interface java.util.List], arguments=[78, 281474976710756, [com.netease.backend.tcc.demo.IPayment, com.netease.backend.tcc.demo.ISale]], attachments={path=com.netease.backend.tcc.Coordinator, input=442, dubbo=2.4.9, interface=com.netease.backend.tcc.Coordinator, version=1.0.0, timeout=10000, group=vstore}]], dubbo version: 2.4.9, current host: 172.17.37.128
+com.alibaba.dubbo.remoting.RemotingException: Failed to send message Response [id=376, version=2.0.0, status=20, event=false, error=null, result=RpcResult [result=0, exception=null]] to /172.17.37.128:55205, cause: null
+	at com.alibaba.dubbo.remoting.transport.netty.NettyChannel.send(NettyChannel.java:108)
+	at com.alibaba.dubbo.remoting.transport.AbstractPeer.send(AbstractPeer.java:51)
+	at com.alibaba.dubbo.remoting.exchange.support.header.HeaderExchangeHandler.received(HeaderExchangeHandler.java:171)
+	at com.alibaba.dubbo.remoting.transport.DecodeHandler.received(DecodeHandler.java:52)
+	at com.alibaba.dubbo.remoting.transport.dispather.ChannelEventRunnable.run(ChannelEventRunnable.java:82)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.nio.channels.ClosedChannelException
+	at org.jboss.netty.channel.socket.nio.NioWorker.cleanUpWriteBuffer(NioWorker.java:643)
+	at org.jboss.netty.channel.socket.nio.NioWorker.writeFromUserCode(NioWorker.java:370)
+	at org.jboss.netty.channel.socket.nio.NioServerSocketPipelineSink.handleAcceptedSocket(NioServerSocketPipelineSink.java:137)
+	at org.jboss.netty.channel.socket.nio.NioServerSocketPipelineSink.eventSunk(NioServerSocketPipelineSink.java:76)
+	at org.jboss.netty.channel.Channels.write(Channels.java:632)
+	at org.jboss.netty.handler.codec.oneone.OneToOneEncoder.handleDownstream(OneToOneEncoder.java:70)
+	at com.alibaba.dubbo.remoting.transport.netty.NettyHandler.writeRequested(NettyHandler.java:99)
+	at org.jboss.netty.channel.Channels.write(Channels.java:611)
+	at org.jboss.netty.channel.Channels.write(Channels.java:578)
+	at org.jboss.netty.channel.AbstractChannel.write(AbstractChannel.java:251)
+	at com.alibaba.dubbo.remoting.transport.netty.NettyChannel.send(NettyChannel.java:98)
+	... 7 more
+[04:39:16:016][INFO] TxTable: expire transaction count:0
+[04:39:16:016][INFO] TxTable: total transaction count:1
+[04:39:16:016][INFO] TxTable: set checkpoint:Timestamp:1485160747991/MaxUUID:281474976710757
+[04:39:21:021][INFO] ExpireProcessor: expire Transaction 281474976710752 service[com.netease.backend.tcc.demo.IPayment, com.netease.backend.tcc.demo.ISale, com.netease.backend.tcc.demo.IOrder]
+[04:39:21:021][INFO] TxTable: expire transaction count:1
+[04:39:21:021][INFO] TxTable: total transaction count:1
+[04:39:21:021][INFO] TxTable: set checkpoint:Timestamp:1485160747991/MaxUUID:281474976710758
+[04:39:26:026][INFO] TxTable: expire transaction count:0
+[04:39:26:026][INFO] TxTable: total transaction count:0
+[04:39:31:031][INFO] TxTable: expire transaction count:0
+[04:39:31:031][INFO] TxTable: total transaction count:0
+[04:39:36:036][INFO] TxTable: expire transaction count:0
+[04:39:36:036][INFO] TxTable: total transaction count:0
+[04:39:41:041][INFO] TxTable: expire transaction count:0
+[04:39:41:041][INFO] TxTable: total transaction count:0
+[04:39:46:046][INFO] TxTable: expire transaction count:0
+[04:39:46:046][INFO] TxTable: total transaction count:0
+[04:39:51:051][INFO] TxTable: expire transaction count:0
+[04:39:51:051][INFO] TxTable: total transaction count:0
+[04:39:56:056][INFO] TxTable: expire transaction count:0
+[04:39:56:056][INFO] TxTable: total transaction count:0
+[04:40:01:001][INFO] TxTable: expire transaction count:0
+[04:40:01:001][INFO] TxTable: total transaction count:0
+[04:40:06:006][INFO] TxTable: expire transaction count:0
+[04:40:06:006][INFO] TxTable: total transaction count:0
+[04:40:11:011][INFO] TxTable: expire transaction count:0
+[04:40:11:011][INFO] TxTable: total transaction count:0
+[04:40:16:016][INFO] TxTable: expire transaction count:0
+[04:40:16:016][INFO] TxTable: total transaction count:0
+[04:40:17:017][INFO] TccMonitor: monitor log:log avg time 53
+[04:40:17:017][ERROR] TccMonitor: write log exception.
+com.netease.backend.coordinator.monitor.MonitorException: Write monitor record error
+	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:646)
+	at com.netease.backend.coordinator.monitor.DBTccMonitor.write(DBTccMonitor.java:40)
+	at com.netease.backend.coordinator.monitor.TccMonitor.run(TccMonitor.java:37)
+	at java.util.TimerThread.mainLoop(Timer.java:555)
+	at java.util.TimerThread.run(Timer.java:505)
+Caused by: java.sql.SQLException: Table has no partition for value 1485160817699
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1094)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4226)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4158)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2615)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2776)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2840)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:2082)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2334)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2262)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2246)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:644)
+	... 4 more
+[04:40:21:021][INFO] TxTable: expire transaction count:0
+[04:40:21:021][INFO] TxTable: total transaction count:0
+[04:40:26:026][INFO] TxTable: expire transaction count:0
+[04:40:26:026][INFO] TxTable: total transaction count:0
+[04:40:31:031][INFO] TxTable: expire transaction count:0
+[04:40:31:031][INFO] TxTable: total transaction count:0
+[04:40:36:036][INFO] TxTable: expire transaction count:0
+[04:40:36:036][INFO] TxTable: total transaction count:0
+[04:40:41:041][INFO] TxTable: expire transaction count:0
+[04:40:41:041][INFO] TxTable: total transaction count:0
+[04:40:46:046][INFO] TxTable: expire transaction count:0
+[04:40:46:046][INFO] TxTable: total transaction count:0
+[04:40:51:051][INFO] TxTable: expire transaction count:0
+[04:40:51:051][INFO] TxTable: total transaction count:0
+[04:40:56:056][INFO] TxTable: expire transaction count:0
+[04:40:56:056][INFO] TxTable: total transaction count:0
+[04:41:01:001][INFO] TxTable: expire transaction count:0
+[04:41:01:001][INFO] TxTable: total transaction count:0
+[04:41:06:006][INFO] TxTable: expire transaction count:0
+[04:41:06:006][INFO] TxTable: total transaction count:0
+[04:41:11:011][INFO] TxTable: expire transaction count:0
+[04:41:11:011][INFO] TxTable: total transaction count:0
+[04:41:16:016][INFO] TxTable: expire transaction count:0
+[04:41:16:016][INFO] TxTable: total transaction count:0
+[04:41:21:021][INFO] TxTable: expire transaction count:0
+[04:41:21:021][INFO] TxTable: total transaction count:0
+[04:41:26:026][INFO] TxTable: expire transaction count:0
+[04:41:26:026][INFO] TxTable: total transaction count:0
+[04:41:31:031][INFO] TxTable: expire transaction count:0
+[04:41:31:031][INFO] TxTable: total transaction count:0
+[04:41:36:036][INFO] TxTable: expire transaction count:0
+[04:41:36:036][INFO] TxTable: total transaction count:0
+[04:41:41:041][INFO] TxTable: expire transaction count:0
+[04:41:41:041][INFO] TxTable: total transaction count:0
+[04:41:46:046][INFO] TxTable: expire transaction count:0
+[04:41:46:046][INFO] TxTable: total transaction count:0
+[04:41:51:051][INFO] TxTable: expire transaction count:0
+[04:41:51:051][INFO] TxTable: total transaction count:0
+[04:41:56:056][INFO] TxTable: expire transaction count:0
+[04:41:56:056][INFO] TxTable: total transaction count:0
+[04:42:01:001][INFO] TxTable: expire transaction count:0
+[04:42:01:001][INFO] TxTable: total transaction count:0
+[04:42:06:006][INFO] TxTable: expire transaction count:0
+[04:42:06:006][INFO] TxTable: total transaction count:0
+[04:42:11:011][INFO] TxTable: expire transaction count:0
+[04:42:11:011][INFO] TxTable: total transaction count:0
+[04:42:16:016][INFO] TxTable: expire transaction count:0
+[04:42:16:016][INFO] TxTable: total transaction count:0
+[04:42:21:021][INFO] TxTable: expire transaction count:0
+[04:42:21:021][INFO] TxTable: total transaction count:0
+[04:42:26:026][INFO] TxTable: expire transaction count:0
+[04:42:26:026][INFO] TxTable: total transaction count:0
+[04:42:31:031][INFO] TxTable: expire transaction count:0
+[04:42:31:031][INFO] TxTable: total transaction count:0
+[04:42:36:036][INFO] TxTable: expire transaction count:0
+[04:42:36:036][INFO] TxTable: total transaction count:0
+[04:42:41:041][INFO] TxTable: expire transaction count:0
+[04:42:41:041][INFO] TxTable: total transaction count:0
+[04:42:46:046][INFO] TxTable: expire transaction count:0
+[04:42:46:046][INFO] TxTable: total transaction count:0
+[04:42:51:051][INFO] TxTable: expire transaction count:0
+[04:42:51:051][INFO] TxTable: total transaction count:0
+[04:42:56:056][INFO] TxTable: expire transaction count:0
+[04:42:56:056][INFO] TxTable: total transaction count:0
+[04:43:01:001][INFO] TxTable: expire transaction count:0
+[04:43:01:001][INFO] TxTable: total transaction count:0
+[04:43:06:006][INFO] TxTable: expire transaction count:0
+[04:43:06:006][INFO] TxTable: total transaction count:0
+[04:43:11:011][INFO] TxTable: expire transaction count:0
+[04:43:11:011][INFO] TxTable: total transaction count:0
+[04:43:16:016][INFO] TxTable: expire transaction count:0
+[04:43:16:016][INFO] TxTable: total transaction count:0
+[04:43:21:021][INFO] TxTable: expire transaction count:0
+[04:43:21:021][INFO] TxTable: total transaction count:0
+[04:43:26:026][INFO] TxTable: expire transaction count:0
+[04:43:26:026][INFO] TxTable: total transaction count:0
+[04:43:31:031][INFO] TxTable: expire transaction count:0
+[04:43:31:031][INFO] TxTable: total transaction count:0
+[04:43:36:036][INFO] TxTable: expire transaction count:0
+[04:43:36:036][INFO] TxTable: total transaction count:0
+[04:43:41:041][INFO] TxTable: expire transaction count:0
+[04:43:41:041][INFO] TxTable: total transaction count:0
+[04:43:46:046][INFO] TxTable: expire transaction count:0
+[04:43:46:046][INFO] TxTable: total transaction count:0
+[04:43:51:051][INFO] TxTable: expire transaction count:0
+[04:43:51:051][INFO] TxTable: total transaction count:0
+[04:43:56:056][INFO] TxTable: expire transaction count:0
+[04:43:56:056][INFO] TxTable: total transaction count:0
+[04:44:01:001][INFO] TxTable: expire transaction count:0
+[04:44:01:001][INFO] TxTable: total transaction count:0
+[04:44:06:006][INFO] TxTable: expire transaction count:0
+[04:44:06:006][INFO] TxTable: total transaction count:0
+[04:44:11:011][INFO] TxTable: expire transaction count:0
+[04:44:11:011][INFO] TxTable: total transaction count:0
+[04:44:16:016][INFO] TxTable: expire transaction count:0
+[04:44:16:016][INFO] TxTable: total transaction count:0
+[04:44:21:021][INFO] TxTable: expire transaction count:0
+[04:44:21:021][INFO] TxTable: total transaction count:0
+[04:44:26:026][INFO] TxTable: expire transaction count:0
+[04:44:26:026][INFO] TxTable: total transaction count:0
+[04:44:31:031][INFO] TxTable: expire transaction count:0
+[04:44:31:031][INFO] TxTable: total transaction count:0
+[04:44:36:036][INFO] TxTable: expire transaction count:0
+[04:44:36:036][INFO] TxTable: total transaction count:0
+[04:44:41:041][INFO] TxTable: expire transaction count:0
+[04:44:41:041][INFO] TxTable: total transaction count:0
+[04:44:46:046][INFO] TxTable: expire transaction count:0
+[04:44:46:046][INFO] TxTable: total transaction count:0
+[04:44:51:051][INFO] TxTable: expire transaction count:0
+[04:44:51:051][INFO] TxTable: total transaction count:0
+[04:44:56:056][INFO] TxTable: expire transaction count:0
+[04:44:56:056][INFO] TxTable: total transaction count:0
+[04:45:01:001][INFO] TxTable: expire transaction count:0
+[04:45:01:001][INFO] TxTable: total transaction count:0
+[04:45:06:006][INFO] TxTable: expire transaction count:0
+[04:45:06:006][INFO] TxTable: total transaction count:0
+[04:45:11:011][INFO] TxTable: expire transaction count:0
+[04:45:11:011][INFO] TxTable: total transaction count:0
+[04:45:16:016][INFO] TxTable: expire transaction count:0
+[04:45:16:016][INFO] TxTable: total transaction count:0
+[04:45:17:017][INFO] TccMonitor: monitor log:log avg time 0
+[04:45:17:017][ERROR] TccMonitor: write log exception.
+com.netease.backend.coordinator.monitor.MonitorException: Write monitor record error
+	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:646)
+	at com.netease.backend.coordinator.monitor.DBTccMonitor.write(DBTccMonitor.java:40)
+	at com.netease.backend.coordinator.monitor.TccMonitor.run(TccMonitor.java:37)
+	at java.util.TimerThread.mainLoop(Timer.java:555)
+	at java.util.TimerThread.run(Timer.java:505)
+Caused by: java.sql.SQLException: Table has no partition for value 1485161117709
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1094)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4226)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4158)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2615)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2776)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2840)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:2082)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2334)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2262)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2246)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:644)
+	... 4 more
+[04:45:21:021][INFO] TxTable: expire transaction count:0
+[04:45:21:021][INFO] TxTable: total transaction count:0
+[04:45:26:026][INFO] TxTable: expire transaction count:0
+[04:45:26:026][INFO] TxTable: total transaction count:0
+[04:45:31:031][INFO] TxTable: expire transaction count:0
+[04:45:31:031][INFO] TxTable: total transaction count:0
+[04:45:36:036][INFO] TxTable: expire transaction count:0
+[04:45:36:036][INFO] TxTable: total transaction count:0
+[04:45:41:041][INFO] TxTable: expire transaction count:0
+[04:45:41:041][INFO] TxTable: total transaction count:0
+[04:45:46:046][INFO] TxTable: expire transaction count:0
+[04:45:46:046][INFO] TxTable: total transaction count:0
+[04:45:51:051][INFO] TxTable: expire transaction count:0
+[04:45:51:051][INFO] TxTable: total transaction count:0
+[04:45:56:056][INFO] TxTable: expire transaction count:0
+[04:45:56:056][INFO] TxTable: total transaction count:0
+[04:46:01:001][INFO] TxTable: expire transaction count:0
+[04:46:01:001][INFO] TxTable: total transaction count:0
+[04:46:06:006][INFO] TxTable: expire transaction count:0
+[04:46:06:006][INFO] TxTable: total transaction count:0
+[04:46:11:011][INFO] TxTable: expire transaction count:0
+[04:46:11:011][INFO] TxTable: total transaction count:0
+[04:46:16:016][INFO] TxTable: expire transaction count:0
+[04:46:16:016][INFO] TxTable: total transaction count:0
+[04:46:21:021][INFO] TxTable: expire transaction count:0
+[04:46:21:021][INFO] TxTable: total transaction count:0
+[04:46:26:026][INFO] TxTable: expire transaction count:0
+[04:46:26:026][INFO] TxTable: total transaction count:0
+[04:46:31:031][INFO] TxTable: expire transaction count:0
+[04:46:31:031][INFO] TxTable: total transaction count:0
+[04:46:36:036][INFO] TxTable: expire transaction count:0
+[04:46:36:036][INFO] TxTable: total transaction count:0

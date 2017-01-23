@@ -13,15 +13,17 @@
 		<property name = "expireTime" value = "10000" />
 		<property name = "ckptInterval" value = "5000" />
 		<property name = "monitorInterval" value = "300000" />
+		<property name = "rdsIp" value="10.120.146.129:3306"/>
 		<!--alarm and boundary config-->	
 		<property name = "alarmRunningTx" value = "5" />
 		<property name = "alarmTxCount" value = "5" />
 		<property name = "maxRunningTx" value = "1000" />
 		<property name = "maxTxCount" value = "100000" />
 		<!--interface config-->		
-		<property name = "zkAddress" value = "zookeeper://10.120.146.133:2181" />
+		<property name = "zkAddress" value = "zookeeper://127.0.0.1:2181" />
 		<property name = "version" value = "1.0.0" />
-		<property name = "group" value = "vstore" /> 
+		<property name = "group" value = "vstore" />
+
 		<!-- 	<property name = "appGroup" value = "vstore" />  -->
 	</bean>
 
@@ -34,9 +36,9 @@
 		 maxWait：最大等待秒数，单位毫秒，超时会报错误信息；
 		-->
 		<property name = "driverClassName" value = "com.mysql.jdbc.Driver" />
-		<property name = "url" value = "jdbc:mysql://ddbtest0.server.163.org:3306/tcc" />
-		<property name = "username" value = "qs" />
-		<property name = "password" value = "123456" />
+		<property name = "url" value = "jdbc:mysql://10.13.4.23:3306/tcc" />
+		<property name = "username" value = "test" />
+		<property name = "password" value = "test123" />
 		<property name = "initialSize" value = "10"/>
 		<property name = "maxActive" value = "100" />
 		<property name = "maxIdle" value = "20" />
@@ -54,9 +56,9 @@
 	<bean id = "systemDataSource" class = "org.apache.commons.dbcp.BasicDataSource"
 		destroy-method = "close">
 		<property name = "driverClassName" value = "com.mysql.jdbc.Driver" />
-		<property name = "url" value = "jdbc:mysql://ddbtest0.server.163.org:3306/tcc_global" />
-		<property name = "username" value = "qs" />
-		<property name = "password" value = "123456" />
+		<property name = "url" value = "jdbc:mysql://10.13.4.23:3306/tcc_global" />
+		<property name = "username" value = "test" />
+		<property name = "password" value = "test123" />
 		<property name = "initialSize" value = "5"/>
 		<property name = "maxActive" value = "10" />
 		<property name = "maxIdle" value = "10" />

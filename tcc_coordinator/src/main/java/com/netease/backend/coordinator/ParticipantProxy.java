@@ -114,7 +114,7 @@ public class ParticipantProxy implements Participant {
 		reference.setApplication(application);
 		reference.setRegistry(registry);
 		reference.setInterface(service);
-		reference.setFilter("traceFilter");
+//		reference.setFilter("traceFilter");
 		reference.setGeneric(true); 
 		if (version != null)
 			reference.setVersion(version);
