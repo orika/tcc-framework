@@ -49,11 +49,11 @@
 	<dependencyManagement>
 		<dependencies>
 			<!-- Common libs -->
-			<dependency>
-          	 	<groupId>com.netease.backend.trace</groupId>
-           		<artifactId>trace-client</artifactId>
-           		<version>0.1.3</version>
-			</dependency>
+			<!--<dependency>-->
+          	 	<!--<groupId>com.netease.backend.trace</groupId>-->
+           		<!--<artifactId>trace-client</artifactId>-->
+           		<!--<version>0.1.3</version>-->
+			<!--</dependency>-->
 			<dependency>
 				<groupId>com.alibaba</groupId>
 				<artifactId>dubbo</artifactId>
@@ -94,11 +94,11 @@
 	    		<artifactId>commons-dbcp</artifactId>
 	    		<version>${dbcp_version}</version>
 			</dependency>
-			<dependency>
-	    		<groupId>com.netease</groupId>
-	   			<artifactId>monitor-jar</artifactId>
-	    		<version>${monitor_version}</version>
-			</dependency>
+			<!--<dependency>-->
+	    		<!--<groupId>com.netease</groupId>-->
+	   			<!--<artifactId>monitor-jar</artifactId>-->
+	    		<!--<version>${monitor_version}</version>-->
+			<!--</dependency>-->
 			<!-- Test libs -->
 			<dependency>
 				<groupId>junit</groupId>  

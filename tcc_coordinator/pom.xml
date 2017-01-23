@@ -21,10 +21,10 @@
 			<artifactId>tcc_api</artifactId>
 			<version>${applicationVersion}</version>
 		</dependency>
-		<dependency>
-       	 	<groupId>com.netease.backend.trace</groupId>
-       		<artifactId>trace-client</artifactId>
-		</dependency>
+		<!--<dependency>-->
+       	 	<!--<groupId>com.netease.backend.trace</groupId>-->
+       		<!--<artifactId>trace-client</artifactId>-->
+		<!--</dependency>-->
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>dubbo</artifactId>
@@ -53,10 +53,10 @@
 		    <groupId>commons-dbcp</groupId>
     		<artifactId>commons-dbcp</artifactId>
 		</dependency>
-		<dependency>
-    		<groupId>com.netease</groupId>
-   			<artifactId>monitor-jar</artifactId>
-		</dependency>
+		<!--<dependency>-->
+    		<!--<groupId>com.netease</groupId>-->
+   			<!--<artifactId>monitor-jar</artifactId>-->
+		<!--</dependency>-->
 		<dependency>
 			<groupId>junit</groupId>  
         	<artifactId>junit</artifactId>  
