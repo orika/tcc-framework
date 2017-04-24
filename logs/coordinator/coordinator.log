@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 [06:40:02:002][INFO] TxTable: expire transaction count:0
 [06:40:02:002][INFO] ClientCnxn: Client session timed out, have not heard from server in 30259882ms for sessionid 0x159ce22da700042, closing socket connection and attempting reconnect
 [06:40:02:002][INFO] TxTable: total transaction count:0
@@ -566,12 +567,63 @@ Caused by: java.net.SocketException: Network is unreachable
 [09:25:35:035][INFO] TxTable: total transaction count:0
 [09:25:38:038][INFO] TccMonitor: monitor log:log avg time 0
 [09:25:38:038][ERROR] TccMonitor: write log exception.
+=======
+[09:43:16:016][INFO] LoggerFactory: using logger: com.alibaba.dubbo.common.logger.log4j.Log4jLoggerAdapter
+[09:43:17:017][INFO] Main:  [DUBBO] Use container type([spring, log4j]) to run dubbo serivce., dubbo version: 2.4.9, current host: 127.0.0.1
+[09:43:17:017][INFO] ClassPathXmlApplicationContext: Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@5891e32e: display name [org.springframework.context.support.ClassPathXmlApplicationContext@5891e32e]; startup date [Tue Jan 24 09:43:17 CST 2017]; root of context hierarchy
+[09:43:17:017][INFO] XmlBeanDefinitionReader: Loading XML bean definitions from file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/config.xml]
+[09:43:17:017][INFO] XmlBeanDefinitionReader: Loading XML bean definitions from file [/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes/spring/modules.xml]
+[09:43:17:017][INFO] ClassPathXmlApplicationContext: Bean factory for application context [org.springframework.context.support.ClassPathXmlApplicationContext@5891e32e]: org.springframework.beans.factory.support.DefaultListableBeanFactory@2f177a4b
+[09:43:17:017][INFO] DefaultListableBeanFactory: Pre-instantiating singletons in org.springframework.beans.factory.support.DefaultListableBeanFactory@2f177a4b: defining beans [config,localDataSource,systemDataSource,tccContainer,coordinator,serviceContext,tccMonitor,recoverManager,txManager,idGenerator,idForCoordinator,uuidGenerator,logManager,dbUtil,monitorUtil]; root of factory hierarchy
+[09:43:20:020][INFO] DBRecoverManager: begin recovering transaction table
+[09:43:20:020][INFO] DBRecoverManager: begin recovering checkpoint is Timestamp:1485160747991/MaxUUID:281474976710758
+[09:43:20:020][INFO] DBRecoverManager: Transaction table has been recovered
+[09:43:20:020][INFO] DBRecoverManager: Last Max UUID 281474976710758
+[09:43:20:020][INFO] RetryProcessor: Initialize retrying tasks,confirm:0,cancel:0,expire:0
+[09:43:21:021][INFO] AbstractConfig:  [DUBBO] Export dubbo service com.netease.backend.tcc.Coordinator to local registry, dubbo version: 2.4.9, current host: 127.0.0.1
+[09:43:21:021][INFO] AbstractConfig:  [DUBBO] Export dubbo service com.netease.backend.tcc.Coordinator to url dubbo://172.17.37.128:20080/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&dubbo=2.4.9&group=vstore&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=531&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485222200957&version=1.0.0, dubbo version: 2.4.9, current host: 127.0.0.1
+[09:43:21:021][INFO] AbstractConfig:  [DUBBO] Register dubbo service com.netease.backend.tcc.Coordinator url dubbo://172.17.37.128:20080/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&dubbo=2.4.9&group=vstore&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=531&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485222200957&version=1.0.0 to registry registry://127.0.0.1:2181/com.alibaba.dubbo.registry.RegistryService?application=Coordinator&dubbo=2.4.9&pid=531&registry=zookeeper&timestamp=1485222200938, dubbo version: 2.4.9, current host: 127.0.0.1
+[09:43:21:021][INFO] AbstractServer:  [DUBBO] Start NettyServer bind /0.0.0.0:20080, export /172.17.37.128:20080, dubbo version: 2.4.9, current host: 127.0.0.1
+[09:43:21:021][INFO] ZookeeperRegistry:  [DUBBO] Load registry store file /Users/jw/.dubbo/dubbo-registry-127.0.0.1.cache, data: {com.netease.backend.tcc.demo.ISale=empty://172.17.37.128:20874/com.netease.backend.tcc.demo.ISale?anyhost=true&application=demo-provider&category=configurators&check=false&dubbo=2.4.9&interface=com.netease.backend.tcc.demo.ISale&loadbalance=roundrobin&methods=confirm,cancel,expired,refond,sell,getItemCount,reserve,isConfirmed,getPrice&owner=tanhua&pid=529&side=provider&timestamp=1485222168701, com.netease.backend.tcc.demo.IPayment=empty://172.17.37.128:20874/com.netease.backend.tcc.demo.IPayment?anyhost=true&application=demo-provider&category=configurators&check=false&dubbo=2.4.9&interface=com.netease.backend.tcc.demo.IPayment&loadbalance=roundrobin&methods=cancel,confirm,expired,reserve,pay,isConfirmed&owner=tanhua&pid=529&side=provider&timestamp=1485222167160, com.netease.backend.tcc.demo.IOrder=empty://172.17.37.128:20874/com.netease.backend.tcc.demo.IOrder?anyhost=true&application=demo-provider&category=configurators&check=false&dubbo=2.4.9&interface=com.netease.backend.tcc.demo.IOrder&loadbalance=roundrobin&methods=confirm,cancel,expired,available&owner=tanhua&pid=529&side=provider&timestamp=1485222168798, com.alibaba.dubbo.examples.nospring.api.NoSpringService:1.0.0=empty://10.0.39.107/com.alibaba.dubbo.examples.nospring.api.NoSpringService?application=nospring-consumer&category=configurators&dubbo=2.0.0&interface=com.alibaba.dubbo.examples.nospring.api.NoSpringService&methods=sayHello&pid=4740&revision=1.0.0&side=consumer&timestamp=1460360015829&version=1.0.0 empty://10.0.39.107/com.alibaba.dubbo.examples.nospring.api.NoSpringService?application=nospring-consumer&category=routers&dubbo=2.0.0&interface=com.alibaba.dubbo.examples.nospring.api.NoSpringService&methods=sayHello&pid=4740&revision=1.0.0&side=consumer&timestamp=1460360015829&version=1.0.0 dubbo://10.0.39.107:12345/com.alibaba.dubbo.examples.nospring.api.NoSpringService?anyhost=true&application=nospring-provider&dubbo=2.0.0&generic=false&interface=com.alibaba.dubbo.examples.nospring.api.NoSpringService&methods=sayHello&pid=4737&revision=1.0.0&side=provider&threads=100&timestamp=1460360006954&version=1.0.0, com.alibaba.dubbo.examples.callback.api.FooService=empty://10.0.45.227/com.alibaba.dubbo.examples.callback.api.FooService?application=foobar-consumer&category=configurators&dubbo=2.0.0&interface=com.alibaba.dubbo.examples.callback.api.FooService&methods=asyncCallInFoo&pid=653&side=consumer&timestamp=1460711582179 empty://10.0.45.227/com.alibaba.dubbo.examples.callback.api.FooService?application=foobar-consumer&category=routers&dubbo=2.0.0&interface=com.alibaba.dubbo.examples.callback.api.FooService&methods=asyncCallInFoo&pid=653&side=consumer&timestamp=1460711582179 dubbo://10.0.45.227:20881/com.alibaba.dubbo.examples.callback.api.FooService?anyhost=true&application=foo-provider&asyncCallInFoo.1.callback=true&callbacks=1000&connections=1&dubbo=2.0.0&generic=false&interface=com.alibaba.dubbo.examples.callback.api.FooService&methods=asyncCallInFoo&pid=650&side=provider&timestamp=1460711382394, vstore/com.netease.backend.tcc.Coordinator:1.0.0=empty://172.17.37.128:20080/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&category=configurators&check=false&dubbo=2.4.9&group=vstore&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=3069&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485160214938&version=1.0.0, com.alibaba.dubbo.examples.callback.api.BarService=empty://10.0.45.227/com.alibaba.dubbo.examples.callback.api.BarService?application=foo-provider&category=configurators&dubbo=2.0.0&interface=com.alibaba.dubbo.examples.callback.api.BarService&methods=asyncCallInBar&pid=650&side=consumer&timestamp=1460711381670 empty://10.0.45.227/com.alibaba.dubbo.examples.callback.api.BarService?application=foo-provider&category=routers&dubbo=2.0.0&interface=com.alibaba.dubbo.examples.callback.api.BarService&methods=asyncCallInBar&pid=650&side=consumer&timestamp=1460711381670 dubbo://10.0.45.227:20880/com.alibaba.dubbo.examples.callback.api.BarService?anyhost=true&application=bar-provider&asyncCallInBar.1.callback=true&callbacks=1000&connections=1&dubbo=2.0.0&generic=false&interface=com.alibaba.dubbo.examples.callback.api.BarService&methods=asyncCallInBar&pid=649&side=provider&timestamp=1460711358372, group1/com.alibaba.dubbo.examples.nospring.api.NoSpringService:1.0.0=empty://10.0.39.107/com.alibaba.dubbo.examples.nospring.api.NoSpringService?application=nospring-consumer&category=configurators&dubbo=2.0.0&group=group1&interface=com.alibaba.dubbo.examples.nospring.api.NoSpringService&methods=sayHello&pid=4794&revision=1.0.0&side=consumer&timestamp=1460360681864&version=1.0.0 empty://10.0.39.107/com.alibaba.dubbo.examples.nospring.api.NoSpringService?application=nospring-consumer&category=routers&dubbo=2.0.0&group=group1&interface=com.alibaba.dubbo.examples.nospring.api.NoSpringService&methods=sayHello&pid=4794&revision=1.0.0&side=consumer&timestamp=1460360681864&version=1.0.0 empty://10.0.39.107/com.alibaba.dubbo.examples.nospring.api.NoSpringService?application=nospring-consumer&category=providers&dubbo=2.0.0&group=group1&interface=com.alibaba.dubbo.examples.nospring.api.NoSpringService&methods=sayHello&pid=4794&revision=1.0.0&side=consumer&timestamp=1460360681864&version=1.0.0}, dubbo version: 2.4.9, current host: 127.0.0.1
+[09:43:21:021][INFO] ZkEventThread: Starting ZkClient event thread.
+[09:43:21:021][INFO] ZooKeeper: Client environment:zookeeper.version=3.4.6-1569965, built on 02/20/2014 09:09 GMT
+[09:43:21:021][INFO] ZooKeeper: Client environment:host.name=172.17.37.128
+[09:43:21:021][INFO] ZooKeeper: Client environment:java.version=1.8.0_65
+[09:43:21:021][INFO] ZooKeeper: Client environment:java.vendor=Azul Systems, Inc.
+[09:43:21:021][INFO] ZooKeeper: Client environment:java.home=/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre
+[09:43:21:021][INFO] ZooKeeper: Client environment:java.class.path=/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/cldrdata.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/dnsns.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/jaccess.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/localedata.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/nashorn.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/sunec.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/sunjce_provider.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/sunpkcs11.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/ext/zipfs.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/management-agent.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/lib/dt.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/lib/jconsole.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/lib/sa-jdi.jar:/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/lib/tools.jar:/Users/jw/Documents/code/tcc/tcc_coordinator/target/classes:/Users/jw/Documents/code/tcc/tcc_api/target/classes:/Users/jw/Documents/maven_resp/com/alibaba/dubbo/2.4.9/dubbo-2.4.9.jar:/Users/jw/Documents/maven_resp/org/springframework/spring/2.5.6.SEC03/spring-2.5.6.SEC03.jar:/Users/jw/Documents/maven_resp/org/javassist/javassist/3.15.0-GA/javassist-3.15.0-GA.jar:/Users/jw/Documents/maven_resp/org/jboss/netty/netty/3.2.5.Final/netty-3.2.5.Final.jar:/Users/jw/Documents/maven_resp/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar:/Users/jw/Documents/maven_resp/log4j/log4j/1.2.16/log4j-1.2.16.jar:/Users/jw/Documents/maven_resp/org/apache/zookeeper/zookeeper/3.4.6/zookeeper-3.4.6.jar:/Users/jw/Documents/maven_resp/org/slf4j/slf4j-api/1.6.1/slf4j-api-1.6.1.jar:/Users/jw/Documents/maven_resp/org/slf4j/slf4j-log4j12/1.6.1/slf4j-log4j12-1.6.1.jar:/Users/jw/Documents/maven_resp/jline/jline/0.9.94/jline-0.9.94.jar:/Users/jw/Documents/maven_resp/junit/junit/4.4/junit-4.4.jar:/Users/jw/Documents/maven_resp/io/netty/netty/3.7.0.Final/netty-3.7.0.Final.jar:/Users/jw/Documents/maven_resp/com/github/sgroschupf/zkclient/0.1/zkclient-0.1.jar:/Users/jw/Documents/maven_resp/mysql/mysql-connector-java/5.1.31/mysql-connector-java-5.1.31.jar:/Users/jw/Documents/maven_resp/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4.jar:/Users/jw/Documents/maven_resp/commons-pool/commons-pool/1.5.4/commons-pool-1.5.4.jar:/Applications/IntelliJ IDEA.app/Contents/lib/idea_rt.jar
+[09:43:21:021][INFO] ZooKeeper: Client environment:java.library.path=/Users/jw/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.
+[09:43:21:021][INFO] ZooKeeper: Client environment:java.io.tmpdir=/var/folders/0p/bcf9dycn6d1050fbv7dswgb80000gn/T/
+[09:43:21:021][INFO] ZooKeeper: Client environment:java.compiler=<NA>
+[09:43:21:021][INFO] ZooKeeper: Client environment:os.name=Mac OS X
+[09:43:21:021][INFO] ZooKeeper: Client environment:os.arch=x86_64
+[09:43:21:021][INFO] ZooKeeper: Client environment:os.version=10.10.5
+[09:43:21:021][INFO] ZooKeeper: Client environment:user.name=jw
+[09:43:21:021][INFO] ZooKeeper: Client environment:user.home=/Users/jw
+[09:43:21:021][INFO] ZooKeeper: Client environment:user.dir=/Users/jw/Documents/code/tcc
+[09:43:21:021][INFO] ZooKeeper: Initiating client connection, connectString=127.0.0.1:2181 sessionTimeout=30000 watcher=org.I0Itec.zkclient.ZkClient@56c698e3
+[09:43:21:021][INFO] ClientCnxn: Opening socket connection to server 127.0.0.1/127.0.0.1:2181. Will not attempt to authenticate using SASL (unknown error)
+[09:43:21:021][INFO] ClientCnxn: Socket connection established to 127.0.0.1/127.0.0.1:2181, initiating session
+[09:43:21:021][INFO] ClientCnxn: Session establishment complete on server 127.0.0.1/127.0.0.1:2181, sessionid = 0x159ce22da700001, negotiated timeout = 30000
+[09:43:21:021][INFO] ZkClient: zookeeper state changed (SyncConnected)
+[09:43:21:021][INFO] ZookeeperRegistry:  [DUBBO] Register: dubbo://172.17.37.128:20080/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&dubbo=2.4.9&group=vstore&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=531&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485222200957&version=1.0.0, dubbo version: 2.4.9, current host: 127.0.0.1
+[09:43:21:021][INFO] ZookeeperRegistry:  [DUBBO] Subscribe: provider://172.17.37.128:20080/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&category=configurators&check=false&dubbo=2.4.9&group=vstore&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=531&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485222200957&version=1.0.0, dubbo version: 2.4.9, current host: 127.0.0.1
+[09:43:21:021][INFO] ZookeeperRegistry:  [DUBBO] Notify urls for subscribe url provider://172.17.37.128:20080/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&category=configurators&check=false&dubbo=2.4.9&group=vstore&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=531&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485222200957&version=1.0.0, urls: [empty://172.17.37.128:20080/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&category=configurators&check=false&dubbo=2.4.9&group=vstore&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=531&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485222200957&version=1.0.0], dubbo version: 2.4.9, current host: 127.0.0.1
+[09:43:21:021][INFO] TccMonitor: TccMonitor started, metrics reset at interval:300000ms
+[09:43:21:021][INFO] TxTable: expire transaction count:0
+[09:43:21:021][INFO] TxTable: total transaction count:0
+[09:43:21:021][INFO] Main:  [DUBBO] Dubbo SpringContainer started!, dubbo version: 2.4.9, current host: 127.0.0.1
+[09:43:21:021][INFO] Main:  [DUBBO] Dubbo Log4jContainer started!, dubbo version: 2.4.9, current host: 127.0.0.1
+[09:43:23:023][INFO] TccMonitor: monitor log:log avg time 0
+[09:43:24:024][ERROR] TccMonitor: write log exception.
+>>>>>>> Stashed changes
 com.netease.backend.coordinator.monitor.MonitorException: Write monitor record error
 	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:646)
 	at com.netease.backend.coordinator.monitor.DBTccMonitor.write(DBTccMonitor.java:40)
 	at com.netease.backend.coordinator.monitor.TccMonitor.run(TccMonitor.java:37)
 	at java.util.TimerThread.mainLoop(Timer.java:555)
 	at java.util.TimerThread.run(Timer.java:505)
+<<<<<<< Updated upstream
 Caused by: java.sql.SQLException: Table has no partition for value 1485307538451
 	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1094)
 	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4226)
@@ -973,13 +1025,156 @@ Caused by: java.net.SocketException: Operation timed out
 [09:44:24:024][INFO] TxTable: expire transaction count:0
 [09:44:24:024][INFO] TxTable: total transaction count:0
 [09:44:25:025][ERROR] TccMonitor: write log exception.
+=======
+Caused by: java.sql.SQLException: Table has no partition for value 1485222203752
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1094)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4226)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4158)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2615)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2776)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2840)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:2082)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2334)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2262)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2246)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:644)
+	... 4 more
+[09:43:26:026][INFO] TxTable: expire transaction count:0
+[09:43:26:026][INFO] TxTable: total transaction count:0
+[09:43:31:031][INFO] TxTable: expire transaction count:0
+[09:43:31:031][INFO] TxTable: total transaction count:0
+[09:43:36:036][INFO] TxTable: expire transaction count:0
+[09:43:36:036][INFO] TxTable: total transaction count:0
+[09:43:41:041][INFO] TxTable: expire transaction count:0
+[09:43:41:041][INFO] TxTable: total transaction count:0
+[09:43:46:046][INFO] TxTable: expire transaction count:0
+[09:43:46:046][INFO] TxTable: total transaction count:0
+[09:43:51:051][INFO] TxTable: expire transaction count:0
+[09:43:51:051][INFO] TxTable: total transaction count:0
+[09:43:56:056][INFO] TxTable: expire transaction count:0
+[09:43:56:056][INFO] TxTable: total transaction count:0
+[09:44:01:001][INFO] TxTable: expire transaction count:0
+[09:44:01:001][INFO] TxTable: total transaction count:0
+[09:44:06:006][INFO] TxTable: expire transaction count:0
+[09:44:06:006][INFO] TxTable: total transaction count:0
+[09:44:11:011][INFO] TxTable: expire transaction count:0
+[09:44:11:011][INFO] TxTable: total transaction count:0
+[09:44:16:016][INFO] TxTable: expire transaction count:0
+[09:44:16:016][INFO] TxTable: total transaction count:0
+[09:44:21:021][INFO] TxTable: expire transaction count:0
+[09:44:21:021][INFO] TxTable: total transaction count:0
+[09:44:26:026][INFO] TxTable: expire transaction count:0
+[09:44:26:026][INFO] TxTable: total transaction count:0
+[09:44:31:031][INFO] TxTable: expire transaction count:0
+[09:44:31:031][INFO] TxTable: total transaction count:0
+[09:44:36:036][INFO] TxTable: expire transaction count:0
+[09:44:36:036][INFO] TxTable: total transaction count:0
+[09:44:41:041][INFO] TxTable: expire transaction count:0
+[09:44:41:041][INFO] TxTable: total transaction count:0
+[09:44:46:046][INFO] TxTable: expire transaction count:0
+[09:44:46:046][INFO] TxTable: total transaction count:0
+[09:44:51:051][INFO] TxTable: expire transaction count:0
+[09:44:51:051][INFO] TxTable: total transaction count:0
+[09:44:56:056][INFO] TxTable: expire transaction count:0
+[09:44:56:056][INFO] TxTable: total transaction count:0
+[09:45:01:001][INFO] TxTable: expire transaction count:0
+[09:45:01:001][INFO] TxTable: total transaction count:0
+[09:45:06:006][INFO] TxTable: expire transaction count:0
+[09:45:06:006][INFO] TxTable: total transaction count:0
+[09:45:11:011][INFO] TxTable: expire transaction count:0
+[09:45:11:011][INFO] TxTable: total transaction count:0
+[09:45:16:016][INFO] TxTable: expire transaction count:0
+[09:45:16:016][INFO] TxTable: total transaction count:0
+[09:45:21:021][INFO] TxTable: expire transaction count:0
+[09:45:21:021][INFO] TxTable: total transaction count:0
+[09:45:26:026][INFO] TxTable: expire transaction count:0
+[09:45:26:026][INFO] TxTable: total transaction count:0
+[09:45:31:031][INFO] TxTable: expire transaction count:0
+[09:45:31:031][INFO] TxTable: total transaction count:0
+[09:45:36:036][INFO] TxTable: expire transaction count:0
+[09:45:36:036][INFO] TxTable: total transaction count:0
+[09:45:41:041][INFO] TxTable: expire transaction count:0
+[09:45:41:041][INFO] TxTable: total transaction count:0
+[09:45:46:046][INFO] TxTable: expire transaction count:0
+[09:45:46:046][INFO] TxTable: total transaction count:0
+[09:45:51:051][INFO] TxTable: expire transaction count:0
+[09:45:51:051][INFO] TxTable: total transaction count:0
+[09:45:56:056][INFO] TxTable: expire transaction count:0
+[09:45:56:056][INFO] TxTable: total transaction count:0
+[09:46:01:001][INFO] TxTable: expire transaction count:0
+[09:46:01:001][INFO] TxTable: total transaction count:0
+[09:46:06:006][INFO] TxTable: expire transaction count:0
+[09:46:06:006][INFO] TxTable: total transaction count:0
+[09:46:11:011][INFO] TxTable: expire transaction count:0
+[09:46:11:011][INFO] TxTable: total transaction count:0
+[09:46:16:016][INFO] TxTable: expire transaction count:0
+[09:46:16:016][INFO] TxTable: total transaction count:0
+[09:46:21:021][INFO] TxTable: expire transaction count:0
+[09:46:21:021][INFO] TxTable: total transaction count:0
+[09:46:26:026][INFO] TxTable: expire transaction count:0
+[09:46:26:026][INFO] TxTable: total transaction count:0
+[09:46:31:031][INFO] TxTable: expire transaction count:0
+[09:46:31:031][INFO] TxTable: total transaction count:0
+[09:46:36:036][INFO] TxTable: expire transaction count:0
+[09:46:36:036][INFO] TxTable: total transaction count:0
+[09:46:41:041][INFO] TxTable: expire transaction count:0
+[09:46:41:041][INFO] TxTable: total transaction count:0
+[09:46:46:046][INFO] TxTable: expire transaction count:0
+[09:46:46:046][INFO] TxTable: total transaction count:0
+[09:46:51:051][INFO] TxTable: expire transaction count:0
+[09:46:51:051][INFO] TxTable: total transaction count:0
+[09:46:56:056][INFO] TxTable: expire transaction count:0
+[09:46:56:056][INFO] TxTable: total transaction count:0
+[09:47:01:001][INFO] TxTable: expire transaction count:0
+[09:47:01:001][INFO] TxTable: total transaction count:0
+[09:47:06:006][INFO] TxTable: expire transaction count:0
+[09:47:06:006][INFO] TxTable: total transaction count:0
+[09:47:11:011][INFO] TxTable: expire transaction count:0
+[09:47:11:011][INFO] TxTable: total transaction count:0
+[09:47:16:016][INFO] TxTable: expire transaction count:0
+[09:47:16:016][INFO] TxTable: total transaction count:0
+[09:47:21:021][INFO] TxTable: expire transaction count:0
+[09:47:21:021][INFO] TxTable: total transaction count:0
+[09:47:26:026][INFO] TxTable: expire transaction count:0
+[09:47:26:026][INFO] TxTable: total transaction count:0
+[09:47:31:031][INFO] TxTable: expire transaction count:0
+[09:47:31:031][INFO] TxTable: total transaction count:0
+[09:47:36:036][INFO] TxTable: expire transaction count:0
+[09:47:36:036][INFO] TxTable: total transaction count:0
+[09:47:41:041][INFO] TxTable: expire transaction count:0
+[09:47:41:041][INFO] TxTable: total transaction count:0
+[09:47:46:046][INFO] TxTable: expire transaction count:0
+[09:47:46:046][INFO] TxTable: total transaction count:0
+[09:47:51:051][INFO] TxTable: expire transaction count:0
+[09:47:51:051][INFO] TxTable: total transaction count:0
+[09:47:56:056][INFO] TxTable: expire transaction count:0
+[09:47:56:056][INFO] TxTable: total transaction count:0
+[09:48:01:001][INFO] TxTable: expire transaction count:0
+[09:48:01:001][INFO] TxTable: total transaction count:0
+[09:48:06:006][INFO] TxTable: expire transaction count:0
+[09:48:06:006][INFO] TxTable: total transaction count:0
+[09:48:11:011][INFO] TxTable: expire transaction count:0
+[09:48:11:011][INFO] TxTable: total transaction count:0
+[09:48:16:016][INFO] TxTable: expire transaction count:0
+[09:48:16:016][INFO] TxTable: total transaction count:0
+[09:48:21:021][INFO] TxTable: expire transaction count:0
+[09:48:21:021][INFO] TxTable: total transaction count:0
+[09:48:23:023][INFO] TccMonitor: monitor log:log avg time 0
+[09:48:23:023][ERROR] TccMonitor: write log exception.
+>>>>>>> Stashed changes
 com.netease.backend.coordinator.monitor.MonitorException: Write monitor record error
 	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:646)
 	at com.netease.backend.coordinator.monitor.DBTccMonitor.write(DBTccMonitor.java:40)
 	at com.netease.backend.coordinator.monitor.TccMonitor.run(TccMonitor.java:37)
 	at java.util.TimerThread.mainLoop(Timer.java:555)
 	at java.util.TimerThread.run(Timer.java:505)
+<<<<<<< Updated upstream
 Caused by: java.sql.SQLException: Could not retrieve transation read-only status server
+=======
+Caused by: java.sql.SQLException: Table has no partition for value 1485222503766
+>>>>>>> Stashed changes
 	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1094)
 	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:997)
 	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:983)
@@ -995,6 +1190,7 @@ Caused by: java.sql.SQLException: Could not retrieve transation read-only status
 	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
 	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:644)
 	... 4 more
+<<<<<<< Updated upstream
 Caused by: com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: Communications link failure
 
 The last packet successfully received from the server was 424,585 milliseconds ago.  The last packet sent successfully to the server was 18,177 milliseconds ago.
@@ -1154,13 +1350,141 @@ Caused by: java.net.SocketException: Operation timed out
 [09:49:44:044][INFO] TxTable: expire transaction count:0
 [09:49:44:044][INFO] TxTable: total transaction count:0
 [09:49:46:046][ERROR] TccMonitor: write log exception.
+=======
+[09:48:26:026][INFO] TxTable: expire transaction count:0
+[09:48:26:026][INFO] TxTable: total transaction count:0
+[09:48:31:031][INFO] TxTable: expire transaction count:0
+[09:48:31:031][INFO] TxTable: total transaction count:0
+[09:48:36:036][INFO] TxTable: expire transaction count:0
+[09:48:36:036][INFO] TxTable: total transaction count:0
+[09:48:41:041][INFO] TxTable: expire transaction count:0
+[09:48:41:041][INFO] TxTable: total transaction count:0
+[09:48:46:046][INFO] TxTable: expire transaction count:0
+[09:48:46:046][INFO] TxTable: total transaction count:0
+[09:48:51:051][INFO] TxTable: expire transaction count:0
+[09:48:51:051][INFO] TxTable: total transaction count:0
+[09:48:56:056][INFO] TxTable: expire transaction count:0
+[09:48:56:056][INFO] TxTable: total transaction count:0
+[09:49:01:001][INFO] TxTable: expire transaction count:0
+[09:49:01:001][INFO] TxTable: total transaction count:0
+[09:49:07:007][INFO] TxTable: expire transaction count:0
+[09:49:07:007][INFO] TxTable: total transaction count:0
+[09:49:12:012][INFO] TxTable: expire transaction count:0
+[09:49:12:012][INFO] TxTable: total transaction count:0
+[09:49:17:017][INFO] TxTable: expire transaction count:0
+[09:49:17:017][INFO] TxTable: total transaction count:0
+[09:49:22:022][INFO] TxTable: expire transaction count:0
+[09:49:22:022][INFO] TxTable: total transaction count:0
+[09:49:27:027][INFO] TxTable: expire transaction count:0
+[09:49:27:027][INFO] TxTable: total transaction count:0
+[09:49:32:032][INFO] TxTable: expire transaction count:0
+[09:49:32:032][INFO] TxTable: total transaction count:0
+[09:49:37:037][INFO] TxTable: expire transaction count:0
+[09:49:37:037][INFO] TxTable: total transaction count:0
+[09:49:42:042][INFO] TxTable: expire transaction count:0
+[09:49:42:042][INFO] TxTable: total transaction count:0
+[09:49:47:047][INFO] TxTable: expire transaction count:0
+[09:49:47:047][INFO] TxTable: total transaction count:0
+[09:49:52:052][INFO] TxTable: expire transaction count:0
+[09:49:52:052][INFO] TxTable: total transaction count:0
+[09:49:57:057][INFO] TxTable: expire transaction count:0
+[09:49:57:057][INFO] TxTable: total transaction count:0
+[09:50:02:002][INFO] TxTable: expire transaction count:0
+[09:50:02:002][INFO] TxTable: total transaction count:0
+[09:50:07:007][INFO] TxTable: expire transaction count:0
+[09:50:07:007][INFO] TxTable: total transaction count:0
+[09:50:12:012][INFO] TxTable: expire transaction count:0
+[09:50:12:012][INFO] TxTable: total transaction count:0
+[09:50:17:017][INFO] TxTable: expire transaction count:0
+[09:50:17:017][INFO] TxTable: total transaction count:0
+[09:50:22:022][INFO] TxTable: expire transaction count:0
+[09:50:22:022][INFO] TxTable: total transaction count:0
+[09:50:27:027][INFO] TxTable: expire transaction count:0
+[09:50:27:027][INFO] TxTable: total transaction count:0
+[09:50:32:032][INFO] TxTable: expire transaction count:0
+[09:50:32:032][INFO] TxTable: total transaction count:0
+[09:50:37:037][INFO] TxTable: expire transaction count:0
+[09:50:37:037][INFO] TxTable: total transaction count:0
+[09:50:42:042][INFO] TxTable: expire transaction count:0
+[09:50:42:042][INFO] TxTable: total transaction count:0
+[09:50:47:047][INFO] TxTable: expire transaction count:0
+[09:50:47:047][INFO] TxTable: total transaction count:0
+[09:50:52:052][INFO] TxTable: expire transaction count:0
+[09:50:52:052][INFO] TxTable: total transaction count:0
+[09:50:57:057][INFO] TxTable: expire transaction count:0
+[09:50:57:057][INFO] TxTable: total transaction count:0
+[09:51:02:002][INFO] TxTable: expire transaction count:0
+[09:51:02:002][INFO] TxTable: total transaction count:0
+[09:51:07:007][INFO] TxTable: expire transaction count:0
+[09:51:07:007][INFO] TxTable: total transaction count:0
+[09:51:12:012][INFO] TxTable: expire transaction count:0
+[09:51:12:012][INFO] TxTable: total transaction count:0
+[09:51:17:017][INFO] TxTable: expire transaction count:0
+[09:51:17:017][INFO] TxTable: total transaction count:0
+[09:51:22:022][INFO] TxTable: expire transaction count:0
+[09:51:22:022][INFO] TxTable: total transaction count:0
+[09:51:27:027][INFO] TxTable: expire transaction count:0
+[09:51:27:027][INFO] TxTable: total transaction count:0
+[09:51:32:032][INFO] TxTable: expire transaction count:0
+[09:51:32:032][INFO] TxTable: total transaction count:0
+[09:51:37:037][INFO] TxTable: expire transaction count:0
+[09:51:37:037][INFO] TxTable: total transaction count:0
+[09:51:42:042][INFO] TxTable: expire transaction count:0
+[09:51:42:042][INFO] TxTable: total transaction count:0
+[09:51:47:047][INFO] TxTable: expire transaction count:0
+[09:51:47:047][INFO] TxTable: total transaction count:0
+[09:51:52:052][INFO] TxTable: expire transaction count:0
+[09:51:52:052][INFO] TxTable: total transaction count:0
+[09:51:57:057][INFO] TxTable: expire transaction count:0
+[09:51:57:057][INFO] TxTable: total transaction count:0
+[09:52:02:002][INFO] TxTable: expire transaction count:0
+[09:52:02:002][INFO] TxTable: total transaction count:0
+[09:52:07:007][INFO] TxTable: expire transaction count:0
+[09:52:07:007][INFO] TxTable: total transaction count:0
+[09:52:12:012][INFO] TxTable: expire transaction count:0
+[09:52:12:012][INFO] TxTable: total transaction count:0
+[09:52:17:017][INFO] TxTable: expire transaction count:0
+[09:52:17:017][INFO] TxTable: total transaction count:0
+[09:52:22:022][INFO] TxTable: expire transaction count:0
+[09:52:22:022][INFO] TxTable: total transaction count:0
+[09:52:27:027][INFO] TxTable: expire transaction count:0
+[09:52:27:027][INFO] TxTable: total transaction count:0
+[09:52:32:032][INFO] TxTable: expire transaction count:0
+[09:52:32:032][INFO] TxTable: total transaction count:0
+[09:52:37:037][INFO] TxTable: expire transaction count:0
+[09:52:37:037][INFO] TxTable: total transaction count:0
+[09:52:42:042][INFO] TxTable: expire transaction count:0
+[09:52:42:042][INFO] TxTable: total transaction count:0
+[09:52:47:047][INFO] TxTable: expire transaction count:0
+[09:52:47:047][INFO] TxTable: total transaction count:0
+[09:52:52:052][INFO] TxTable: expire transaction count:0
+[09:52:52:052][INFO] TxTable: total transaction count:0
+[09:52:57:057][INFO] TxTable: expire transaction count:0
+[09:52:57:057][INFO] TxTable: total transaction count:0
+[09:53:02:002][INFO] TxTable: expire transaction count:0
+[09:53:02:002][INFO] TxTable: total transaction count:0
+[09:53:07:007][INFO] TxTable: expire transaction count:0
+[09:53:07:007][INFO] TxTable: total transaction count:0
+[09:53:12:012][INFO] TxTable: expire transaction count:0
+[09:53:12:012][INFO] TxTable: total transaction count:0
+[09:53:17:017][INFO] TxTable: expire transaction count:0
+[09:53:17:017][INFO] TxTable: total transaction count:0
+[09:53:22:022][INFO] TxTable: expire transaction count:0
+[09:53:22:022][INFO] TxTable: total transaction count:0
+[09:53:23:023][INFO] TccMonitor: monitor log:log avg time 0
+[09:53:23:023][ERROR] TccMonitor: write log exception.
+>>>>>>> Stashed changes
 com.netease.backend.coordinator.monitor.MonitorException: Write monitor record error
 	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:646)
 	at com.netease.backend.coordinator.monitor.DBTccMonitor.write(DBTccMonitor.java:40)
 	at com.netease.backend.coordinator.monitor.TccMonitor.run(TccMonitor.java:37)
 	at java.util.TimerThread.mainLoop(Timer.java:555)
 	at java.util.TimerThread.run(Timer.java:505)
+<<<<<<< Updated upstream
 Caused by: java.sql.SQLException: Could not retrieve transation read-only status server
+=======
+Caused by: java.sql.SQLException: Table has no partition for value 1485222803774
+>>>>>>> Stashed changes
 	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1094)
 	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:997)
 	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:983)
@@ -1176,6 +1500,7 @@ Caused by: java.sql.SQLException: Could not retrieve transation read-only status
 	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
 	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:644)
 	... 4 more
+<<<<<<< Updated upstream
 Caused by: com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: Communications link failure
 
 The last packet successfully received from the server was 745,136 milliseconds ago.  The last packet sent successfully to the server was 38,624 milliseconds ago.
@@ -1373,12 +1698,137 @@ Caused by: java.net.ConnectException: connection timed out
 [09:55:20:020][INFO] TxTable: expire transaction count:0
 [09:55:20:020][INFO] TxTable: total transaction count:0
 [09:55:24:024][ERROR] TccMonitor: write log exception.
+=======
+[09:53:27:027][INFO] TxTable: expire transaction count:0
+[09:53:27:027][INFO] TxTable: total transaction count:0
+[09:53:32:032][INFO] TxTable: expire transaction count:0
+[09:53:32:032][INFO] TxTable: total transaction count:0
+[09:53:37:037][INFO] TxTable: expire transaction count:0
+[09:53:37:037][INFO] TxTable: total transaction count:0
+[09:53:42:042][INFO] TxTable: expire transaction count:0
+[09:53:42:042][INFO] TxTable: total transaction count:0
+[09:53:47:047][INFO] TxTable: expire transaction count:0
+[09:53:47:047][INFO] TxTable: total transaction count:0
+[09:53:52:052][INFO] TxTable: expire transaction count:0
+[09:53:52:052][INFO] TxTable: total transaction count:0
+[09:53:57:057][INFO] TxTable: expire transaction count:0
+[09:53:57:057][INFO] TxTable: total transaction count:0
+[09:54:02:002][INFO] TxTable: expire transaction count:0
+[09:54:02:002][INFO] TxTable: total transaction count:0
+[09:54:07:007][INFO] TxTable: expire transaction count:0
+[09:54:07:007][INFO] TxTable: total transaction count:0
+[09:54:12:012][INFO] TxTable: expire transaction count:0
+[09:54:12:012][INFO] TxTable: total transaction count:0
+[09:54:17:017][INFO] TxTable: expire transaction count:0
+[09:54:17:017][INFO] TxTable: total transaction count:0
+[09:54:22:022][INFO] TxTable: expire transaction count:0
+[09:54:22:022][INFO] TxTable: total transaction count:0
+[09:54:27:027][INFO] TxTable: expire transaction count:0
+[09:54:27:027][INFO] TxTable: total transaction count:0
+[09:54:32:032][INFO] TxTable: expire transaction count:0
+[09:54:32:032][INFO] TxTable: total transaction count:0
+[09:54:37:037][INFO] TxTable: expire transaction count:0
+[09:54:37:037][INFO] TxTable: total transaction count:0
+[09:54:42:042][INFO] TxTable: expire transaction count:0
+[09:54:42:042][INFO] TxTable: total transaction count:0
+[09:54:47:047][INFO] TxTable: expire transaction count:0
+[09:54:47:047][INFO] TxTable: total transaction count:0
+[09:54:52:052][INFO] TxTable: expire transaction count:0
+[09:54:52:052][INFO] TxTable: total transaction count:0
+[09:54:57:057][INFO] TxTable: expire transaction count:0
+[09:54:57:057][INFO] TxTable: total transaction count:0
+[09:55:02:002][INFO] TxTable: expire transaction count:0
+[09:55:02:002][INFO] TxTable: total transaction count:0
+[09:55:07:007][INFO] TxTable: expire transaction count:0
+[09:55:07:007][INFO] TxTable: total transaction count:0
+[09:55:12:012][INFO] TxTable: expire transaction count:0
+[09:55:12:012][INFO] TxTable: total transaction count:0
+[09:55:17:017][INFO] TxTable: expire transaction count:0
+[09:55:17:017][INFO] TxTable: total transaction count:0
+[09:55:22:022][INFO] TxTable: expire transaction count:0
+[09:55:22:022][INFO] TxTable: total transaction count:0
+[09:55:27:027][INFO] TxTable: expire transaction count:0
+[09:55:27:027][INFO] TxTable: total transaction count:0
+[09:55:32:032][INFO] TxTable: expire transaction count:0
+[09:55:32:032][INFO] TxTable: total transaction count:0
+[09:55:37:037][INFO] TxTable: expire transaction count:0
+[09:55:37:037][INFO] TxTable: total transaction count:0
+[09:55:42:042][INFO] TxTable: expire transaction count:0
+[09:55:42:042][INFO] TxTable: total transaction count:0
+[09:55:47:047][INFO] TxTable: expire transaction count:0
+[09:55:47:047][INFO] TxTable: total transaction count:0
+[09:55:52:052][INFO] TxTable: expire transaction count:0
+[09:55:52:052][INFO] TxTable: total transaction count:0
+[09:55:57:057][INFO] TxTable: expire transaction count:0
+[09:55:57:057][INFO] TxTable: total transaction count:0
+[09:56:02:002][INFO] TxTable: expire transaction count:0
+[09:56:02:002][INFO] TxTable: total transaction count:0
+[09:56:07:007][INFO] TxTable: expire transaction count:0
+[09:56:07:007][INFO] TxTable: total transaction count:0
+[09:56:12:012][INFO] TxTable: expire transaction count:0
+[09:56:12:012][INFO] TxTable: total transaction count:0
+[09:56:17:017][INFO] TxTable: expire transaction count:0
+[09:56:17:017][INFO] TxTable: total transaction count:0
+[09:56:22:022][INFO] TxTable: expire transaction count:0
+[09:56:22:022][INFO] TxTable: total transaction count:0
+[09:56:27:027][INFO] TxTable: expire transaction count:0
+[09:56:27:027][INFO] TxTable: total transaction count:0
+[09:56:32:032][INFO] TxTable: expire transaction count:0
+[09:56:32:032][INFO] TxTable: total transaction count:0
+[09:56:37:037][INFO] TxTable: expire transaction count:0
+[09:56:37:037][INFO] TxTable: total transaction count:0
+[09:56:42:042][INFO] TxTable: expire transaction count:0
+[09:56:42:042][INFO] TxTable: total transaction count:0
+[09:56:47:047][INFO] TxTable: expire transaction count:0
+[09:56:47:047][INFO] TxTable: total transaction count:0
+[09:56:52:052][INFO] TxTable: expire transaction count:0
+[09:56:52:052][INFO] TxTable: total transaction count:0
+[09:56:57:057][INFO] TxTable: expire transaction count:0
+[09:56:57:057][INFO] TxTable: total transaction count:0
+[09:57:02:002][INFO] TxTable: expire transaction count:0
+[09:57:02:002][INFO] TxTable: total transaction count:0
+[09:57:07:007][INFO] TxTable: expire transaction count:0
+[09:57:07:007][INFO] TxTable: total transaction count:0
+[09:57:12:012][INFO] TxTable: expire transaction count:0
+[09:57:12:012][INFO] TxTable: total transaction count:0
+[09:57:17:017][INFO] TxTable: expire transaction count:0
+[09:57:17:017][INFO] TxTable: total transaction count:0
+[09:57:22:022][INFO] TxTable: expire transaction count:0
+[09:57:22:022][INFO] TxTable: total transaction count:0
+[09:57:27:027][INFO] TxTable: expire transaction count:0
+[09:57:27:027][INFO] TxTable: total transaction count:0
+[09:57:32:032][INFO] TxTable: expire transaction count:0
+[09:57:32:032][INFO] TxTable: total transaction count:0
+[09:57:37:037][INFO] TxTable: expire transaction count:0
+[09:57:37:037][INFO] TxTable: total transaction count:0
+[09:57:42:042][INFO] TxTable: expire transaction count:0
+[09:57:42:042][INFO] TxTable: total transaction count:0
+[09:57:47:047][INFO] TxTable: expire transaction count:0
+[09:57:47:047][INFO] TxTable: total transaction count:0
+[09:57:52:052][INFO] TxTable: expire transaction count:0
+[09:57:52:052][INFO] TxTable: total transaction count:0
+[09:57:57:057][INFO] TxTable: expire transaction count:0
+[09:57:57:057][INFO] TxTable: total transaction count:0
+[09:58:02:002][INFO] TxTable: expire transaction count:0
+[09:58:02:002][INFO] TxTable: total transaction count:0
+[09:58:07:007][INFO] TxTable: expire transaction count:0
+[09:58:07:007][INFO] TxTable: total transaction count:0
+[09:58:12:012][INFO] TxTable: expire transaction count:0
+[09:58:12:012][INFO] TxTable: total transaction count:0
+[09:58:17:017][INFO] TxTable: expire transaction count:0
+[09:58:17:017][INFO] TxTable: total transaction count:0
+[09:58:22:022][INFO] TxTable: expire transaction count:0
+[09:58:22:022][INFO] TxTable: total transaction count:0
+[09:58:23:023][INFO] TccMonitor: monitor log:log avg time 0
+[09:58:23:023][ERROR] TccMonitor: write log exception.
+>>>>>>> Stashed changes
 com.netease.backend.coordinator.monitor.MonitorException: Write monitor record error
 	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:646)
 	at com.netease.backend.coordinator.monitor.DBTccMonitor.write(DBTccMonitor.java:40)
 	at com.netease.backend.coordinator.monitor.TccMonitor.run(TccMonitor.java:37)
 	at java.util.TimerThread.mainLoop(Timer.java:555)
 	at java.util.TimerThread.run(Timer.java:505)
+<<<<<<< Updated upstream
 Caused by: com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: Communications link failure
 
 The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
@@ -1541,12 +1991,152 @@ Caused by: java.net.ConnectException: Operation timed out
 [10:00:20:020][INFO] TxTable: expire transaction count:0
 [10:00:20:020][INFO] TxTable: total transaction count:0
 [10:00:25:025][ERROR] TccMonitor: write log exception.
+=======
+Caused by: java.sql.SQLException: Table has no partition for value 1485223103779
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1094)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4226)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4158)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2615)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2776)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2840)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:2082)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2334)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2262)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2246)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:644)
+	... 4 more
+[09:58:27:027][INFO] TxTable: expire transaction count:0
+[09:58:27:027][INFO] TxTable: total transaction count:0
+[09:58:32:032][INFO] TxTable: expire transaction count:0
+[09:58:32:032][INFO] TxTable: total transaction count:0
+[09:58:37:037][INFO] TxTable: expire transaction count:0
+[09:58:37:037][INFO] TxTable: total transaction count:0
+[09:58:42:042][INFO] TxTable: expire transaction count:0
+[09:58:42:042][INFO] TxTable: total transaction count:0
+[09:58:47:047][INFO] TxTable: expire transaction count:0
+[09:58:47:047][INFO] TxTable: total transaction count:0
+[09:58:52:052][INFO] TxTable: expire transaction count:0
+[09:58:52:052][INFO] TxTable: total transaction count:0
+[09:58:57:057][INFO] TxTable: expire transaction count:0
+[09:58:57:057][INFO] TxTable: total transaction count:0
+[09:59:02:002][INFO] TxTable: expire transaction count:0
+[09:59:02:002][INFO] TxTable: total transaction count:0
+[09:59:07:007][INFO] TxTable: expire transaction count:0
+[09:59:07:007][INFO] TxTable: total transaction count:0
+[09:59:12:012][INFO] TxTable: expire transaction count:0
+[09:59:12:012][INFO] TxTable: total transaction count:0
+[09:59:17:017][INFO] TxTable: expire transaction count:0
+[09:59:17:017][INFO] TxTable: total transaction count:0
+[09:59:22:022][INFO] TxTable: expire transaction count:0
+[09:59:22:022][INFO] TxTable: total transaction count:0
+[09:59:27:027][INFO] TxTable: expire transaction count:0
+[09:59:27:027][INFO] TxTable: total transaction count:0
+[09:59:32:032][INFO] TxTable: expire transaction count:0
+[09:59:32:032][INFO] TxTable: total transaction count:0
+[09:59:37:037][INFO] TxTable: expire transaction count:0
+[09:59:37:037][INFO] TxTable: total transaction count:0
+[09:59:42:042][INFO] TxTable: expire transaction count:0
+[09:59:42:042][INFO] TxTable: total transaction count:0
+[09:59:47:047][INFO] TxTable: expire transaction count:0
+[09:59:47:047][INFO] TxTable: total transaction count:0
+[09:59:52:052][INFO] TxTable: expire transaction count:0
+[09:59:52:052][INFO] TxTable: total transaction count:0
+[09:59:57:057][INFO] TxTable: expire transaction count:0
+[09:59:57:057][INFO] TxTable: total transaction count:0
+[10:00:02:002][INFO] TxTable: expire transaction count:0
+[10:00:02:002][INFO] TxTable: total transaction count:0
+[10:00:07:007][INFO] TxTable: expire transaction count:0
+[10:00:07:007][INFO] TxTable: total transaction count:0
+[10:00:12:012][INFO] TxTable: expire transaction count:0
+[10:00:12:012][INFO] TxTable: total transaction count:0
+[10:00:17:017][INFO] TxTable: expire transaction count:0
+[10:00:17:017][INFO] TxTable: total transaction count:0
+[10:00:22:022][INFO] TxTable: expire transaction count:0
+[10:00:22:022][INFO] TxTable: total transaction count:0
+[10:00:27:027][INFO] TxTable: expire transaction count:0
+[10:00:27:027][INFO] TxTable: total transaction count:0
+[10:00:32:032][INFO] TxTable: expire transaction count:0
+[10:00:32:032][INFO] TxTable: total transaction count:0
+[10:00:37:037][INFO] TxTable: expire transaction count:0
+[10:00:37:037][INFO] TxTable: total transaction count:0
+[10:00:42:042][INFO] TxTable: expire transaction count:0
+[10:00:42:042][INFO] TxTable: total transaction count:0
+[10:00:47:047][INFO] TxTable: expire transaction count:0
+[10:00:47:047][INFO] TxTable: total transaction count:0
+[10:00:52:052][INFO] TxTable: expire transaction count:0
+[10:00:52:052][INFO] TxTable: total transaction count:0
+[10:00:57:057][INFO] TxTable: expire transaction count:0
+[10:00:57:057][INFO] TxTable: total transaction count:0
+[10:01:02:002][INFO] TxTable: expire transaction count:0
+[10:01:02:002][INFO] TxTable: total transaction count:0
+[10:01:07:007][INFO] TxTable: expire transaction count:0
+[10:01:07:007][INFO] TxTable: total transaction count:0
+[10:01:12:012][INFO] TxTable: expire transaction count:0
+[10:01:12:012][INFO] TxTable: total transaction count:0
+[10:01:17:017][INFO] TxTable: expire transaction count:0
+[10:01:17:017][INFO] TxTable: total transaction count:0
+[10:01:22:022][INFO] TxTable: expire transaction count:0
+[10:01:22:022][INFO] TxTable: total transaction count:0
+[10:01:27:027][INFO] TxTable: expire transaction count:0
+[10:01:27:027][INFO] TxTable: total transaction count:0
+[10:01:32:032][INFO] TxTable: expire transaction count:0
+[10:01:32:032][INFO] TxTable: total transaction count:0
+[10:01:37:037][INFO] TxTable: expire transaction count:0
+[10:01:37:037][INFO] TxTable: total transaction count:0
+[10:01:42:042][INFO] TxTable: expire transaction count:0
+[10:01:42:042][INFO] TxTable: total transaction count:0
+[10:01:47:047][INFO] TxTable: expire transaction count:0
+[10:01:47:047][INFO] TxTable: total transaction count:0
+[10:01:52:052][INFO] TxTable: expire transaction count:0
+[10:01:52:052][INFO] TxTable: total transaction count:0
+[10:01:57:057][INFO] TxTable: expire transaction count:0
+[10:01:57:057][INFO] TxTable: total transaction count:0
+[10:02:02:002][INFO] TxTable: expire transaction count:0
+[10:02:02:002][INFO] TxTable: total transaction count:0
+[10:02:07:007][INFO] TxTable: expire transaction count:0
+[10:02:07:007][INFO] TxTable: total transaction count:0
+[10:02:12:012][INFO] TxTable: expire transaction count:0
+[10:02:12:012][INFO] TxTable: total transaction count:0
+[10:02:17:017][INFO] TxTable: expire transaction count:0
+[10:02:17:017][INFO] TxTable: total transaction count:0
+[10:02:22:022][INFO] TxTable: expire transaction count:0
+[10:02:22:022][INFO] TxTable: total transaction count:0
+[10:02:27:027][INFO] TxTable: expire transaction count:0
+[10:02:27:027][INFO] TxTable: total transaction count:0
+[10:02:32:032][INFO] TxTable: expire transaction count:0
+[10:02:32:032][INFO] TxTable: total transaction count:0
+[10:02:37:037][INFO] TxTable: expire transaction count:0
+[10:02:37:037][INFO] TxTable: total transaction count:0
+[10:02:42:042][INFO] TxTable: expire transaction count:0
+[10:02:42:042][INFO] TxTable: total transaction count:0
+[10:02:47:047][INFO] TxTable: expire transaction count:0
+[10:02:47:047][INFO] TxTable: total transaction count:0
+[10:02:52:052][INFO] TxTable: expire transaction count:0
+[10:02:52:052][INFO] TxTable: total transaction count:0
+[10:02:57:057][INFO] TxTable: expire transaction count:0
+[10:02:57:057][INFO] TxTable: total transaction count:0
+[10:03:02:002][INFO] TxTable: expire transaction count:0
+[10:03:02:002][INFO] TxTable: total transaction count:0
+[10:03:07:007][INFO] TxTable: expire transaction count:0
+[10:03:07:007][INFO] TxTable: total transaction count:0
+[10:03:12:012][INFO] TxTable: expire transaction count:0
+[10:03:12:012][INFO] TxTable: total transaction count:0
+[10:03:17:017][INFO] TxTable: expire transaction count:0
+[10:03:17:017][INFO] TxTable: total transaction count:0
+[10:03:22:022][INFO] TxTable: expire transaction count:0
+[10:03:22:022][INFO] TxTable: total transaction count:0
+[10:03:23:023][INFO] TccMonitor: monitor log:log avg time 0
+[10:03:23:023][ERROR] TccMonitor: write log exception.
+>>>>>>> Stashed changes
 com.netease.backend.coordinator.monitor.MonitorException: Write monitor record error
 	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:646)
 	at com.netease.backend.coordinator.monitor.DBTccMonitor.write(DBTccMonitor.java:40)
 	at com.netease.backend.coordinator.monitor.TccMonitor.run(TccMonitor.java:37)
 	at java.util.TimerThread.mainLoop(Timer.java:555)
 	at java.util.TimerThread.run(Timer.java:505)
+<<<<<<< Updated upstream
 Caused by: com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: Communications link failure
 
 The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
@@ -7002,3 +7592,36 @@ Caused by: java.net.ConnectException: connection timed out
 [12:40:15:015][INFO] DubboProtocol:  [DUBBO] Destroy reference: dubbo://172.17.37.128:20881/com.mogujie.tccdemo.order.api.OrderService?anyhost=true&application=Coordinator&check=false&dubbo=2.4.9&generic=true&interface=com.mogujie.tccdemo.order.api.OrderService&loadbalance=roundrobin&methods=createOrder,confirm,cancel,expired&owner=tanhua&pid=6940&side=consumer&timestamp=1485244207144, dubbo version: 2.4.9, current host: 172.17.37.128
 [12:40:15:015][INFO] DubboProtocol:  [DUBBO] Unexport service: dubbo://172.17.37.128:20080/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&dubbo=2.4.9&group=vstore&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=6940&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485242550047&version=1.0.0, dubbo version: 2.4.9, current host: 172.17.37.128
 [12:40:15:015][INFO] InjvmProtocol:  [DUBBO] Unexport service: injvm://127.0.0.1/com.netease.backend.tcc.Coordinator?anyhost=true&application=Coordinator&dubbo=2.4.9&group=vstore&interface=com.netease.backend.tcc.Coordinator&loadbalance=consistenthash&methods=confirm,cancel,removeHeuristicExceptions,getTxTableSize,begin,getHeuristicExceptionList&pid=6940&revision=1.0.0&side=provider&threadpool=cached&timestamp=1485242550047&version=1.0.0, dubbo version: 2.4.9, current host: 172.17.37.128
+=======
+Caused by: java.sql.SQLException: Table has no partition for value 1485223403790
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1094)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4226)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4158)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2615)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2776)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2840)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:2082)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2334)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2262)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2246)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at org.apache.commons.dbcp.DelegatingPreparedStatement.executeUpdate(DelegatingPreparedStatement.java:105)
+	at com.netease.backend.coordinator.util.DbUtil.writeMonitorRec(DbUtil.java:644)
+	... 4 more
+[10:03:27:027][INFO] TxTable: expire transaction count:0
+[10:03:27:027][INFO] TxTable: total transaction count:0
+[10:03:32:032][INFO] TxTable: expire transaction count:0
+[10:03:32:032][INFO] TxTable: total transaction count:0
+[10:03:37:037][INFO] TxTable: expire transaction count:0
+[10:03:37:037][INFO] TxTable: total transaction count:0
+[10:03:42:042][INFO] TxTable: expire transaction count:0
+[10:03:42:042][INFO] TxTable: total transaction count:0
+[10:03:47:047][INFO] TxTable: expire transaction count:0
+[10:03:47:047][INFO] TxTable: total transaction count:0
+[10:03:52:052][INFO] TxTable: expire transaction count:0
+[10:03:52:052][INFO] TxTable: total transaction count:0
+[10:03:57:057][INFO] TxTable: expire transaction count:0
+[10:03:57:057][INFO] TxTable: total transaction count:0
+[10:04:02:002][INFO] TxTable: expire transaction count:0
+[10:04:02:002][INFO] TxTable: total transaction count:0
+>>>>>>> Stashed changes
